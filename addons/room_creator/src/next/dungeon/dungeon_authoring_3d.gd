@@ -39,16 +39,48 @@ func generate_new_layout() -> void:
 		generation_failed.emit(result.report)
 		push_warning("DungeonAuthoring3D: " + result.report.summary())
 		return
-	# Old valid preview/bake remain untouched. Save will reject stale bake versions.
+	# Compile before touching the currently valid layout, preview or bake.
+	# An unsuccessful generation never deletes the designer's previous work.
+	if not _can_replace_generated(PREVIEW_NAME) or not _can_replace_generated(BAKE_NAME):
+		result.success = false
+		result.report.add_error("GENERATED_NAME_OCCUPIED", "A user-owned node occupies DungeonPreview or DungeonBake.")
+		generation_failed.emit(result.report)
+		return
+	var geometry := DungeonSceneCompiler.build(result.layout, false)
+	if geometry == null:
+		result.success = false
+		result.report.add_error("PREVIEW_COMPILE", "Unable to compile the generated layout.")
+		generation_failed.emit(result.report)
+		return
+	var preview_snapshot := _snapshot_node(geometry)
+	geometry.free()
+	if preview_snapshot == null:
+		result.success = false
+		result.report.add_error("PREVIEW_PACK", "Unable to serialize the new preview.")
+		generation_failed.emit(result.report)
+		return
+	var old_preview := _snapshot_node(_get_generated(PREVIEW_NAME))
+	var old_bake := _snapshot_node(_get_generated(BAKE_NAME))
 	if Engine.is_editor_hint() and is_inside_tree() and get_tree().edited_scene_root != null:
 		var history := EditorInterface.get_editor_undo_redo()
-		history.create_action("Generate Dungeon Layout", UndoRedo.MERGE_DISABLE, self)
-		history.add_do_property(self, "layout", result.layout)
-		history.add_undo_property(self, "layout", layout)
+		history.create_action("Generate Dungeon Layout and Preview", UndoRedo.MERGE_DISABLE, self)
+		history.add_do_method(self, "_apply_generation", result.layout, preview_snapshot, null)
+		history.add_undo_method(self, "_apply_generation", layout, old_preview, old_bake)
 		history.commit_action()
 	else:
-		layout = result.layout
+		_apply_generation(result.layout, preview_snapshot, null)
 	layout_generated.emit(result)
+
+
+func _can_replace_generated(node_name: String) -> bool:
+	var existing := get_node_or_null(NodePath(node_name))
+	return existing == null or existing.get_meta(GENERATED_META, false)
+
+
+func _apply_generation(new_layout: LevelLayout, preview_snapshot: PackedScene, baked_snapshot: PackedScene) -> void:
+	layout = new_layout
+	_apply_snapshot(PREVIEW_NAME, preview_snapshot)
+	_apply_snapshot(BAKE_NAME, baked_snapshot)
 
 
 func validate_current_layout() -> RoomValidationReport:

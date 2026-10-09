@@ -83,9 +83,57 @@ func _run() -> void:
 	var physical := DungeonSceneCompiler.build(author.layout, true)
 	if not _check(physical != null and physical.find_children("*", "CollisionShape3D", true, false).size() > 10, "Manual geometry overrides must compile real native collision."):
 		return
-	physical.free()
+	# Walk each locally rebuilt edge with the actual gameplay collision
+	# capsule. OBB-only checks would miss a wall blocking the first doorway.
+	var stage := Node3D.new()
+	root.add_child(stage)
+	stage.add_child(physical)
+	var actor := CharacterBody3D.new()
+	actor.collision_layer = 2
+	actor.collision_mask = 1
+	actor.safe_margin = 0.001
+	var capsule_node := CollisionShape3D.new()
+	var capsule := CapsuleShape3D.new()
+	capsule.radius = author.layout.player_radius
+	capsule.height = author.layout.player_height
+	capsule_node.shape = capsule
+	actor.add_child(capsule_node)
+	stage.add_child(actor)
+	await physics_frame
+	await physics_frame
+	var room_ids: Dictionary = {}
+	for current_room in author.layout.rooms:
+		room_ids[current_room.stable_id] = current_room
+	var height: float = author.layout.player_height * 0.5 + 0.08
+	for edge in author.layout.connections:
+		if edge.from_room_id != target.stable_id and edge.to_room_id != target.stable_id:
+			continue
+		var first: RoomPlacementData = room_ids[edge.from_room_id]
+		var last: RoomPlacementData = room_ids[edge.to_room_id]
+		var points := PackedVector3Array([first.world_transform.origin])
+		if edge.route_points.size() == 4:
+			points.append_array(edge.route_points)
+		else:
+			# Straight connectors use the exact source/target door socket.
+			var one := DungeonFreeYawRouter.socket_pose(author.layout, first, edge.from_wall, edge.from_offset)
+			var two := DungeonFreeYawRouter.socket_pose(author.layout, last, edge.to_wall, edge.to_offset)
+			points.append(one.origin)
+			points.append(two.origin)
+		points.append(last.world_transform.origin)
+		actor.global_position = points[0] + Vector3.UP * height
+		for k in range(1, points.size()):
+			var target_pos: Vector3 = points[k] + Vector3.UP * height
+			if not _check(not actor.test_move(actor.global_transform, target_pos - actor.global_position), "Real player capsule cannot traverse rerouted F3 doorway %s leg %d." % [edge.stable_id, k]):
+				return
+			actor.global_position = target_pos
+	stage.free()
 	author.bake()
 	if not _check(author.get_node_or_null("DungeonBake") != null, "F3 edited rooms must bake normally."):
+		return
+	var saved_fp := author.layout.fingerprint()
+	var baked_node := author.get_node_or_null("DungeonBake")
+	author.manual_translation = Vector3(3.0, 0, 0)
+	if not _check(not author.apply_selected_room_override() and author.layout.fingerprint() == saved_fp and author.get_node_or_null("DungeonBake") == baked_node, "Rejected second edit must preserve authored layout and previous static bake."):
 		return
 	var packed := PackedScene.new()
 	if not _check(packed.pack(author) == OK and packed.get_state().get_node_count() == 1, "Authored scene must preserve only the source node."):

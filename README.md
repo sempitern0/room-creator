@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.2.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.3.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -12,15 +12,28 @@ Copy the directory `addons/room_creator/` to the same path in your Godot project
 
 1. Open **[examples/dungeon_authoring.tscn](examples/dungeon_authoring.tscn)** or add a `DungeonAuthoring3D` Node3D.
 2. In the Inspector, assign a new `DungeonConfig` resource to **Config**. Configure `seed`, `grid_size`, `critical_path_min/max`, `branch_count`, `loop_count`, dimensions, door clearance and collision options.
-3. Click **Generate Layout**. The planner creates an editable/serializable `LevelLayout` resource on the node. An invalid or impossible set of constraints leaves the previous layout and generated scene intact, with an error report.
-4. Click **Validate Layout**, then **Preview Layout** (lightweight native meshes, without colliders).
-5. Click **Bake Static Dungeon** to create `MeshInstance3D`, primitive `StaticBody3D`/`CollisionShape3D` and paired `Socket_*` markers.
+3. Click **Generate Layout**. A valid `LevelLayout` is created and **Preview Layout runs automatically**, replacing any earlier preview **and clearing stale baked geometry** in one Undo/Redo transaction. On failure the previous layout, preview and bake remain unchanged. Toggle **Auto Preview on Generate** off for large layouts when you only want to prepare data.
+4. Optionally click **Validate Layout**, or **Preview Layout** again after manual edits.
+5. Click **Bake Static Dungeon** to create `MeshInstance3D`, primitive `StaticBody3D`/`CollisionShape3D` and paired `Socket_*` markers. Baking hides the preview automatically to avoid overlapping surfaces; Undo restores the previous preview/bake.
 6. Set **Output Scene Path** to a `res://… .tscn` path and press **Save Baked Scene**. The exported scene is an independent, engine-native `PackedScene`.
 7. Save your authoring scene to keep the `DungeonConfig` and `LevelLayout` as the source of truth for later regeneration.
 
-Preview, bake, and clearing generated output are Undo/Redo-enabled in the editor. Regeneration is **non-destructive** to your manual child nodes and never overwrites a previously baked scene with an invalid layout. If the source changes after baking, bake again before exporting.
+Preview, bake, regeneration and clearing generated output are Undo/Redo-enabled in the editor. Regeneration is **non-destructive** to manually owned child nodes. If the source changes after baking, bake again before exporting.
 
-**Current F2 scope:** single-floor, fixed-size rectangular rooms, cardinal (90°) grid-aligned connections, a seeded main path, branches and optional graph cycles. Each connection defines two mirrored door openings with stable IDs, coincident socket centers and opposite normals. No open unpaired doorways are generated. Impossible layouts return a `DungeonBuildResult` with an error report; they are not exported as success.
+### Shape variety (F2.1)
+
+In the `DungeonConfig` Inspector, expand **Room silhouettes** and configure four weights: `rectangle_weight`, `cross_weight`, `l_shape_weight`, and `t_shape_weight`. A weight of zero disables that shape. The default is rectangle-only, preserving existing authored scenes. A recommended starter mix is **3 / 8 / 7 / 7**. Every room's silhouette and quarter-turn rotation are selected deterministically from its required connection sides; shapes unable to accommodate all doors are rejected for that room.
+
+- **Rectangle:** the original full room footprint.
+- **Cross:** narrower side wings around a central junction.
+- **L-shaped:** a walkable bent room with a recessed corner.
+- **T-shaped:** a three-arm junction with a recessed side.
+
+Each nonrectangular room occupies some of the nine thirds of the same bounding grid cell. Floors, ceilings and colliders follow the actual silhouette; missing tiles remain empty. The entry/exit openings always align with reciprocal external sockets. Door width must fit the narrower one-third connector of the cell: by default an 8-meter room supports the standard 1.6-meter door. Invalid configurations fail validation rather than creating inaccessible walls.
+
+Manual `RoomBlueprint` authoring also exposes `shape` and `shape_rotation`, and currently supports **centered** openings on exposed silhouette boundaries. Rooms can be varied in *shape*, but **their overall grid-cell dimensions are still shared**. True mixed room sizes, arbitrary polygon footprints, custom `PackedScene` sockets and free rotation are planned, not yet implemented.
+
+**Current F2 scope:** single-floor rooms inside a fixed-size cardinal grid, a seeded main path, branches and optional graph cycles. Each connection defines two mirrored door openings with stable IDs, coincident socket centers and opposite normals. No open unpaired doorways are generated. Impossible layouts return a `DungeonBuildResult` with an error report; they are not exported as success.
 
 This is **not** yet arbitrary prefab/socket rotation matching, variable-size spatial packing, multilevel routing, navigation-mesh baking, or partial room-lock regeneration. New hand-authored room prefabs can be added later without changing the graph contract.
 
@@ -59,9 +72,10 @@ godot --headless --path . --editor --quit
 godot --headless --path . --script res://tests/room_creator_smoke.gd
 godot --headless --path . --script res://tests/dungeon_layout_smoke.gd
 godot --headless --path . --script res://tests/dungeon_capsule_smoke.gd
+godot --headless --path . --script res://tests/room_shapes_smoke.gd
 ```
 
-GitHub Actions additionally verifies **clean addon-only installation**, 300 deterministic seed/preset cases, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
+GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette seed cases, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
 
 The older `RoomCreator` and `DungeonGenerator` nodes remain for compatibility but the legacy dungeon path is not claimed to have the same F2 validation guarantees. Use `DungeonAuthoring3D` for new dungeons.
 

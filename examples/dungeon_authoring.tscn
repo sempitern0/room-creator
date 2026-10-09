@@ -13,6 +13,10 @@ grid_size = Vector2i(24, 24)
 critical_path_max = 8
 branch_count = 8
 loop_count = 1
+rectangle_weight = 3
+cross_weight = 8
+l_shape_weight = 7
+t_shape_weight = 7
 
 [sub_resource type="Resource" id="Resource_v3bdb"]
 script = ExtResource("3_v3bdb")

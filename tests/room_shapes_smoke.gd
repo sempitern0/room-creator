@@ -81,7 +81,7 @@ func _run() -> void:
 	if not _check(preview != null and author.layout != null and preview.get_meta("layout_fingerprint", "") == author.layout.fingerprint(), "Generate Layout must immediately create the current preview."):
 		return
 	author.bake()
-	if not _check(author.get_node_or_null("DungeonBake") != null, "A baked scene should exist."):
+	if not _check(author.get_node_or_null("DungeonBake") != null and author.get_node_or_null("DungeonPreview") == null, "Bake must replace the preview with static geometry, not draw both at once."):
 		return
 	var old_layout_fingerprint := author.layout.fingerprint()
 	profile.seed = 1233
@@ -104,6 +104,11 @@ func _run() -> void:
 	author.config = invalid_config
 	author.generate_new_layout()
 	if not _check(author.layout == preserved_layout and author.get_node_or_null("DungeonPreview") == preserved_preview and author.get_node_or_null("DungeonBake") == preserved_bake, "A failed generation must preserve valid layout, preview, and bake."):
+		return
+	author.config = profile
+	author.auto_preview_on_generate = false
+	author.generate_new_layout()
+	if not _check(author.layout != null and author.get_node_or_null("DungeonPreview") == null and author.get_node_or_null("DungeonBake") == null, "Disabling automatic preview must keep source but remove obsolete generated nodes."):
 		return
 	author.free()
 

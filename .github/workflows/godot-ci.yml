@@ -221,3 +221,11 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_free_yaw_smoke.gd 2>&1 | tee free-yaw.log
           grep 'DUNGEON_FREE_YAW_SMOKE: PASS' free-yaw.log
           if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_FREE_YAW_SMOKE: FAIL' free-yaw.log; then exit 1; fi
+
+      - name: Verify combined full-F2 yaw, loops, silhouettes, static prefabs and capsule routes
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_f2_combined_smoke.gd 2>&1 | tee f2-combined.log
+          grep 'DUNGEON_F2_COMBINED_SMOKE: PASS' f2-combined.log
+          if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_F2_COMBINED_SMOKE: FAIL' f2-combined.log; then exit 1; fi

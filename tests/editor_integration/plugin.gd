@@ -164,6 +164,42 @@ func _exercise() -> void:
 	await get_tree().process_frame
 	if not _check(author.layout.rooms[-1].authored_override_active and author.layout.fingerprint() != before_override, "Redo must recover the persisted designer edit and local reroute."):
 		return
+	# F3.3: asset palette painting in real graphical editor, via the
+	# production dock (not a separate visual-only test harness).
+	var art_profile := load("res://examples/dungeon_room_module_profile.tres") as DungeonRoomModule
+	if not _check(art_profile != null and art_profile.validate().is_valid(), "Production visual art fixture must be valid."):
+		return
+	edit_config.room_modules = [art_profile]
+	room_dock.call("_fill_palette")
+	var palette := room_dock.get("_module_picker") as OptionButton
+	if not _check(palette != null and palette.item_count == 2, "Dock must discover the configurable module palette."):
+		return
+	palette.select(1)
+	room_dock.call("set_mode", 3)
+	var paint_id: String = author.layout.rooms[0].stable_id
+	var art_before := author.layout.fingerprint()
+	if not _check(room_dock.call("apply_viewport_action", paint_id), "Art brush must accept clicking the selected visual room."):
+		return
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(author.layout.rooms[0].module_profile == art_profile and author.layout.fingerprint() != art_before and author.get_node_or_null("DungeonPreview").find_children("ModuleDecor", "Node3D", true, false).size() == 1, "Painting must persist only the chosen room art without duplication."):
+		return
+	scene_history = history.get_history_undo_redo(history.get_object_history_id(author))
+	scene_history.undo()
+	await get_tree().process_frame
+	if not _check(author.layout.fingerprint() == art_before and author.layout.rooms[0].module_profile == null, "Art painting must undo alongside native editor room actions."):
+		return
+	scene_history.redo()
+	await get_tree().process_frame
+	if not _check(author.layout.rooms[0].module_profile == art_profile, "Art painting must redo correctly."):
+		return
+	palette.select(0)
+	room_dock.call("apply_viewport_action", paint_id)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(author.layout.rooms[0].module_profile == null, "Erasing art restores the procedural physical shell."):
+		return
+	room_dock.call("set_mode", 0)
 	var authored_snapshot := PackedScene.new()
 	if not _check(authored_snapshot.pack(author) == OK and authored_snapshot.get_state().get_node_count() == 1, "Ctrl+S after manual edits must keep only the single source authoring node."):
 		return

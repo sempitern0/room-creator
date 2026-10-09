@@ -20,7 +20,7 @@ static func dock(anchor_pose: Transform3D, anchor_socket: Transform3D, candidate
 static func solve(anchor_pose: Transform3D, anchor_size: Vector3, anchor_socket: Transform3D, candidate_size: Vector3, candidate_socket: Transform3D, obstacles: Array[Dictionary], min_gap: float, max_gap: float, attempts: int, rng: RandomNumberGenerator, width: float = 1.6) -> Dictionary:
 	if rng == null or attempts < 1 or attempts > 64 or not is_finite(min_gap) or not is_finite(max_gap) or min_gap < 0.5 or max_gap < min_gap or max_gap > 30.0:
 		return {"success": false, "reason": "INVALID_LIMITS"}
-	if not _rigid_yaw(anchor_pose) or not _rigid_y(anchor_socket) or not _rigid_y(candidate_socket) or not anchor_size.is_finite() or not candidate_size.is_finite() or minf(anchor_size.x, anchor_size.z) <= width or minf(candidate_size.x, candidate_size.z) <= width:
+	if not _rigid_yaw(anchor_pose) or not _rigid_yaw(anchor_socket) or not _rigid_yaw(candidate_socket) or not anchor_size.is_finite() or not candidate_size.is_finite() or minf(anchor_size.x, anchor_size.z) <= width or minf(candidate_size.x, candidate_size.z) <= width:
 		return {"success": false, "reason": "INVALID_GEOMETRY"}
 	var anchor_bounds: Dictionary = DungeonOrientedBounds.rectangle(anchor_pose.origin, Vector2(anchor_size.x, anchor_size.z), anchor_pose.basis)
 	var start: Transform3D = anchor_pose * anchor_socket

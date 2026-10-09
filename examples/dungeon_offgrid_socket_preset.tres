@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="DungeonConfig" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_config.gd" id="1_script"]
+[ext_resource type="Resource" path="res://examples/dungeon_structural_straight_profile.tres" id="2_straight"]
+[ext_resource type="Resource" path="res://examples/dungeon_structural_corner_profile.tres" id="3_corner"]
+
+[resource]
+script = ExtResource("1_script")
+seed = 47000
+grid_size = Vector2i(9, 9)
+critical_path_min = 6
+critical_path_max = 8
+branch_count = 3
+loop_count = 0
+max_attempts = 24
+rectangle_weight = 10
+cross_weight = 0
+l_shape_weight = 0
+t_shape_weight = 0
+structural_prefabs = Array[Resource]([ExtResource("2_straight"), ExtResource("3_corner")])
+structural_prefab_chance = 0.35
+vary_room_sizes = false
+enable_free_yaw_dungeons = true
+enable_offgrid_socket_packing = true
+free_yaw_max_degrees = 70.0
+free_yaw_shift = 1.5
+free_yaw_candidates = 20
+free_yaw_search_budget = 16000
+socket_pack_min_gap = 10.0
+socket_pack_max_gap = 13.0

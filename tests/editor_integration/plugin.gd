@@ -242,9 +242,7 @@ func _exercise() -> void:
 	var wall_list := room_dock.get("_stamp_wall") as OptionButton
 	if not _check(wall_list != null, "The bottom workspace must expose an exact wall-side selector."):
 		return
-	for i in wall_list.item_count:
-		if wall_list.get_item_id(i) == stamp_side:
-			wall_list.select(i)
+	room_dock.call("set_stamp_wall", stamp_side)
 	if not _check(room_dock.call("apply_viewport_action", stamp_room_id), "Stamp click must dispatch to the canonical author and defer the edit."):
 		return
 	await get_tree().process_frame

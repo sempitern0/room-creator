@@ -180,10 +180,7 @@ func _build() -> void:
 	_stamp_wall.add_item("Back (+Z)", RoomOpening.Wall.BACK)
 	_stamp_wall.add_item("Left (-X)", RoomOpening.Wall.LEFT)
 	_stamp_wall.item_selected.connect(func(index: int) -> void:
-		var wall: int = _stamp_wall.get_item_id(index)
-		if author != null:
-			author.stamp_wall_choice = wall
-		stamp_wall_changed.emit(wall)
+		set_stamp_wall(_stamp_wall.get_item_id(index))
 	)
 	stamp_row.add_child(_stamp_wall)
 	var stamp_button := Button.new()
@@ -329,6 +326,18 @@ func _fill_palette() -> void:
 		var selection_index: int = _module_profiles.find(author.selected_visual_module)
 		if selection_index >= 0:
 			_module_picker.select(selection_index)
+
+
+func set_stamp_wall(wall: int) -> void:
+	if wall < 0 or wall > 3:
+		return
+	if author != null:
+		author.stamp_wall_choice = wall
+	for i in _stamp_wall.item_count:
+		if _stamp_wall.get_item_id(i) == wall:
+			_stamp_wall.select(i)
+			break
+	stamp_wall_changed.emit(wall)
 
 
 func get_stamp_wall() -> int:

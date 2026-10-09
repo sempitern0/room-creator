@@ -213,3 +213,11 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_yaw_docking_smoke.gd 2>&1 | tee yaw.log
           grep 'DUNGEON_YAW_DOCKING_SMOKE: PASS' yaw.log
           if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_YAW_DOCKING_SMOKE: FAIL' yaw.log; then exit 1; fi
+
+      - name: Verify production free-yaw multiroom dungeons, physics and native export
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_free_yaw_smoke.gd 2>&1 | tee free-yaw.log
+          grep 'DUNGEON_FREE_YAW_SMOKE: PASS' free-yaw.log
+          if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_FREE_YAW_SMOKE: FAIL' free-yaw.log; then exit 1; fi

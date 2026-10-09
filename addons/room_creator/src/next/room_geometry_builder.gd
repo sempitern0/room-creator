@@ -158,7 +158,7 @@ static func _add_box(root: Node3D, label: String, pos: Vector3, dimensions: Vect
 
 static func _add_socket(root: Node3D, blueprint: RoomBlueprint, opening: RoomOpening) -> void:
 	var half := blueprint.room_size * 0.5
-		var pos := Vector3.ZERO
+	var pos := Vector3.ZERO
 	var yaw := 0.0
 	match opening.wall:
 		RoomOpening.Wall.FRONT:

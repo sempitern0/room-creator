@@ -70,9 +70,8 @@ static func validate_route(layout: LevelLayout, edge: RoomConnectionData, route:
 	# their own room walls. Try another seeded position instead.
 	if gap < edge.clear_width + 2.0 * layout.wall_thickness + 0.1:
 		return false
-	var offset: float = absf(delta.z) if x_axis else absf(delta.x)
-	if offset < 0.1:
-		return false
+	# A selected dogleg may be nearly straight. Keep its route persisted:
+	# rejecting a tiny lateral offset would cause unnecessary search failures.
 	return true
 
 

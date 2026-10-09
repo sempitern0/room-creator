@@ -43,7 +43,20 @@ static func apply(preview: Node3D, layout: LevelLayout, palette: DungeonPreviewP
 				color = colors.alternate_loops
 			var from_room: RoomPlacementData = room_by_id[edge.from_room_id]
 			var to_room: RoomPlacementData = room_by_id[edge.to_room_id]
-			_add_route(group, edge.stable_id, from_room.world_transform.origin, to_room.world_transform.origin, layout.room_size.y + (layout.ceiling_thickness if layout.include_ceiling else 0.0), colors.route_width, color, kind)
+			var top: float = layout.room_size.y + (layout.ceiling_thickness if layout.include_ceiling else 0.0)
+			if edge.route_points.size() == 4:
+				var track := PackedVector3Array([from_room.world_transform.origin])
+				track.append_array(edge.route_points)
+				track.append(to_room.world_transform.origin)
+				var drawn: int = 0
+				for i in range(track.size() - 1):
+					if track[i].distance_to(track[i + 1]) <= 0.01:
+						continue
+					_add_route(group, edge.stable_id if drawn == 0 else "Part_%s_%d" % [edge.stable_id, drawn],
+						track[i], track[i + 1], top, colors.route_width, color, kind)
+					drawn += 1
+			else:
+				_add_route(group, edge.stable_id, from_room.world_transform.origin, to_room.world_transform.origin, top, colors.route_width, color, kind)
 	if draw_labels:
 		for room in layout.rooms:
 			if room.role == RoomPlacementData.Role.ENTRANCE or room.role == RoomPlacementData.Role.EXIT:

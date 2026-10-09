@@ -99,6 +99,11 @@ static func validate_config(config: DungeonConfig) -> RoomValidationReport:
 	if config.use_variable_grid_spacing:
 		if not is_finite(config.min_corridor_gap) or not is_finite(config.max_corridor_gap) or config.min_corridor_gap < 0.0 or config.max_corridor_gap > 30.0 or config.max_corridor_gap < config.min_corridor_gap:
 			report.add_error("GRID_GAP", "Corridor gap range must be finite, ordered and inside [0, 30] meters.")
+	if config.enable_dogleg_corridors:
+		if not config.enable_independent_room_offsets:
+			report.add_error("DOGLEG_OFFSETS_REQUIRED", "Enable independent room offsets before using dogleg corridors.")
+		if not is_finite(config.dogleg_frequency) or config.dogleg_frequency < 0.0 or config.dogleg_frequency > 1.0:
+			report.add_error("DOGLEG_FREQUENCY", "Dogleg frequency must be between 0 and 1.")
 	if config.enable_independent_room_offsets:
 		if not is_finite(config.room_position_jitter) or config.room_position_jitter < 0.0 or config.room_position_jitter > 6.0 or config.placement_attempts < 1 or config.placement_attempts > 64:
 			report.add_error("OFFSET_CONFIGURATION", "Independent room placement jitter/attempts must remain in safe bounds.")

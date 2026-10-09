@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_authoring_3d.gd" id="1_author"]
+[ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_config.gd" id="2_config"]
+[ext_resource type="Resource" path="res://examples/dungeon_room_module_profile.tres" id="3_module"]
+
+[sub_resource type="Resource" id="DungeonConfig_modular"]
+script = ExtResource("2_config")
+seed = 891
+grid_size = Vector2i(12, 12)
+critical_path_min = 7
+critical_path_max = 9
+branch_count = 5
+loop_count = 0
+rectangle_weight = 10
+cross_weight = 0
+l_shape_weight = 0
+t_shape_weight = 0
+room_modules = Array[Resource]([ExtResource("3_module")])
+require_room_modules = true
+vary_room_sizes = true
+min_room_scale = 0.8
+max_room_scale = 0.95
+generate_exterior_doors = true
+
+[node name="DungeonAuthoring3D" type="Node3D"]
+script = ExtResource("1_author")
+config = SubResource("DungeonConfig_modular")
+output_scene_path = "res://room_creator/dungeons/modular_example.tscn"

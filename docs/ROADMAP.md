@@ -11,10 +11,10 @@ Architecture derived from `ROOM_CREATOR_NEXT_AGENT_HANDOFF(1).md` (design propos
 | F2 seeded layout | Implemented for cardinal-grid rooms | `DungeonConfig`, `LevelLayout`, `RoomPlacementData`, `RoomConnectionData`, stable IDs, local RNG, bounded path search |
 | F2 graph/geometry validation | Implemented for this subset | BFS reachability, critical path floor, reciprocal door orientations, matched openings, occupancy, schema checks |
 | F2 editor/export | Implemented | `DungeonAuthoring3D` generates/validates/previews/bakes/exports; Undo/Redo for generated nodes; baked scenes are engine-native |
-| F2 validation | Automated in Godot 4.7.2 CI | 100 seeds × 3 presets plus 60 mixed-silhouette seeds and 12 rotations; loop test, door socket alignment, portable scene reload and capsule sweep |
+| F2 validation | Automated in Godot 4.7.2 CI | 100 seeds × 3 presets plus 60 mixed-silhouette and 40 varied-size seeds; socket-marked module roundtrips, exterior-door and corridor capsule sweeps, 12 rotations; loop test, door socket alignment, portable scene reload and capsule sweep |
 | F2.1 shape variety and editor lifecycle | **Implemented** | Weighted rectangle/cross/L/T orthogonal silhouettes with matched sockets; generating auto-previews and replaces stale bake; bake hides preview, undoable |
-| F2.2 path diagnostics | **Implemented** | Preview-only role floor tints, entrance/exit labels, main/branch/alternate-loop links, editable color palette and visibility toggles; no bake contamination |
-| F2 advanced packing | **Not implemented** | Variable-size prefabs, arbitrary rotated sockets, explicit spatial broadphase and bounded backtracking for 3D overlaps |
+| F2.2 path diagnostics | **Implemented** | Preview-only role floor/roof tints, entrance/exit labels, main/branch/alternate-loop links, editable color palette and visibility toggles; no bake contamination |
+| F2.3 exterior portals | **Implemented + CI-tested** | Real exit/entry wall holes and socket markers, both verified with CharacterBody3D capsule |\n| F2.3 varied dimensions and connectors | **Implemented + CI-tested** | Reproducible per-room widths/depths within grid cells, spatial AABB checks and static corridor segments with real physics |\n| F2.3 normalized art modules | **Implemented + CI-tested** | Optional script-free / collision-free PackedScene with normalized wall sockets, seeded selection and portable baked instances |\n| F2 advanced free packing | **Not implemented** | Collision-bearing replacement prefabs, arbitrary rotated sockets, off-grid spatial packing, rotated OBB and bounded spatial backtracking |
 | F3 locked editing/biomes | **Not implemented** | Locks, incremental regeneration, biomes, reusable profiles, navigation pipeline |
 | F4 exterior cities | **Not implemented** | Street graph, parcels, road access, zoning |
 | F5 release hardening | Partial | Cross-platform interactive QA, benchmarks, migration fixtures and user acceptance outstanding |
@@ -22,7 +22,7 @@ Architecture derived from `ROOM_CREATOR_NEXT_AGENT_HANDOFF(1).md` (design propos
 ## Remaining work, in order
 
 1. **Interactive F2 QA:** test Undo/Redo with scene saved/reopened in Windows and Linux editor; validate exported gameplay with a controllable character and differing physics profiles.
-2. **Prefab-driven spatial embedding and true variable size:** read authored sockets from `PackedScene` templates, match facing transforms and clearance, handle differing footprints and transforms (OBB, backtracking), avoid unpaired doors.
+2. **Full prefab-driven spatial embedding:** replace the parametric shell with explicitly authored, collision-bearing room prefabs only after independent capsule and connectivity checks; extend socket contracts beyond normalized centered openings; support rotated OBB overlap and off-grid bounded spatial backtracking. The current F2.3 stage already varies room size within grid cells and supports collision-free normalized art modules.
 3. **Agent-space validation:** optional NavigationMesh generation and independent path verification (graph connectivity alone is insufficient for full navigation).
 4. **F3 persistent overrides:** stable per-room locks, local overrides, invalid-connection conflict reports, incremental regeneration and undoable viewport gizmos.
 5. **Style/data layer:** separate RoomBiome and BakeProfile from geometry; meshes by room/chunk/material when measured; no shared Resource mutation.

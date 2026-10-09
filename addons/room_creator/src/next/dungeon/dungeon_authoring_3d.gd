@@ -32,6 +32,15 @@ const GENERATED_META := "room_creator_generated"
 @export_tool_button("Lock Selected Room") var lock_room_action: Callable = _request_lock_room
 @export_tool_button("Unlock Selected Room") var unlock_room_action: Callable = _request_unlock_room
 @export_tool_button("Regenerate Unlocked Rooms") var regenerate_unlocked_action: Callable = _request_regenerate_unlocked
+@export_subgroup("F3.2 Explicit Overrides")
+## Translation is relative to current pose, horizontally only. Total bounded
+## movement is 3 m from the pose at the first edit. 0 width/depth means keep.
+@export var manual_translation: Vector3 = Vector3.ZERO
+@export var manual_room_size: Vector2 = Vector2.ZERO
+## Keep current, Rect, Cross, L, T; incompatible existing modules are rejected.
+@export_enum("Keep", "Rectangle", "Cross", "L Shape", "T Shape") var manual_shape_choice: int = 0
+@export_range(-1, 3, 1) var manual_shape_rotation: int = -1
+@export_tool_button("Apply Selected Room Override") var apply_room_override_action: Callable = _request_apply_room_override
 @export_tool_button("Generate Layout") var generate_action: Callable = _request_generate_layout
 @export_tool_button("Validate Layout") var validate_action: Callable = _request_validate
 @export_tool_button("Preview Layout") var preview_action: Callable = _request_preview
@@ -62,6 +71,10 @@ func _request_unlock_room() -> void:
 
 func _request_regenerate_unlocked() -> void:
 	_queue_editor_action(&"regenerate_unlocked_rooms")
+
+
+func _request_apply_room_override() -> void:
+	_queue_editor_action(&"apply_selected_room_override")
 
 
 func _request_validate() -> void:
@@ -192,6 +205,19 @@ func regenerate_unlocked_rooms() -> bool:
 		push_warning("DungeonAuthoring3D: " + result.report.summary())
 		return false
 	return _commit_room_edit(result, "Regenerate Unlocked Dungeon Rooms", false)
+
+
+func apply_selected_room_override() -> bool:
+	var chosen_shape: int = manual_shape_choice - 1 if manual_shape_choice > 0 else -1
+	var result := DungeonRoomOverrides.apply(layout, selected_room_id, manual_translation, manual_room_size, chosen_shape, manual_shape_rotation)
+	last_result = result
+	last_report = result.report
+	if not result.success:
+		generation_failed.emit(result.report)
+		push_warning("DungeonAuthoring3D: " + result.report.summary())
+		return false
+	# The override can move a doorway: always clear stale baked connectors.
+	return _commit_room_edit(result, "Apply Selected Dungeon Room Override", false)
 
 
 func _commit_room_edit(result: DungeonBuildResult, label: String, keep_bake: bool) -> bool:

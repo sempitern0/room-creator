@@ -465,6 +465,9 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 	var lock_report := DungeonRoomEditing.validate_locks(layout)
 	for error in lock_report.errors:
 		report.add_error("F3_ROOM_LOCK", error)
+	var override_report := DungeonRoomOverrides.validate_metadata(layout)
+	for error in override_report.errors:
+		report.add_error("F3_ROOM_OVERRIDE", error)
 	if layout.expected_room_count != layout.rooms.size():
 		report.add_error("ROOM_COUNT", "Missing or surplus placed rooms.")
 	if layout.connections.size() - layout.rooms.size() + 1 != layout.expected_loops:

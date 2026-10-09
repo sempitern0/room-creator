@@ -11,6 +11,10 @@ enum Role { ENTRANCE, MAIN, EXIT, BRANCH }
 ## topology signature is captured from the actual graph and socket contract.
 @export var edit_locked: bool = false
 @export var lock_topology_signature: String = ""
+## F3.2 explicit designer override. Anchor remains the pose at first edit,
+## so repeated Inspector actions cannot silently walk a room across the world.
+@export var authored_override_active: bool = false
+@export var authored_override_origin: Vector3 = Vector3.ZERO
 @export var cell: Vector2i = Vector2i.ZERO
 ## Optional actual geometry extent; ZERO preserves pre-1.5 layouts.
 @export var room_size: Vector3 = Vector3.ZERO

@@ -98,8 +98,9 @@ static func regenerate_unlocked(source: LevelLayout, config: DungeonConfig, vari
 	var changed: int = 0
 	var available: int = 0
 	for room in fresh.rooms:
-		if room.edit_locked or room.structural_prefab != null:
-			# Structural shells are retained: choosing another prefab here
+		if room.edit_locked or room.authored_override_active or room.structural_prefab != null:
+			# Explicit authored geometry and structural shells are retained;
+			# choosing another prefab or shape here
 			# would also require updating authored socket offsets and rerouting.
 			continue
 		available += 1
@@ -215,6 +216,20 @@ static func decorate_preview(preview: Node3D, layout: LevelLayout) -> void:
 		label.position = room.world_transform.origin + Vector3.UP * (DungeonPlanner.actual_size(layout, room).y + 1.0)
 		parent.add_child(label)
 		label.set_meta("room_id", room.stable_id)
+	for room in layout.rooms:
+		if not room.authored_override_active:
+			continue
+		var edited_label := Label3D.new()
+		edited_label.name = "Edited_" + room.stable_id.validate_node_name()
+		edited_label.text = "EDITED"
+		edited_label.font_size = 24
+		edited_label.pixel_size = 0.008
+		edited_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		edited_label.no_depth_test = true
+		edited_label.modulate = Color(0.25, 0.84, 0.95)
+		edited_label.position = room.world_transform.origin + Vector3.UP * (DungeonPlanner.actual_size(layout, room).y + 1.6)
+		parent.add_child(edited_label)
+		edited_label.set_meta("room_id", room.stable_id)
 	if parent.get_child_count() > 0:
 		preview.add_child(parent)
 	else:

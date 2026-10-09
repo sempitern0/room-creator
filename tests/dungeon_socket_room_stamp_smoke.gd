@@ -25,13 +25,17 @@ func _run() -> void:
 	var before: LevelLayout = generated.layout
 	var found: DungeonBuildResult
 	var first_rejection: String = ""
+	var rejection_counts: Dictionary = {}
 	var chosen_source: RoomPlacementData
 	var chosen_wall: int = -1
 	for room in before.rooms:
 		for side in 4:
 			var proposed := DungeonSocketRoomStamp.propose(before, room.stable_id, side)
-			if first_rejection.is_empty() and not proposed.success:
-				first_rejection = "%s wall %d: %s" % [room.stable_id, side, proposed.report.summary()]
+			if not proposed.success:
+				var label: String = proposed.report.errors[0] if not proposed.report.errors.is_empty() else proposed.report.summary()
+				rejection_counts[label] = rejection_counts.get(label, 0) + 1
+				if first_rejection.is_empty() and not label.contains("STAMP_EXTERIOR") and not label.contains("STAMP_WALL_OCCUPIED"):
+					first_rejection = "%s wall %d: %s" % [room.stable_id, side, proposed.report.summary()]
 			if proposed.success:
 				found = proposed
 				chosen_source = room
@@ -39,7 +43,7 @@ func _run() -> void:
 				break
 		if found != null:
 			break
-	if not _check(found != null and chosen_source != null, "At least one wall should offer safe topology-connected room placement. First rejection: " + first_rejection):
+	if not _check(found != null and chosen_source != null, "At least one wall should offer safe topology-connected room placement. First nontrivial rejection: " + first_rejection + " | reasons: " + str(rejection_counts)):
 		return
 	var next: LevelLayout = found.layout
 	if not _check(next.rooms.size() == before.rooms.size() + 1 and next.connections.size() == before.connections.size() + 1 and next.expected_room_count == before.expected_room_count + 1 and next.expected_loops == before.expected_loops, "Exactly one branching room and exactly one reciprocal edge must be added."):

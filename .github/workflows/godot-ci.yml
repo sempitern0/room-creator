@@ -53,3 +53,11 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_layout_smoke.gd 2>&1 | tee dungeon-test.log
           grep 'DUNGEON_LAYOUT_SMOKE: PASS' dungeon-test.log
           if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_LAYOUT_SMOKE: FAIL' dungeon-test.log; then exit 1; fi
+
+      - name: Sweep a representative capsule through every dungeon door
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_capsule_smoke.gd 2>&1 | tee capsule.log
+          grep 'DUNGEON_CAPSULE_SMOKE: PASS' capsule.log
+          if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_CAPSULE_SMOKE: FAIL' capsule.log; then exit 1; fi

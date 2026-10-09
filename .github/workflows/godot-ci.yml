@@ -197,3 +197,11 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_structural_smoke.gd 2>&1 | tee structural.log
           grep 'DUNGEON_STRUCTURAL_SMOKE: PASS' structural.log
           if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_STRUCTURAL_SMOKE: FAIL' structural.log; then exit 1; fi
+
+      - name: Test F2.8 offset sockets and automatic safe dogleg routing
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_offset_socket_smoke.gd 2>&1 | tee offcenter.log
+          grep 'DUNGEON_OFFSET_SOCKET_SMOKE: PASS' offcenter.log
+          if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_OFFSET_SOCKET_SMOKE: FAIL' offcenter.log; then exit 1; fi

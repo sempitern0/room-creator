@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="RoomMaterials" load_steps=3 format=3 uid="uid://cvo775khjqwh7"]
+[gd_resource type="Resource" script_class="RoomMaterials" format=3 uid="uid://cvo775khjqwh7"]
 
-[ext_resource type="Material" uid="uid://b78y1r4ydwwpu" path="res://addons/ninetailsrabbit.room_creator/src/debug_colors/exit.tres" id="1_3lrbc"]
-[ext_resource type="Script" uid="uid://ca4j3w55oyd23" path="res://addons/ninetailsrabbit.room_creator/src/dungeon/room_materials.gd" id="2_hmy6m"]
+[ext_resource type="Material" uid="uid://b78y1r4ydwwpu" path="res://addons/room_creator/src/debug_colors/exit.tres" id="1_3lrbc"]
+[ext_resource type="Script" uid="uid://ca4j3w55oyd23" path="res://addons/room_creator/src/dungeon/room_materials.gd" id="2_hmy6m"]
 
 [resource]
 script = ExtResource("2_hmy6m")

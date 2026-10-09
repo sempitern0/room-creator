@@ -1,7 +1,7 @@
 @tool
 class_name RoomCreatorPluginSettings extends RefCounted
 
-const PluginPrefixName: String = "ninetailsrabbit.room_creator" ## The folder name
+const PluginPrefixName: String = "room_creator" ## The folder name
 const GitRepositoryName: String = "room-creator"
 
 static var PluginName: String = "RoomCreator"
@@ -9,7 +9,7 @@ static var PluginProjectName: String = ProjectSettings.get_setting("application/
 static var PluginBasePath: String = "res://addons/%s" % PluginPrefixName
 static var PluginLocalConfigFilePath = "%s/plugin.cfg" % PluginBasePath
 static var PluginSettingsBasePath: String = "%s/config/%s" % [PluginProjectName, PluginPrefixName]
-static var RemoteReleasesUrl = "https://api.github.com/repos/ninetailsrabbit/%s/releases" % GitRepositoryName
+static var RemoteReleasesUrl = "https://api.github.com/repos/sempitern0/%s/releases" % GitRepositoryName
 static var PluginTemporaryDirectoryPath = OS.get_user_data_dir() + "/" + PluginPrefixName
 static var PluginTemporaryReleaseUpdateDirectoryPath = "%s/update" % PluginTemporaryDirectoryPath
 static var PluginTemporaryReleaseFilePath = "%s/%s.zip" % [PluginTemporaryDirectoryPath, PluginPrefixName]

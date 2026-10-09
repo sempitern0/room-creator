@@ -1,10 +1,10 @@
-[gd_scene load_steps=241 format=4 uid="uid://x3rctj7qbpxv"]
+[gd_scene format=4 uid="uid://x3rctj7qbpxv"]
 
-[ext_resource type="Script" uid="uid://bx7d4gduxk7xb" path="res://addons/ninetailsrabbit.room_creator/src/dungeon/dungeon_generator.gd" id="1_uhqqe"]
-[ext_resource type="Script" uid="uid://2l3eouu555am" path="res://addons/ninetailsrabbit.room_creator/src/room_configuration.gd" id="2_sasra"]
-[ext_resource type="Script" uid="uid://bsuq4gn5kdrie" path="res://addons/ninetailsrabbit.room_creator/src/csg_room.gd" id="3_sasra"]
-[ext_resource type="Script" uid="uid://wc8m7rnyshv4" path="res://addons/ninetailsrabbit.room_creator/src/dungeon/dungeon.gd" id="4_2nij2"]
-[ext_resource type="Script" uid="uid://s316jjhwvrwi" path="res://addons/ninetailsrabbit.room_creator/src/room_mesh.gd" id="5_7cbxl"]
+[ext_resource type="Script" uid="uid://bx7d4gduxk7xb" path="res://addons/room_creator/src/dungeon/dungeon_generator.gd" id="1_uhqqe"]
+[ext_resource type="Script" uid="uid://2l3eouu555am" path="res://addons/room_creator/src/room_configuration.gd" id="2_sasra"]
+[ext_resource type="Script" uid="uid://bsuq4gn5kdrie" path="res://addons/room_creator/src/csg_room.gd" id="3_sasra"]
+[ext_resource type="Script" uid="uid://wc8m7rnyshv4" path="res://addons/room_creator/src/dungeon/dungeon.gd" id="4_2nij2"]
+[ext_resource type="Script" uid="uid://s316jjhwvrwi" path="res://addons/room_creator/src/room_mesh.gd" id="5_7cbxl"]
 
 [sub_resource type="Resource" id="Resource_ia1lp"]
 script = ExtResource("2_sasra")

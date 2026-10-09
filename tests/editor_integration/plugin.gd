@@ -37,6 +37,12 @@ func _exercise() -> void:
 	var room_dock := EditorInterface.get_base_control().find_child("RoomCreatorDungeonDock", true, false) as Control
 	if not _check(room_dock != null, "Room Creator must expose its own context-aware dungeon dock in Godot."):
 		return
+	# The former add_control_to_dock() API only allowed side placement.
+	# This MUST be an EditorDock able to move to the actual bottom panel
+	# beside Output/Debugger/Animation, with persisted UI layout.
+	var native_dock := EditorInterface.get_base_control().find_child("RoomCreatorWorkspace", true, false) as EditorDock
+	if not _check(native_dock != null and native_dock.default_slot == EditorDock.DOCK_SLOT_BOTTOM and (native_dock.available_layouts & EditorDock.DOCK_LAYOUT_HORIZONTAL) != 0 and (native_dock.available_layouts & EditorDock.DOCK_LAYOUT_VERTICAL) != 0 and (native_dock.available_layouts & EditorDock.DOCK_LAYOUT_FLOATING) != 0, "Room Creator needs a native movable EditorDock with horizontal/bottom, side and floating layouts."):
+		return
 	for frame in 25:
 		if room_dock.get("author") == author:
 			break
@@ -198,6 +204,61 @@ func _exercise() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if not _check(author.layout.rooms[0].module_profile == null, "Erasing art restores the procedural physical shell."):
+		return
+	room_dock.call("set_mode", 0)
+	# F3.4: real bottom dock stamp mode uses the same socket-constrained
+	# graph transaction and scene-specific UndoRedo as all previous tools.
+	var stamp_cfg := DungeonConfig.new()
+	stamp_cfg.seed = 61140
+	stamp_cfg.grid_size = Vector2i(12, 12)
+	stamp_cfg.critical_path_min = 6
+	stamp_cfg.critical_path_max = 7
+	stamp_cfg.branch_count = 2
+	stamp_cfg.use_variable_grid_spacing = true
+	stamp_cfg.min_corridor_gap = 10.0
+	stamp_cfg.max_corridor_gap = 12.0
+	author.config = stamp_cfg
+	author.selected_visual_module = null
+	author._request_generate_layout()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(author.layout != null and author.layout.rooms.size() >= 8, "Editor stamp fixture should generate."):
+		return
+	var stamp_room_id: String = ""
+	var stamp_side: int = -1
+	for existing_room in author.layout.rooms:
+		for side in 4:
+			if DungeonSocketRoomStamp.propose(author.layout, existing_room.stable_id, side).success:
+				stamp_room_id = existing_room.stable_id
+				stamp_side = side
+				break
+		if not stamp_room_id.is_empty():
+			break
+	if not _check(not stamp_room_id.is_empty(), "An empty valid wall must be selectable for new-room stamping."):
+		return
+	var stamp_count: int = author.layout.rooms.size()
+	var stamp_undo_fingerprint: String = author.layout.fingerprint()
+	room_dock.call("set_mode", 4)
+	var wall_list := room_dock.get("_stamp_wall") as OptionButton
+	if not _check(wall_list != null, "The bottom workspace must expose an exact wall-side selector."):
+		return
+	for i in wall_list.item_count:
+		if wall_list.get_item_id(i) == stamp_side:
+			wall_list.select(i)
+	if not _check(room_dock.call("apply_viewport_action", stamp_room_id), "Stamp click must dispatch to the canonical author and defer the edit."):
+		return
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(author.layout.rooms.size() == stamp_count + 1 and author.layout.connections.size() == stamp_count + author.layout.expected_loops and author.get_node_or_null("DungeonPreview") != null, "One click should produce one playable connected branch and a refreshed source-only preview."):
+		return
+	scene_history = history.get_history_undo_redo(history.get_object_history_id(author))
+	scene_history.undo()
+	await get_tree().process_frame
+	if not _check(author.layout.fingerprint() == stamp_undo_fingerprint, "Godot Undo must remove the stamped room and its edge atomically."):
+		return
+	scene_history.redo()
+	await get_tree().process_frame
+	if not _check(author.layout.rooms.size() == stamp_count + 1, "Godot Redo must restore the stamped physical room and edge."):
 		return
 	room_dock.call("set_mode", 0)
 	var authored_snapshot := PackedScene.new()

@@ -17,6 +17,12 @@ func _enter_tree() -> void:
 		preload("res://addons/room_creator/assets/icon.svg")
 	)
 	add_custom_type(
+		"DungeonAuthoring3D",
+		"Node3D",
+		preload("res://addons/room_creator/src/next/dungeon/dungeon_authoring_3d.gd"),
+		preload("res://addons/room_creator/assets/icon.svg")
+	)
+	add_custom_type(
 		"DungeonGenerator",
 		"Node3D",
 		preload("res://addons/room_creator/src/dungeon/dungeon_generator.gd"),
@@ -29,6 +35,7 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
 	remove_custom_type("RoomAuthoring3D")
+	remove_custom_type("DungeonAuthoring3D")
 	remove_custom_type("DungeonGenerator")
 	remove_custom_type("RoomCreator")
 	remove_inspector_plugin(inspector_plugin)

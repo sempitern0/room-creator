@@ -11,6 +11,7 @@ signal selection_changed(room_id: String)
 const MODE_SELECT: int = 0
 const MODE_LOCK: int = 1
 const MODE_UNLOCK: int = 2
+const MODE_PAINT_ART: int = 3
 
 var author: DungeonAuthoring3D
 var active_mode: int = MODE_SELECT
@@ -32,6 +33,9 @@ var _shape: OptionButton
 var _rotation: OptionButton
 var _room_tabs: TabContainer
 var _filter: OptionButton
+var _module_picker: OptionButton
+var _module_profiles: Array[DungeonRoomModule] = []
+var _palette_source: DungeonConfig
 
 
 func _ready() -> void:
@@ -56,6 +60,7 @@ func set_author(next: DungeonAuthoring3D) -> void:
 	author = next if is_instance_valid(next) else null
 	_tracked_layout = null
 	_tracked_id = ""
+	_palette_source = null
 	if author != null:
 		author.layout_generated.connect(_on_layout_changed)
 		author.generation_failed.connect(_on_failed)
@@ -64,7 +69,7 @@ func set_author(next: DungeonAuthoring3D) -> void:
 
 
 func set_mode(value: int) -> void:
-	active_mode = clampi(value, MODE_SELECT, MODE_UNLOCK)
+	active_mode = clampi(value, MODE_SELECT, MODE_PAINT_ART)
 	if _mode_picker != null and _mode_picker.selected != active_mode:
 		_mode_picker.select(active_mode)
 	mode_changed.emit(active_mode)
@@ -90,6 +95,8 @@ func apply_viewport_action(room_id: String) -> bool:
 			author._request_lock_room()
 		MODE_UNLOCK:
 			author._request_unlock_room()
+		MODE_PAINT_ART:
+			_paint_module()
 	return true
 
 
@@ -102,7 +109,7 @@ func _process(delta: float) -> void:
 		if author != null:
 			set_author(null)
 		return
-	if author.layout != _tracked_layout or author.selected_room_id != _tracked_id:
+	if author.layout != _tracked_layout or author.selected_room_id != _tracked_id or author.config != _palette_source:
 		_refresh()
 
 
@@ -139,9 +146,21 @@ func _build() -> void:
 	_mode_picker.add_item("Select room", MODE_SELECT)
 	_mode_picker.add_item("Paint locks", MODE_LOCK)
 	_mode_picker.add_item("Erase locks", MODE_UNLOCK)
+	_mode_picker.add_item("Paint visual modules", MODE_PAINT_ART)
 	_mode_picker.item_selected.connect(func(index: int) -> void: set_mode(index))
 	rooms.add_child(_mode_picker)
-	_note(rooms, "Click a room in the 3D view. Paint modes apply one safe lock/unlock action per click.")
+	_note(rooms, "Enable Room Tool in the 3D toolbar. Click a room to select or paint a lock/module. Esc exits.")
+	_heading(rooms, "Visual module palette")
+	_module_picker = OptionButton.new()
+	rooms.add_child(_module_picker)
+	var paint_bar := HBoxContainer.new()
+	rooms.add_child(paint_bar)
+	var paint_btn := Button.new()
+	paint_btn.text = "Apply to selected"
+	paint_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	paint_btn.pressed.connect(_paint_module)
+	paint_bar.add_child(paint_btn)
+	_note(rooms, "Palette reads Config.room_modules. None clears current room art. Only compatible visual-only modules can be painted.")
 	_heading(rooms, "Find a room")
 	_search = LineEdit.new()
 	_search.placeholder_text = "Filter by room ID or role..."
@@ -243,6 +262,35 @@ func _spin(parent: Node, label: String, minimum: float, maximum: float, step: fl
 	return field
 
 
+func _fill_palette() -> void:
+	if _module_picker == null:
+		return
+	_module_profiles.clear()
+	_module_picker.clear()
+	_module_picker.add_item("None / erase art")
+	_module_profiles.append(null)
+	if author == null or author.config == null:
+		return
+	for module in author.config.room_modules:
+		if module == null:
+			continue
+		if _module_profiles.has(module):
+			continue
+		_module_profiles.append(module)
+		_module_picker.add_item(module.stable_id)
+	_palette_source = author.config
+
+
+func _paint_module() -> void:
+	if not is_instance_valid(author):
+		return
+	var index: int = _module_picker.selected
+	if index < 0 or index >= _module_profiles.size():
+		return
+	author.selected_visual_module = _module_profiles[index]
+	author._request_paint_room_module()
+
+
 func _fill_rooms() -> void:
 	if _room_list == null:
 		return
@@ -276,11 +324,14 @@ func _refresh() -> void:
 	if not valid:
 		_details.text = ""
 		_status.text = "Open a scene with a DungeonAuthoring3D root."
+		_fill_palette()
 		_tracked_layout = null
 		_tracked_id = ""
 		return
 	_tracked_layout = author.layout
 	_tracked_id = author.selected_room_id
+	if author.config != _palette_source or _module_profiles.is_empty():
+		_fill_palette()
 	_fill_rooms()
 	if author.layout == null:
 		_details.text = "Generate a layout to begin."

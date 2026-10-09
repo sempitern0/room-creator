@@ -46,6 +46,15 @@ func _run() -> void:
 		return
 	if not _check(layer.get_node_or_null("RoleLabel_Entrance") != null and layer.get_node_or_null("RoleLabel_Exit") != null, "Entrance/exit labels must both be visible."):
 		return
+	for role_pair in [{"room": layout.entrance_id, "label": "RoleLabel_Entrance", "socket": "Socket_exterior_entrance"}, {"room": layout.exit_id, "label": "RoleLabel_Exit", "socket": "Socket_exterior_exit"}]:
+		var role_room := preview.get_node_or_null(NodePath(role_pair["room"])) as Node3D
+		var actual_socket := role_room.get_node_or_null(NodePath(role_pair["socket"])) as Marker3D
+		var overhead_label := layer.get_node_or_null(NodePath(role_pair["label"])) as Label3D
+		if not _check(actual_socket != null and overhead_label != null, "Each label must have an actual outside doorway."):
+			return
+		var socket_world: Vector3 = role_room.transform * actual_socket.position
+		if not _check(Vector2(overhead_label.position.x, overhead_label.position.z).distance_to(Vector2(socket_world.x, socket_world.z)) < 0.001, "The overhead label must point directly to its exterior doorway."):
+			return
 	var entrance := preview.get_node_or_null(NodePath(layout.entrance_id))
 	var exit_room := preview.get_node_or_null(NodePath(layout.exit_id))
 	var entrance_floor := _floor(entrance)

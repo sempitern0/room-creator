@@ -76,6 +76,7 @@ func _inspect(report: RoomValidationReport) -> void:
 	if sockets.is_empty():
 		report.add_error("PREFAB_SOCKETS", "Add at least one valid, direct child Marker3D socket.")
 	var physics_bodies: Dictionary = {}
+	var solid_boxes: Array[Dictionary] = []
 	var has_mesh := false
 	var has_box := false
 	for i in state.get_node_count():
@@ -86,6 +87,11 @@ func _inspect(report: RoomValidationReport) -> void:
 		if kind == &"StaticBody3D":
 			if node_path.trim_prefix("./").contains("/"):
 				report.add_error("PREFAB_BODY_PARENT", "StaticBody3D must be a direct child of the prefab root.")
+			for j in state.get_node_property_count(i):
+				if state.get_node_property_name(i, j) == &"transform":
+					var body_pose: Transform3D = state.get_node_property_value(i, j)
+					if not body_pose.is_equal_approx(Transform3D.IDENTITY):
+						report.add_error("PREFAB_BODY_TRANSFORM", "StaticBody3D children must have identity transforms; place BoxShape3D children instead.")
 			physics_bodies[str(state.get_node_name(i))] = true
 		elif kind == &"CollisionShape3D":
 			var parent_path: String = node_path.get_base_dir().trim_prefix("./")
@@ -103,6 +109,7 @@ func _inspect(report: RoomValidationReport) -> void:
 				report.add_error("PREFAB_PRIMITIVE", "Only axis-aligned BoxShape3D colliders are currently supported.")
 				continue
 			has_box = true
+			solid_boxes.append({"center": transform.origin, "half": box.size * 0.5})
 			if box.size.x <= 0.0 or box.size.y <= 0.0 or box.size.z <= 0.0:
 				report.add_error("PREFAB_BOX_SIZE", "All collision boxes must have positive dimensions.")
 			_check_box_clearance(box, transform.origin, sockets, report)
@@ -113,6 +120,25 @@ func _inspect(report: RoomValidationReport) -> void:
 				report.add_error("PREFAB_SCRIPT", "Structural prefab scenes must be script-free.")
 	if not has_mesh or not has_box:
 		report.add_error("PREFAB_GEOMETRY", "Room must provide visual mesh and real BoxShape3D physics.")
+	for side in WALL_SIDES:
+		if sockets.has(side):
+			continue
+		var face: Vector3 = _expected_position(side)
+		# Unpaired central exits must be physically sealed. Check several
+		# standing heights, so a missing lintel/partial wall cannot turn into
+		# a second accidental door with no logical graph connection.
+		for height in [0.4, doorway_height * 0.5, doorway_height - 0.1]:
+			var probe := Vector3(face.x, height, face.z)
+			var blocked := false
+			for bounds in solid_boxes:
+				var center: Vector3 = bounds["center"]
+				var half: Vector3 = bounds["half"]
+				if absf(probe.x - center.x) <= half.x + EPS and absf(probe.y - center.y) <= half.y + EPS and absf(probe.z - center.z) <= half.z + EPS:
+					blocked = true
+					break
+			if not blocked:
+				report.add_error("PREFAB_UNPAIRED_EXIT", "The center of a wall without a socket must be sealed by collision: side %d." % side)
+				break
 
 
 func _read_sockets(state: SceneState, report: RoomValidationReport) -> Dictionary:

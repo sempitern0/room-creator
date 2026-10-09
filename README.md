@@ -2,11 +2,21 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.5.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.5.1**. Authors: **sempitern0**.
 
 ## Install
 
 Copy the directory `addons/room_creator/` to the same path in your Godot project and enable **Room Creator** under Project Settings → Plugins. No Barebone or OmniKit dependency is needed. The built scenes use only stock engine nodes and can be used without the addon.
+
+## Godot editor modular preview hotfix (1.5.1)
+
+If `examples/dungeon_modular_authoring.tscn` previously spammed `Attempting to parent and popup a dialog that already has a parent` on **Generate Layout** or **Preview Layout**, update the addon to **1.5.1** and restart the Godot editor.
+
+The modular path no longer instantiates its `PackedScene` over and over merely to inspect socket compatibility. `DungeonRoomModule` reads node types, validated normalized marker coordinates and script/collision restrictions directly from `PackedScene.get_state()`. Generated module nodes are detached from their source scene-instance path before recursively assigning scene owners, which prevents ambiguous nested `PackedScene` ownership on save/reload. `@export_tool_button` actions execute deferred after the Inspector finishes processing input, avoiding synchronous editor SceneTree mutations.
+
+This was tested in **Godot 4.7.2** with an actual editor instance in both headless mode and a graphical X11 session under Xvfb, including opening the supplied modular example, generation, preview refresh, bake, regeneration, and PackedScene save/reload. The CI explicitly fails if that recurring dialog error occurs. Windows graphical testing remains a manual acceptance check.
+
+If you still see messages in an existing edited scene after upgrading, close/reopen Godot and press **Generate Layout** to replace the old preview; save a backup before manually removing an already damaged `DungeonPreview`/`DungeonBake` tree. If it persists, capture the first error with its Godot file/line and which Inspector action triggers it.
 
 ## Create a dungeon (F2)
 

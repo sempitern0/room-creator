@@ -16,11 +16,11 @@ Architecture derived from `ROOM_CREATOR_NEXT_AGENT_HANDOFF(1).md` (design propos
 | F2.2 path diagnostics | **Implemented** | Preview-only role floor/roof tints, entrance/exit labels, main/branch/alternate-loop links, editable color palette and visibility toggles; no bake contamination |
 | F2.3 exterior portals | **Implemented + CI-tested** | Real exit/entry wall holes and socket markers, both verified with CharacterBody3D capsule |
 | F2.3 varied dimensions and connectors | **Implemented + CI-tested** | Reproducible per-room widths/depths within grid cells, spatial AABB checks and static corridor segments with real physics |
-| F2.3 normalized art modules | **Implemented + CI-tested** | Optional script-free / collision-free PackedScene with normalized wall sockets, seeded selection and portable baked instances |
+| F2.3 normalized art modules | **Implemented + CI-tested (v1.5.1 editor regression)** | Optional script-free / collision-free PackedScene with normalized wall sockets, seeded selection and portable baked instances |
 | F2 advanced free packing | **Not implemented** | Collision-bearing replacement prefabs, arbitrary rotated sockets, off-grid spatial packing, rotated OBB and bounded spatial backtracking |
 | F3 locked editing/biomes | **Not implemented** | Locks, incremental regeneration, biomes, reusable profiles, navigation pipeline |
 | F4 exterior cities | **Not implemented** | Street graph, parcels, road access, zoning |
-| F5 release hardening | Partial | Cross-platform interactive QA, benchmarks, migration fixtures and user acceptance outstanding |
+| F5 release hardening | Partial (Godot 4.7.2 editor, plus Xvfb graphical regression) | Cross-platform interactive QA, benchmarks, migration fixtures and user acceptance outstanding |
 
 ## Remaining work, in order
 

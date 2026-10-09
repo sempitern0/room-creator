@@ -10,10 +10,10 @@ func _run() -> void:
 	if not _check(example != null, "Bundled modular dungeon example must import."):
 		return
 	var example_author := example.instantiate() as DungeonAuthoring3D
-	if not _check(example_author != null and example_author.config != null and example_author.config.room_modules.size() == 1 and example_author.config.vary_room_sizes, "Bundled modular example must load typed resource properties."):
+	if not _check(example_author != null and example_author.config != null and example_author.config.room_modules.size() == 1 and example_author.config.vary_room_sizes and example_author.config.use_variable_grid_spacing and example_author.config.cross_weight > 0, "Bundled modular example must load typed resource properties."):
 		return
 	example_author.generate_new_layout()
-	if not _check(example_author.layout != null and example_author.get_node_or_null("DungeonPreview") != null, "Opening the modular authoring example must generate a valid preview."):
+	if not _check(example_author.layout != null and example_author.get_node_or_null("DungeonPreview") != null and not example_author.layout.column_positions.is_empty(), "Opening the modular authoring example must generate a valid preview."):
 		return
 	example_author.free()
 	var module_profile := load("res://examples/dungeon_room_module_profile.tres") as DungeonRoomModule

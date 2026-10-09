@@ -12,15 +12,18 @@ critical_path_min = 7
 critical_path_max = 9
 branch_count = 5
 loop_count = 0
-rectangle_weight = 10
-cross_weight = 0
-l_shape_weight = 0
-t_shape_weight = 0
+rectangle_weight = 12
+cross_weight = 5
+l_shape_weight = 4
+t_shape_weight = 4
 room_modules = Array[Resource]([ExtResource("3_module")])
-require_room_modules = true
+require_room_modules = false
 vary_room_sizes = true
 min_room_scale = 0.8
 max_room_scale = 0.95
+use_variable_grid_spacing = true
+min_corridor_gap = 1.0
+max_corridor_gap = 4.0
 generate_exterior_doors = true
 
 [node name="DungeonAuthoring3D" type="Node3D"]

@@ -22,13 +22,13 @@ func _exercise() -> void:
 	var preview := author.get_node_or_null("DungeonPreview")
 	if not _check(author.layout != null and preview != null, "Deferred inspector Generate Layout should display a preview."):
 		return
-	if not _check(_count_nodes(preview, "ModuleDecor") == author.layout.rooms.size(), "Preview must hold exactly one visual module per room."):
+	if not _check(_count_nodes(preview, "ModuleDecor") == _expected_modules(author.layout), "Preview must hold exactly one visual module per room."):
 		return
 	author._request_preview()
 	await get_tree().process_frame
 	await get_tree().process_frame
 	preview = author.get_node_or_null("DungeonPreview")
-	if not _check(preview != null and _count_nodes(preview, "ModuleDecor") == author.layout.rooms.size(), "Refresh must not duplicate nested visual modules."):
+	if not _check(preview != null and _count_nodes(preview, "ModuleDecor") == _expected_modules(author.layout), "Refresh must not duplicate nested visual modules."):
 		return
 	var snapshot := PackedScene.new()
 	if not _check(snapshot.pack(author) == OK, "Editor-generated scene tree must remain packable."):
@@ -40,7 +40,7 @@ func _exercise() -> void:
 	if not _check(reload_scene != null, "Editor-generated authoring scene must reopen."):
 		return
 	var reopened := reload_scene.instantiate()
-	if not _check(_count_nodes(reopened.get_node_or_null("DungeonPreview"), "ModuleDecor") == author.layout.rooms.size(), "Reload should not create duplicate prefab children."):
+	if not _check(_count_nodes(reopened.get_node_or_null("DungeonPreview"), "ModuleDecor") == _expected_modules(author.layout), "Reload should not create duplicate prefab children."):
 		return
 	reopened.free()
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
@@ -57,6 +57,14 @@ func _exercise() -> void:
 		return
 	print("DUNGEON_EDITOR_INTEGRATION: PASS")
 	get_tree().quit(0)
+
+
+func _expected_modules(layout: LevelLayout) -> int:
+	var amount: int = 0
+	for room in layout.rooms:
+		if room.module_profile != null:
+			amount += 1
+	return amount
 
 
 func _count_nodes(root: Node, name: String) -> int:

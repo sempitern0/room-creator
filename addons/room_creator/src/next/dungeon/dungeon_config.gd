@@ -39,6 +39,12 @@ extends Resource
 @export var use_variable_grid_spacing: bool = false
 @export_range(0.0, 30.0, 0.25) var min_corridor_gap: float = 1.0
 @export_range(0.0, 30.0, 0.25) var max_corridor_gap: float = 4.0
+@export_group("Independent room offsets (F2.5)")
+## A bounded spatial solver moves rooms independently only where graph
+## connectivity allows a straight, coaxial connector; no arbitrary yaw.
+@export var enable_independent_room_offsets: bool = false
+@export_range(0.0, 6.0, 0.05) var room_position_jitter: float = 0.75
+@export_range(1, 64, 1) var placement_attempts: int = 16
 @export_group("Opening and player clearance")
 @export_range(0.5, 5.0, 0.05) var door_width: float = 1.6
 @export_range(0.5, 6.0, 0.05) var door_height: float = 2.3

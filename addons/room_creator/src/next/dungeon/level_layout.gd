@@ -12,6 +12,10 @@ const SCHEMA_VERSION: int = 1
 ## perfectly regular grid and preserve 1.5.x authored layout compatibility.
 @export var column_positions: PackedFloat32Array = PackedFloat32Array()
 @export var row_positions: PackedFloat32Array = PackedFloat32Array()
+## F2.5: resolved per-room coordinates live in world_transform. Keep limits
+## with the layout so standalone validation needs no original DungeonConfig.
+@export var independent_room_offsets_enabled: bool = false
+@export var maximum_room_offset: float = 0.0
 @export var wall_thickness: float = 0.2
 @export var floor_thickness: float = 0.2
 @export var ceiling_thickness: float = 0.2
@@ -41,6 +45,7 @@ func fingerprint() -> String:
 	parts.append("schema:%d seed:%d grid:%d,%d" % [schema_version, seed, grid_size.x, grid_size.y])
 	parts.append("size:%.4f,%.4f,%.4f" % [room_size.x, room_size.y, room_size.z])
 	parts.append("axis_x:%s axis_z:%s" % [str(column_positions), str(row_positions)])
+	parts.append("room_offsets:%d:%.4f" % [int(independent_room_offsets_enabled), maximum_room_offset])
 	parts.append("surfaces:%.4f,%.4f,%.4f:%d" % [wall_thickness, floor_thickness, ceiling_thickness, int(include_ceiling)])
 	parts.append("player:%.4f,%.4f collision:%d,%d" % [player_radius, player_height, collision_layer, collision_mask])
 	parts.append("materials:%s|%s|%s" % [wall_material.resource_path if wall_material != null else "", floor_material.resource_path if floor_material != null else "", ceiling_material.resource_path if ceiling_material != null else ""])

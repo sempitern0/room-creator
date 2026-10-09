@@ -45,6 +45,8 @@ static func generate_layout(config: DungeonConfig) -> DungeonBuildResult:
 			continue
 		_assign_room_sizes(config, layout, rng)
 		DungeonSpatialEmbedder.embed(config, layout, rng)
+		if not DungeonRoomOffsetSolver.assign(config, layout, rng):
+			continue
 		if not _assign_room_modules(config, layout, rng):
 			continue
 		var report := validate_layout(layout)
@@ -97,6 +99,9 @@ static func validate_config(config: DungeonConfig) -> RoomValidationReport:
 	if config.use_variable_grid_spacing:
 		if not is_finite(config.min_corridor_gap) or not is_finite(config.max_corridor_gap) or config.min_corridor_gap < 0.0 or config.max_corridor_gap > 30.0 or config.max_corridor_gap < config.min_corridor_gap:
 			report.add_error("GRID_GAP", "Corridor gap range must be finite, ordered and inside [0, 30] meters.")
+	if config.enable_independent_room_offsets:
+		if not is_finite(config.room_position_jitter) or config.room_position_jitter < 0.0 or config.room_position_jitter > 6.0 or config.placement_attempts < 1 or config.placement_attempts > 64:
+			report.add_error("OFFSET_CONFIGURATION", "Independent room placement jitter/attempts must remain in safe bounds.")
 	if config.vary_room_sizes:
 		if not is_finite(config.min_room_scale) or not is_finite(config.max_room_scale) or config.min_room_scale < 0.5 or config.max_room_scale > 1.0 or config.max_room_scale < config.min_room_scale:
 			report.add_error("ROOM_SCALE", "Variable room scales must be between 0.5 and 1.0 and form an ordered range.")
@@ -383,6 +388,9 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 	var embedding_report := DungeonSpatialEmbedder.validate(layout)
 	for error in embedding_report.errors:
 		report.add_error("SPATIAL_EMBEDDING", error)
+	var independent_report := DungeonRoomOffsetSolver.validate(layout)
+	for error in independent_report.errors:
+		report.add_error("INDEPENDENT_SPATIAL", error)
 	if layout.expected_room_count != layout.rooms.size():
 		report.add_error("ROOM_COUNT", "Missing or surplus placed rooms.")
 	if layout.connections.size() - layout.rooms.size() + 1 != layout.expected_loops:
@@ -398,7 +406,7 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 			report.add_error("DUPLICATE_ROOM", "Duplicate or empty room ID: %s" % room.stable_id)
 		if by_cell.has(room.cell) or not _inside(room.cell, layout.grid_size):
 			report.add_error("SPATIAL_OVERLAP", "Duplicate or out-of-bounds cell: %s" % str(room.cell))
-		if not room.world_transform.basis.is_equal_approx(Basis.IDENTITY) or not room.world_transform.origin.is_equal_approx(DungeonSpatialEmbedder.expected_origin(layout, room.cell)):
+		if not layout.independent_room_offsets_enabled and (not room.world_transform.basis.is_equal_approx(Basis.IDENTITY) or not room.world_transform.origin.is_equal_approx(DungeonSpatialEmbedder.expected_origin(layout, room.cell))):
 			report.add_error("ROOM_TRANSFORM", "Room transform disagrees with the grid footprint: %s" % room.stable_id)
 		if not RoomFootprint.is_valid_shape(int(room.shape)) or room.shape_rotation < 0 or room.shape_rotation > 3:
 			report.add_error("ROOM_SHAPE", "Invalid shape or rotation in %s." % room.stable_id)

@@ -6,6 +6,10 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	var probe := load("res://examples/dungeon_room_module_visual.tscn") as PackedScene
+	var state := probe.get_state()
+	for i in state.get_node_count():
+		print("MODULE_STATE_NODE:", i, ":", state.get_node_name(i), ":", state.get_node_type(i), ":", state.get_node_path(i), ":", state.get_node_path(i, true))
 	var example := load("res://examples/dungeon_modular_authoring.tscn") as PackedScene
 	if not _check(example != null, "Bundled modular dungeon example must import."):
 		return

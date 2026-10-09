@@ -158,20 +158,19 @@ static func _add_box(root: Node3D, label: String, pos: Vector3, dimensions: Vect
 
 static func _add_socket(root: Node3D, blueprint: RoomBlueprint, opening: RoomOpening) -> void:
 	var half := blueprint.room_size * 0.5
-	var t := blueprint.wall_thickness * 0.5
-	var pos := Vector3.ZERO
+		var pos := Vector3.ZERO
 	var yaw := 0.0
 	match opening.wall:
 		RoomOpening.Wall.FRONT:
-			pos = Vector3(opening.offset, opening.sill_height, -half.z + t)
+			pos = Vector3(opening.offset, opening.sill_height, -half.z)
 		RoomOpening.Wall.BACK:
-			pos = Vector3(opening.offset, opening.sill_height, half.z - t)
+			pos = Vector3(opening.offset, opening.sill_height, half.z)
 			yaw = PI
 		RoomOpening.Wall.LEFT:
-			pos = Vector3(-half.x + t, opening.sill_height, opening.offset)
+			pos = Vector3(-half.x, opening.sill_height, opening.offset)
 			yaw = PI * 0.5
 		RoomOpening.Wall.RIGHT:
-			pos = Vector3(half.x - t, opening.sill_height, opening.offset)
+			pos = Vector3(half.x, opening.sill_height, opening.offset)
 			yaw = -PI * 0.5
 	var marker := Marker3D.new()
 	marker.name = "Socket_" + opening.stable_id.validate_node_name()

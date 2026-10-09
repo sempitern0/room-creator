@@ -33,6 +33,12 @@ extends Resource
 @export var vary_room_sizes: bool = false
 @export_range(0.5, 1.0, 0.05) var min_room_scale: float = 0.80
 @export_range(0.5, 1.0, 0.05) var max_room_scale: float = 1.00
+@export_group("Spatial embedding (F2.4)")
+## Reproducible non-uniform room column/row positions. Graph sockets remain
+## axis-aligned, so all generated corridors remain physically traversable.
+@export var use_variable_grid_spacing: bool = false
+@export_range(0.0, 30.0, 0.25) var min_corridor_gap: float = 1.0
+@export_range(0.0, 30.0, 0.25) var max_corridor_gap: float = 4.0
 @export_group("Opening and player clearance")
 @export_range(0.5, 5.0, 0.05) var door_width: float = 1.6
 @export_range(0.5, 6.0, 0.05) var door_height: float = 2.3

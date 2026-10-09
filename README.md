@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.9.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.10.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -62,6 +62,25 @@ Manual `RoomBlueprint` authoring also exposes `shape` and `shape_rotation`, and 
 **Current F2 scope:** single-floor rooms inside a fixed-size cardinal grid, a seeded main path, branches and optional graph cycles. Each connection defines two mirrored door openings with stable IDs, coincident socket centers and opposite normals. No open unpaired doorways are generated. Impossible layouts return a `DungeonBuildResult` with an error report; they are not exported as success.
 
 This is **not** yet arbitrary collision-bearing prefab replacement, free-form rotated spatial packing, multilevel routing, navigation-mesh baking, or partial room-lock regeneration. New hand-authored room prefabs can be added later without changing the graph contract.
+
+## F2.8 — Asymmetric room sockets (first spatial-packing extension)
+
+Full, collision-bearing room prefabs can now have doors **offset from the wall center**. Each connection stores independent `from_offset` and `to_offset` metrics; entrance/exit rooms also store `exterior_offset`. These values are **serialized, fingerprinted, deterministic and independently validated**. Unlike visual-only `DungeonRoomModule` assets, these offsets describe genuine physical cutouts in the full `DungeonStructuralPrefab` shell.
+
+**Test it without duplicating the authoring scene:**
+
+1. Open [`examples/dungeon_authoring.tscn`](examples/dungeon_authoring.tscn).
+2. In the `DungeonAuthoring3D` Inspector, replace `config` temporarily with **[`examples/dungeon_offset_socket_preset.tres`](examples/dungeon_offset_socket_preset.tres)**.
+3. Click **Generate Layout**. The preset enables nonuniform spacing, independent position offsets and dogleg corridors, so the planner can place rooms with asymmetric doors alongside procedural rooms. Watch the colored roof routes bend between the *actual door positions*.
+4. Click **Bake Static Dungeon**, then **Save Baked Scene** to retain full collision and the underlying prefab geometry.
+
+The [example structural prefab](examples/dungeon_structural_offset_straight.tscn) is an 8 × 3.5 × 8 m room with `SocketFront` at **(0.8, 0, -4)** and `SocketBack` at **(-0.8, 0, 4)**. Its front/back wall meshes and `BoxShape3D` walls have matching physical openings. [Profile](examples/dungeon_structural_offset_profile.tres). You can edit this prefab or make variants. For FRONT/BACK sockets, offset is local **X**; for LEFT/RIGHT, local **Z**. Each `Marker3D` must lie on the wall face at Y=0, point outward via its **local -Z**, and retain enough lateral margin for the full door width.
+
+**New pipeline:** after seed-based topology and room selection, `DungeonSocketOffsetPlacer` reads the prefab's **actual saved socket transforms**, applies cardinal room rotation, and adopts the resulting signed lateral offsets. It recalculates affected F2.6 routes to connect the real doorway positions. Every tentative placement is checked for missing/negative corridor clearance, room/corridor intersections and unaligned sockets. If a prefab cannot be connected safely, it is removed **without altering the existing logical dungeon**, and the certified procedural shell takes its place. This is a bounded, deterministic fallback rather than a blocked opening or partially generated dungeon.
+
+The profile validator also checks interior walkable routes from the room center to each offset opening against authored `BoxShape3D` colliders. A broken socket position or stale physical wall cutout prevents accepting that prefab.
+
+**Limitations:** asymmetric door offsets **do not mean arbitrary room yaw**. The rooms still have axis-aligned rectangular bounding footprints and rotate in 90° increments; corridors remain orthogonal three-leg doglegs with enough clearance to turn. Presets without dogleg routing automatically fall back to procedural rooms whenever a displaced socket cannot make a straight, coaxial connection. Truly free-angle sockets, rotated OBB packing, unconstrained 3D placement, curved tunnels, rotated collision boxes and multilevel rooms are still future work. This distinction is intentional to preserve physical passability.
 
 ## F2.7 — Full collision-bearing room prefabs and oriented sockets
 
@@ -182,7 +201,7 @@ Author module scenes in **normalized coordinates**: X/Z in -0.5…+0.5 and Y in 
 
 The generator selects modules deterministically **only when their markers, shape and rotation match all required wall connections**, including outside doors. Modules must be **script-free and collision-free**: they provide visual detail inside a procedurally validated, walkable room shell. Module instances are scaled to the chosen room dimensions, and sockets align with the actual procedural door markers. The exported `.tscn` contains engine-native geometry and the selected art scene dependencies.
 
-**Still future work:** arbitrary yaw/socket offsets, fully unbounded spatial placement with rotated OBB and backtracking, non-box collision-bearing prefabs, multilevel dungeons and automatic navigation meshes. F2.7 supports collision-bearing **rectangular** replacement shells with exact cardinal sockets, alongside visual-only art modules.
+**Still future work:** arbitrary yaw or non-cardinal angled sockets, fully unbounded spatial placement with rotated OBB and backtracking, non-box collision-bearing prefabs, multilevel dungeons and automatic navigation meshes. F2.7 supports collision-bearing **rectangular** replacement shells with exact cardinal sockets, alongside visual-only art modules.
 
 ## Create a manual room (F1)
 
@@ -227,9 +246,10 @@ godot --headless --path . --script res://tests/dungeon_embedding_smoke.gd
 godot --headless --path . --script res://tests/dungeon_offsets_smoke.gd
 godot --headless --path . --script res://tests/dungeon_dogleg_smoke.gd
 godot --headless --path . --script res://tests/dungeon_structural_smoke.gd
+godot --headless --path . --script res://tests/dungeon_offset_socket_smoke.gd
 ```
 
-GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset + 36 routed-dogleg + 34 structural-prefab seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
+GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset + 36 routed-dogleg + 34 structural-prefab + 35 asymmetric-socket seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
 
 The older `RoomCreator` and `DungeonGenerator` nodes remain for compatibility but the legacy dungeon path is not claimed to have the same F2 validation guarantees. Use `DungeonAuthoring3D` for new dungeons.
 

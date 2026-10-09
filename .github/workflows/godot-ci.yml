@@ -253,3 +253,11 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_f3_override_smoke.gd 2>&1 | tee f3-override.log
           grep 'DUNGEON_F3_OVERRIDE_SMOKE: PASS' f3-override.log
           if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_F3_OVERRIDE_SMOKE: FAIL' f3-override.log; then exit 1; fi
+
+      - name: Verify dungeon editor dock browsing and oriented viewport room picking
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_editor_ui_smoke.gd 2>&1 | tee dungeon-editor-ui.log
+          grep 'DUNGEON_EDITOR_UI_SMOKE: PASS' dungeon-editor-ui.log
+          if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_EDITOR_UI_SMOKE: FAIL' dungeon-editor-ui.log; then exit 1; fi

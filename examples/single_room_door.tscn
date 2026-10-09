@@ -1,24 +1,104 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://yxexutbobolt"]
 
-[ext_resource type="Script" path="res://addons/room_creator/src/next/room_authoring_3d.gd" id="1_author"]
-[ext_resource type="Script" path="res://addons/room_creator/src/next/room_blueprint.gd" id="2_blueprint"]
-[ext_resource type="Script" path="res://addons/room_creator/src/next/room_opening.gd" id="3_opening"]
+[ext_resource type="Script" uid="uid://d4ilk7ns2kj6m" path="res://addons/room_creator/src/next/room_authoring_3d.gd" id="1_author"]
+[ext_resource type="Script" uid="uid://b8h2gil4kkou" path="res://addons/room_creator/src/next/room_blueprint.gd" id="2_blueprint"]
+[ext_resource type="Script" uid="uid://07idiu1lkclk" path="res://addons/room_creator/src/next/room_opening.gd" id="3_opening"]
 
 [sub_resource type="Resource" id="Opening_front"]
 script = ExtResource("3_opening")
 stable_id = "entrance"
-wall = 0
-kind = 0
 width = 1.6
 height = 2.3
 
 [sub_resource type="Resource" id="Blueprint_main"]
 script = ExtResource("2_blueprint")
 stable_id = "demo_single_room"
-room_size = Vector3(8, 3.5, 8)
+room_size = Vector3(20, 10, 30)
+wall_thickness = 0.15000000000000002
+ceiling_thickness = 0.35
 openings = Array[ExtResource("3_opening")]([SubResource("Opening_front")])
 
-[node name="RoomAuthoring3D" type="Node3D"]
+[sub_resource type="BoxMesh" id="BoxMesh_gdemf"]
+size = Vector3(20, 0.2, 30)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g5xoy"]
+size = Vector3(20, 0.35, 30)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sp0xv"]
+size = Vector3(9.2, 2.3, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fa4cb"]
+size = Vector3(9.2, 7.7, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xo41u"]
+size = Vector3(1.6, 7.7, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_le2gw"]
+size = Vector3(9.2, 2.3, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p3x2d"]
+size = Vector3(9.2, 7.7, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1c2ue"]
+size = Vector3(20, 10, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p406o"]
+size = Vector3(0.15, 10, 29.7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ci8dg"]
+size = Vector3(0.15, 10, 29.7)
+
+[node name="RoomAuthoring3D" type="Node3D" unique_id=1183090203]
 script = ExtResource("1_author")
 blueprint = SubResource("Blueprint_main")
 output_scene_path = "res://room_creator/rooms/demo_single_room.tscn"
+
+[node name="RoomCreatorPreview" type="Node3D" parent="." unique_id=1484517738]
+metadata/room_creator_generated = true
+
+[node name="Floor" type="MeshInstance3D" parent="RoomCreatorPreview" unique_id=1967412715]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_gdemf")
+
+[node name="Ceiling" type="MeshInstance3D" parent="RoomCreatorPreview" unique_id=788366432]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.175, 0)
+mesh = SubResource("BoxMesh_g5xoy")
+
+[node name="Wall_0_0_1" type="MeshInstance3D" parent="RoomCreatorPreview" unique_id=2106619507]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.4, 1.15, -14.925)
+mesh = SubResource("BoxMesh_sp0xv")
+
+[node name="Wall_0_0_2" type="MeshInstance3D" parent="RoomCreatorPreview" unique_id=619143014]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.4, 6.15, -14.925)
+mesh = SubResource("BoxMesh_fa4cb")
+
+[node name="Wall_0_1_2" type="MeshInstance3D" parent="RoomCreatorPreview" unique_id=696990807]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.15, -14.925)
+mesh = SubResource("BoxMesh_xo41u")
+
+[node name="Wall_0_2_1" type="MeshInstance3D" parent="RoomCreatorPreview" unique_id=2086420808]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4, 1.15, -14.925)
+mesh = SubResource("BoxMesh_le2gw")
+
+[node name="Wall_0_2_2" type="MeshInstance3D" parent="RoomCreatorPreview" unique_id=907448412]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4, 6.15, -14.925)
+mesh = SubResource("BoxMesh_p3x2d")
+
+[node name="Wall_1_0_0" type="MeshInstance3D" parent="RoomCreatorPreview" unique_id=1547159393]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 14.925)
+mesh = SubResource("BoxMesh_1c2ue")
+
+[node name="Wall_2_0_0" type="MeshInstance3D" parent="RoomCreatorPreview" unique_id=1839078148]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.925, 5, 0)
+mesh = SubResource("BoxMesh_p406o")
+
+[node name="Wall_3_0_0" type="MeshInstance3D" parent="RoomCreatorPreview" unique_id=1912745158]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.925, 5, 0)
+mesh = SubResource("BoxMesh_ci8dg")
+
+[node name="Socket_entrance" type="Marker3D" parent="RoomCreatorPreview" unique_id=439595909]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
+metadata/stable_id = "entrance"
+metadata/wall = 0
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3

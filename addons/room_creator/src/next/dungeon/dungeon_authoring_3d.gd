@@ -14,6 +14,8 @@ const BAKE_NAME := "DungeonBake"
 const GENERATED_META := "room_creator_generated"
 
 @export var config: DungeonConfig
+## Enable to inspect every new layout immediately. Disable for very large drafts.
+@export var auto_preview_on_generate: bool = true
 @export var layout: LevelLayout
 @export_file("*.tscn") var output_scene_path: String = "res://room_creator/dungeons/dungeon.tscn"
 @export_tool_button("Generate Layout") var generate_action: Callable = generate_new_layout
@@ -46,19 +48,21 @@ func generate_new_layout() -> void:
 		result.report.add_error("GENERATED_NAME_OCCUPIED", "A user-owned node occupies DungeonPreview or DungeonBake.")
 		generation_failed.emit(result.report)
 		return
-	var geometry := DungeonSceneCompiler.build(result.layout, false)
-	if geometry == null:
-		result.success = false
-		result.report.add_error("PREVIEW_COMPILE", "Unable to compile the generated layout.")
-		generation_failed.emit(result.report)
-		return
-	var preview_snapshot := _snapshot_node(geometry)
-	geometry.free()
-	if preview_snapshot == null:
-		result.success = false
-		result.report.add_error("PREVIEW_PACK", "Unable to serialize the new preview.")
-		generation_failed.emit(result.report)
-		return
+	var preview_snapshot: PackedScene = null
+	if auto_preview_on_generate:
+		var geometry := DungeonSceneCompiler.build(result.layout, false)
+		if geometry == null:
+			result.success = false
+			result.report.add_error("PREVIEW_COMPILE", "Unable to compile the generated layout.")
+			generation_failed.emit(result.report)
+			return
+		preview_snapshot = _snapshot_node(geometry)
+		geometry.free()
+		if preview_snapshot == null:
+			result.success = false
+			result.report.add_error("PREVIEW_PACK", "Unable to serialize the new preview.")
+			generation_failed.emit(result.report)
+			return
 	var old_preview := _snapshot_node(_get_generated(PREVIEW_NAME))
 	var old_bake := _snapshot_node(_get_generated(BAKE_NAME))
 	if Engine.is_editor_hint() and is_inside_tree() and get_tree().edited_scene_root != null:
@@ -112,8 +116,34 @@ func preview_layout() -> void:
 func bake() -> void:
 	if not validate_current_layout().is_valid():
 		return
-	_commit_generated_action(BAKE_NAME, DungeonSceneCompiler.build(layout, true), "Bake Static Dungeon")
+	if not _can_replace_generated(PREVIEW_NAME) or not _can_replace_generated(BAKE_NAME):
+		push_error("DungeonAuthoring3D: Cannot overwrite user-owned preview/bake nodes.")
+		return
+	var geometry := DungeonSceneCompiler.build(layout, true)
+	if geometry == null:
+		push_error("DungeonAuthoring3D: Failed to compile the static dungeon.")
+		return
+	var baked_snapshot := _snapshot_node(geometry)
+	geometry.free()
+	if baked_snapshot == null:
+		push_error("DungeonAuthoring3D: Failed to serialize baked geometry.")
+		return
+	var old_preview := _snapshot_node(_get_generated(PREVIEW_NAME))
+	var old_bake := _snapshot_node(_get_generated(BAKE_NAME))
+	if Engine.is_editor_hint() and is_inside_tree() and get_tree().edited_scene_root != null:
+		var history := EditorInterface.get_editor_undo_redo()
+		history.create_action("Bake Dungeon and Hide Preview", UndoRedo.MERGE_DISABLE, self)
+		history.add_do_method(self, "_apply_bake_state", baked_snapshot, null)
+		history.add_undo_method(self, "_apply_bake_state", old_bake, old_preview)
+		history.commit_action()
+	else:
+		_apply_bake_state(baked_snapshot, null)
 	bake_finished.emit(_get_generated(BAKE_NAME))
+
+
+func _apply_bake_state(baked_snapshot: PackedScene, preview_snapshot: PackedScene) -> void:
+	_apply_snapshot(BAKE_NAME, baked_snapshot)
+	_apply_snapshot(PREVIEW_NAME, preview_snapshot)
 
 
 func clear_preview() -> void:

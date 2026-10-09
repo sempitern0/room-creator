@@ -17,6 +17,9 @@ const SCHEMA_VERSION: int = 1
 @export var independent_room_offsets_enabled: bool = false
 @export var maximum_room_offset: float = 0.0
 @export var dogleg_corridors_enabled: bool = false
+@export var free_yaw_enabled: bool = false
+@export var maximum_yaw_degrees: float = 0.0
+@export var maximum_free_yaw_shift: float = 0.0
 @export var wall_thickness: float = 0.2
 @export var floor_thickness: float = 0.2
 @export var ceiling_thickness: float = 0.2
@@ -47,6 +50,7 @@ func fingerprint() -> String:
 	parts.append("size:%.4f,%.4f,%.4f" % [room_size.x, room_size.y, room_size.z])
 	parts.append("axis_x:%s axis_z:%s" % [str(column_positions), str(row_positions)])
 	parts.append("room_offsets:%d:%.4f" % [int(independent_room_offsets_enabled), maximum_room_offset])
+	parts.append("free_yaw:%d:%.4f:%.4f" % [int(free_yaw_enabled), maximum_yaw_degrees, maximum_free_yaw_shift])
 	parts.append("surfaces:%.4f,%.4f,%.4f:%d" % [wall_thickness, floor_thickness, ceiling_thickness, int(include_ceiling)])
 	parts.append("player:%.4f,%.4f collision:%d,%d" % [player_radius, player_height, collision_layer, collision_mask])
 	parts.append("materials:%s|%s|%s" % [wall_material.resource_path if wall_material != null else "", floor_material.resource_path if floor_material != null else "", ceiling_material.resource_path if ceiling_material != null else ""])
@@ -54,6 +58,7 @@ func fingerprint() -> String:
 	parts.append("rooms:%d edges:%d" % [rooms.size(), connections.size()])
 	for room in rooms:
 		parts.append("%s:%d,%d:%d:%.4f,%.4f,%.4f:%d,%d:%d:%s:%.4f,%.4f,%.4f:%s:%d:%s" % [room.stable_id, room.cell.x, room.cell.y, room.role, room.world_transform.origin.x, room.world_transform.origin.y, room.world_transform.origin.z, room.shape, room.shape_rotation, room.exterior_wall, room.exterior_id, room.room_size.x, room.room_size.y, room.room_size.z, room.module_profile.stable_id if room.module_profile != null else "", room.structural_turns, room.structural_prefab.stable_id if room.structural_prefab != null else ""])
+	parts.append("room_bases:%s" % str(rooms.map(func(r: RoomPlacementData) -> Basis: return r.world_transform.basis)))
 	parts.append("exterior_offsets:%s" % str(rooms.map(func(r: RoomPlacementData) -> float: return r.exterior_offset)))
 	for edge in connections:
 		parts.append("%s:%s:%s:%d:%d:%.4f:%.4f" % [edge.stable_id, edge.from_room_id, edge.to_room_id, edge.from_wall, edge.to_wall, edge.clear_width, edge.clear_height])

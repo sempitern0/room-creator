@@ -72,6 +72,10 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 	if layout == null:
 		report.add_error("MISSING_LAYOUT", "Missing level layout.")
 		return report
+	if layout.free_yaw_enabled:
+		# General world-space route validation belongs to DungeonFreeYawRouter,
+		# not the legacy axis/coaxial F2.5 validator.
+		return report
 	if not layout.independent_room_offsets_enabled:
 		if layout.dogleg_corridors_enabled:
 			report.add_error("OFFSET_REQUIRED", "Dogleg corridors require independent room offsets.")

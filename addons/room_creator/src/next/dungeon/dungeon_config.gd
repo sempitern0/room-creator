@@ -55,6 +55,14 @@ extends Resource
 ## requiring the door centers to be coaxial. Uses a bounded collision solver.
 @export var enable_dogleg_corridors: bool = false
 @export_range(0.0, 1.0, 0.05) var dogleg_frequency: float = 0.65
+@export_group("Free-yaw multiroom placement (F2)")
+## Optional seeded backtracking. The logical grid remains a topology guide,
+## but actual room yaw/position and world-space routes can be non-cardinal.
+@export var enable_free_yaw_dungeons: bool = false
+@export_range(0.0, 45.0, 0.5) var free_yaw_max_degrees: float = 24.0
+@export_range(0.0, 3.0, 0.25) var free_yaw_shift: float = 0.75
+@export_range(4, 32, 1) var free_yaw_candidates: int = 12
+@export_range(100, 20000, 100) var free_yaw_search_budget: int = 3000
 @export_group("Opening and player clearance")
 @export_range(0.5, 5.0, 0.05) var door_width: float = 1.6
 @export_range(0.5, 6.0, 0.05) var door_height: float = 2.3

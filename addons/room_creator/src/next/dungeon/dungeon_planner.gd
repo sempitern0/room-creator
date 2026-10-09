@@ -51,6 +51,8 @@ static func generate_layout(config: DungeonConfig) -> DungeonBuildResult:
 			continue
 		_assign_structural_prefabs(config, layout, rng)
 		DungeonSocketOffsetPlacer.resolve(layout)
+		if not DungeonFreeYawPlacement.assign(config, layout, rng):
+			continue
 		var report := validate_layout(layout)
 		if report.is_valid():
 			result.success = true
@@ -101,6 +103,11 @@ static func validate_config(config: DungeonConfig) -> RoomValidationReport:
 	if config.use_variable_grid_spacing:
 		if not is_finite(config.min_corridor_gap) or not is_finite(config.max_corridor_gap) or config.min_corridor_gap < 0.0 or config.max_corridor_gap > 30.0 or config.max_corridor_gap < config.min_corridor_gap:
 			report.add_error("GRID_GAP", "Corridor gap range must be finite, ordered and inside [0, 30] meters.")
+	if config.enable_free_yaw_dungeons:
+		if not config.use_variable_grid_spacing or config.min_corridor_gap < 7.0:
+			report.add_error("YAW_SPACE_REQUIRED", "Free-yaw dungeon mode needs variable grid spacing with at least 7 m gap for safe three-leg angled connectors.")
+		if not is_finite(config.free_yaw_max_degrees) or config.free_yaw_max_degrees < 0.0 or config.free_yaw_max_degrees > 45.0 or not is_finite(config.free_yaw_shift) or config.free_yaw_shift < 0.0 or config.free_yaw_shift > 3.0 or config.free_yaw_candidates < 4 or config.free_yaw_candidates > 32 or config.free_yaw_search_budget < 100 or config.free_yaw_search_budget > 20000:
+			report.add_error("YAW_SOLVER_LIMITS", "Free-yaw angles, local shift and backtracking search must stay in finite bounded ranges.")
 	if config.enable_dogleg_corridors:
 		if not config.enable_independent_room_offsets:
 			report.add_error("DOGLEG_OFFSETS_REQUIRED", "Enable independent room offsets before using dogleg corridors.")
@@ -447,6 +454,9 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 	var independent_report := DungeonRoomOffsetSolver.validate(layout)
 	for error in independent_report.errors:
 		report.add_error("INDEPENDENT_SPATIAL", error)
+	var yaw_report := DungeonFreeYawRouter.validate(layout)
+	for error in yaw_report.errors:
+		report.add_error("FREE_YAW", error)
 	if layout.expected_room_count != layout.rooms.size():
 		report.add_error("ROOM_COUNT", "Missing or surplus placed rooms.")
 	if layout.connections.size() - layout.rooms.size() + 1 != layout.expected_loops:
@@ -462,7 +472,7 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 			report.add_error("DUPLICATE_ROOM", "Duplicate or empty room ID: %s" % room.stable_id)
 		if by_cell.has(room.cell) or not _inside(room.cell, layout.grid_size):
 			report.add_error("SPATIAL_OVERLAP", "Duplicate or out-of-bounds cell: %s" % str(room.cell))
-		if not layout.independent_room_offsets_enabled and (not room.world_transform.basis.is_equal_approx(Basis.IDENTITY) or not room.world_transform.origin.is_equal_approx(DungeonSpatialEmbedder.expected_origin(layout, room.cell))):
+		if not layout.independent_room_offsets_enabled and not layout.free_yaw_enabled and (not room.world_transform.basis.is_equal_approx(Basis.IDENTITY) or not room.world_transform.origin.is_equal_approx(DungeonSpatialEmbedder.expected_origin(layout, room.cell))):
 			report.add_error("ROOM_TRANSFORM", "Room transform disagrees with the grid footprint: %s" % room.stable_id)
 		if not RoomFootprint.is_valid_shape(int(room.shape)) or room.shape_rotation < 0 or room.shape_rotation > 3:
 			report.add_error("ROOM_SHAPE", "Invalid shape or rotation in %s." % room.stable_id)

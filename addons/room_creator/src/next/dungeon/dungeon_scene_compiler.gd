@@ -52,7 +52,14 @@ static func build(layout: LevelLayout, with_collisions: bool = true) -> Node3D:
 	for edge in layout.connections:
 		var a: RoomPlacementData = by_id[edge.from_room_id]
 		var b: RoomPlacementData = by_id[edge.to_room_id]
-		var corridor := DungeonConnectorBuilder.build(layout, edge, a, b, with_collisions)
+		var corridor: Node3D
+		if layout.free_yaw_enabled:
+			corridor = DungeonFreeYawCorridorBuilder.build(layout, edge, with_collisions)
+			if corridor == null:
+				root.free()
+				return null
+		else:
+			corridor = DungeonConnectorBuilder.build(layout, edge, a, b, with_collisions)
 		if corridor != null:
 			root.add_child(corridor)
 	return root

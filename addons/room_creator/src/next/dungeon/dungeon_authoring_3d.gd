@@ -305,11 +305,12 @@ func _apply_snapshot(node_name: String, snapshot: PackedScene) -> void:
 		return
 	generated.name = node_name
 	add_child(generated)
-	var scene_root: Node = self
-	if Engine.is_editor_hint() and is_inside_tree() and get_tree().edited_scene_root != null:
-		scene_root = get_tree().edited_scene_root
-	generated.owner = scene_root
-	_set_descendant_owners(generated, scene_root)
+	# The authoring node is the only saved source of truth. Generated preview
+	# and baked geometry are transient editor/runtime children, never owned
+	# by the edited scene root. This prevents saving thousands of derived nodes
+	# into the authoring .tscn after an ordinary Ctrl+S.
+	# Save Baked Scene explicitly packs an independent native-engine scene.
+	generated.owner = null
 
 
 static func _snapshot_node(node: Node3D) -> PackedScene:

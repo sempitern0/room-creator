@@ -40,7 +40,12 @@ func _exercise() -> void:
 	if not _check(reload_scene != null, "Editor-generated authoring scene must reopen."):
 		return
 	var reopened := reload_scene.instantiate()
-	if not _check(_count_nodes(reopened.get_node_or_null("DungeonPreview"), "ModuleDecor") == _expected_modules(author.layout), "Reload should not create duplicate prefab children."):
+	if not _check(reopened is DungeonAuthoring3D and reopened.layout != null and reopened.config != null, "Saved authoring scene must preserve config and layout."):
+		return
+	if not _check(reopened.get_node_or_null("DungeonPreview") == null and reopened.get_node_or_null("DungeonBake") == null, "Generated nodes must never be saved into an authoring scene."):
+		return
+	reopened.preview_layout()
+	if not _check(_count_nodes(reopened.get_node_or_null("DungeonPreview"), "ModuleDecor") == _expected_modules(reopened.layout), "A reopened authoring scene must regenerate the same modules from its saved layout."):
 		return
 	reopened.free()
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))

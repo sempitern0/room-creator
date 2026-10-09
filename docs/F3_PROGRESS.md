@@ -1,4 +1,4 @@
-# F3 engineering progress — Room Creator v1.15.0
+# F3 engineering progress — Room Creator v1.16.0
 
 ## F3.1 — implemented
 
@@ -26,7 +26,7 @@ This is a **bounded local** override, **not** globally optimized re-embedding: i
 
 ## F3.3 — editor workspace, room picking and palette painting (implemented)
 
-- `addons/room_creator/plugin.gd` adds a context-bound Room Creator right dock and an explicit 3D editor **Room Tool** toggle. It unbinds on scene changes and only intercepts unmodified left clicks while the tool is active; Esc exits.
+- `addons/room_creator/plugin.gd` adds a context-bound native Room Creator bottom EditorDock (movable to sides/floating) and an explicit 3D editor **Room Tool** toggle. It unbinds on scene changes and only intercepts unmodified left clicks while the tool is active; Esc exits.
 - `src/editor/dungeon_editor_dock.gd`: Build/Rooms tabs, search/filter roles/locks/edited rooms, current room ID and dimensions, shape/size/move controls, immediate lock/erase modes and visual module palette sourced from `DungeonConfig.room_modules`.
 - `src/editor/dungeon_viewport_picker.gd`: accurate Godot camera ray → yaw-rotated room local AABB intersection; works without preview collisions, with editor-only selected outline.
 - `dungeon_room_module_painter.gd`: validated, undoable, resource-persistent **visual-only** art painting and erasing. Prevents structural-prefab collisions and incompatible silhouette/sockets; newly painted rooms are designer-owned and excluded from automatic rerolls.
@@ -34,9 +34,19 @@ This is a **bounded local** override, **not** globally optimized re-embedding: i
 
 See `docs/EDITOR_WORKSPACE.md` for the UX comparison, controls and phased successor to Inspector-only workflows.
 
+## F3.4.1 — bottom editor workspace and socket-linked stamping (first slice)
+
+- `addons/room_creator/plugin.gd` now creates an actual Godot 4.7 `EditorDock` with `default_slot = DOCK_SLOT_BOTTOM`, `available_layouts = DOCK_LAYOUT_ALL` and a stable `layout_key`. Unlike the previous `add_control_to_dock(DOCK_SLOT_RIGHT_BL)`, this allows bottom/side/floating positions and native layout persistence.
+- `src/editor/dungeon_editor_dock.gd` uses `HFlowContainer` to show separate tools, room browser and precision edit sections horizontally in the bottom panel and wrap vertically in narrow side docks. `Build` is likewise a wrapped two-group panel.
+- `dungeon_socket_room_stamp.gd` creates a **single new branch** from a source room and an explicit local `RoomOpening.Wall` to the opposite wall of a new rectangular procedural room. IDs, topology, endpoints, collisions and capsule metrics are independently checked before deep-copy commit.
+- `DungeonAuthoring3D.stamp_room_candidate()` is read-only and powers a projected **green/red ghost** in the 3D viewport. `stamp_selected_room()` goes through the established Undo/Redo and source-only preview/bake transaction.
+- `tests/dungeon_socket_room_stamp_smoke.gd` covers deterministic branch placement, unchanged existing rooms/corridors, locks, wall occupancy, physical capsule corridor traversal and source serialization; Xvfb `tests/editor_integration/plugin.gd` checks native bottom-capable dock, wrapped tool layout and live room stamp UndoRedo.
+
+This is **one-room-at-a-time branch expansion**, not arbitrary multiroom graph painting. A candidate placed outside grid bounds, over an existing opening, in a locked room or in an OBB-conflicting corridor is rejected. The footprint ghost is a projected visual cue; full mesh previews, profiled asset thumbnails and direct socket-marker picking remain later F3.4 work.
+
 ## Remaining F3 phases
 
-1. **F3.4 placement tooling:** implement ghost preview and safe click-to-place new rooms **linked by source/target sockets**; topology, collision and portal validation must pass before committing any new room.
+1. **F3.4.2 richer placement:** completed first slice supports one-room socket branches and projected ghost. Next: full room/prefab palette and 3D ghost models, precise door-marker picking, more shapes, bounded neighbor adjustments and rejection diagnostics.
 2. **F3.5 manual viewport gizmos:** selected room and door/socket controls in the Godot editor; Undo/Redo and conflict diagnostics integrated into Inspector.
 3. **F3.6 styling:** `RoomBiome` and `BakeProfile` as resources separate from structural geometry, seeded aesthetic variation and never changing shared designer resources.
 4. **F3.7 navigation/validation:** optional NavigationMesh bake + independent agent-radius/height validation, room-level and global traversal across all connected doors.

@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.15.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.16.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -17,6 +17,23 @@ The modular path no longer instantiates its `PackedScene` over and over merely t
 This was tested in **Godot 4.7.2** with an actual editor instance in both headless mode and a graphical X11 session under Xvfb, including opening the supplied modular example, generation, preview refresh, bake, regeneration, and PackedScene save/reload. The CI explicitly fails if that recurring dialog error occurs. Windows graphical testing remains a manual acceptance check.
 
 If you still see messages in an existing edited scene after upgrading, close/reopen Godot and press **Generate Layout** to replace the old preview; save a backup before manually removing an already damaged `DungeonPreview`/`DungeonBake` tree. If it persists, capture the first error with its Godot file/line and which Inspector action triggers it.
+
+## F3.4.1 — Bottom workspace and socket-connected room stamping (v1.16.0)
+
+**The editor workspace now opens at the bottom by default**, alongside Output/Debugger/Animation, instead of being restricted to side docks. Godot 4.7's native `EditorDock` allows you to move **Room Creator** freely between **bottom**, **left/right** and **floating** layouts, remembering its position. The controls respond to width: at the bottom, the `Rooms` workspace arranges **tools/palette, searchable room browser and precision properties** side by side; at narrow widths it wraps into vertical sections.
+
+To **add a new connected branch room** without using the Inspector's resource array:
+
+1. Open your existing `examples/dungeon_authoring.tscn`, select `DungeonAuthoring3D`, and make sure the addon is enabled. In the bottom **Room Creator → Rooms** panel, activate **Stamp connected room** and choose **Front, Right, Back or Left** (local to the clicked source room). Optional: choose a compatible rectangular `DungeonRoomModule` from the visual-only palette.
+2. Enable **Room Tool** above the 3D viewport. Move the mouse over an existing room. A **translucent green ghost** indicates that a connected branch can be added; **red** indicates a blocked/invalid placement with explanatory status in the panel.
+3. Click the source room to place **one** new procedural rectangular branch room linked by **one** reciprocal doorway/corridor edge. The candidate is evaluated on a deep copy and must pass the existing graph, shape, OBB/clearance, corridor and capsule dimensions contracts. Rejecting a proposed room leaves all existing scene data untouched.
+4. Use **Undo/Redo** to restore/remove the entire new room and its corridor atomically. Preview and baked geometry are regenerated through the standard editor lifecycle; save the authoring scene with Ctrl+S or explicitly bake/export the native static layout.
+
+In the advanced Inspector, the same operation is available under `F3.4 Socket Placement` via `stamp_wall_choice` and **Add Connected Branch Room**.
+
+**Deliberate first-slice limits:** F3.4.1 stamps into **one currently unoccupied face-adjacent logical cell** of an existing dungeon; it does not create a disconnected room, ignore a lock, replace arbitrary physics prefabs, move neighboring rooms automatically, change the critical path, or promise a geometrically valid placement at every wall. The preview is a **2D translucent projected footprint**, not a fully textured 3D mesh ghost. Free-yaw/off-grid layouts are handled by the world-socket solver and may reject candidates that cannot satisfy their persisted constraints. Future F3.4 work will add a richer room prefab catalog, thumbnails, selectable socket markers and full 3D ghost geometry.
+
+The canonical user-customizable authoring scene, `.uid` files and existing presets were preserved. See [`docs/EDITOR_WORKSPACE.md`](docs/EDITOR_WORKSPACE.md) and [`docs/F3_PROGRESS.md`](docs/F3_PROGRESS.md).
 
 ## F3.3 — Integrated dungeon workspace and click-to-paint modules (v1.15.0)
 
@@ -357,6 +374,7 @@ godot --headless --path . --script res://tests/dungeon_offgrid_socket_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f3_room_edit_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f3_override_smoke.gd
 godot --headless --path . --script res://tests/dungeon_editor_ui_smoke.gd
+godot --headless --path . --script res://tests/dungeon_socket_room_stamp_smoke.gd
 ```
 
 GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset + 36 routed-dogleg + 34 structural-prefab + 35 asymmetric-socket seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.

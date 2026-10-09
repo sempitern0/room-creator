@@ -67,6 +67,7 @@ godot --headless --path . --editor --quit
 godot --headless --path . --script res://tests/dungeon_f3_room_edit_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f3_override_smoke.gd
 godot --headless --path . --script res://tests/dungeon_editor_ui_smoke.gd
+godot --headless --path . --script res://tests/dungeon_socket_room_stamp_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f2_combined_smoke.gd
 godot --headless --path . --script res://tests/dungeon_offgrid_socket_smoke.gd
 ```
@@ -92,3 +93,11 @@ Read `docs/EDITOR_WORKSPACE.md` before editing the dock/viewport. The **dock is 
 Do not reinterpret visual module `PackedScene` as a physical structural prefab; it is **collision-free and socket validated**. Never create a new room on raw left-click without connecting its graph-edge sockets first. For future placement, use a ghost preview and reject before committing; test UndoRedo, native export and capsule walking along every newly joined edge.
 
 Selection raycasts against layout OBB, not preview physics. A tool mode must be explicitly enabled (Room Tool top 3D toolbar); Esc exits, Ctrl/Alt/Shift preserve regular camera/editor behavior. The original Inspector remains functional if the dock is not visible.
+
+## 9. Native bottom dock and F3.4 socket-stamp invariants
+
+Godot 4.7 provides `EditorDock`: register it with `EditorPlugin.add_dock()`, `default_slot = DOCK_SLOT_BOTTOM` and `available_layouts = DOCK_LAYOUT_ALL`. The old `add_control_to_dock(DOCK_SLOT_RIGHT_BL)` **cannot** reach the user's bottom Output/Animation area. Keep adaptive `HFlowContainer` tools/browser/edit groups for both horizontal bottom and narrow vertical dock placement; test dock layouts under graphical X11.
+
+`RoomOpening.Wall` is **FRONT=0, BACK=1, LEFT=2, RIGHT=3**, not a clockwise numbering. Derive opposite walls via an explicit match. `DungeonSocketRoomStamp.propose()` must deep-copy `LevelLayout`, append only one graph BRANCH and its sole reciprocal edge into an unoccupied face-adjacent logical cell, and pass `DungeonPlanner.validate_layout()` before any editor transaction. Existing room/edge IDs, roles and routes must remain bit-equivalent. A source lock or occupied/exterior wall causes an explicit diagnostic and preserves source/bake. `preview_pose()` is pure and must agree with committed placement; reject disconnected ghosts, unresolved sockets, or unvalidated mesh creation. Confirm the new corridor is physically traversable by a `CharacterBody3D` capsule and Undo/Redo restores both branch and edge atomically.
+
+F3.4.1 does not yet implement unconstrained new-room prefab painting, fully textured 3D ghost meshes, per-socket marker picking or automatic neighbor rearrangement. Do not claim those features are delivered until independently tested.

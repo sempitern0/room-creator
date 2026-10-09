@@ -60,6 +60,18 @@ static func valid_route(layout: LevelLayout, edge: RoomConnectionData, route: Pa
 	# Reject self-folding connectors or hairpins that cannot accommodate a capsule.
 	if dir_first.normalized().dot(dir_mid.normalized()) < -0.45 or dir_mid.normalized().dot(dir_last.normalized()) < -0.45:
 		return false
+	# The corridor must not pierce its OWN source/target through a different
+	# wall. The first segment is allowed to touch only its source socket and
+	# the last segment only its destination socket. All other envelopes must
+	# remain outside both solid room footprints, even when yaw > 90 degrees.
+	var a_obb := DungeonOrientedBounds.room(a, DungeonPlanner.actual_size(layout, a))
+	var b_obb := DungeonOrientedBounds.room(b, DungeonPlanner.actual_size(layout, b))
+	var regions := envelopes(layout, edge, route)
+	for i in regions.size():
+		if i != 0 and DungeonOrientedBounds.overlaps(regions[i], a_obb):
+			return false
+		if i != 2 and DungeonOrientedBounds.overlaps(regions[i], b_obb):
+			return false
 	return true
 
 
@@ -85,7 +97,7 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 		return report
 	if not layout.free_yaw_enabled:
 		return report
-	if not is_finite(layout.maximum_yaw_degrees) or layout.maximum_yaw_degrees < 0.0 or layout.maximum_yaw_degrees > 90.0 or not is_finite(layout.maximum_free_yaw_shift) or layout.maximum_free_yaw_shift < 0.0 or layout.maximum_free_yaw_shift > 5.0:
+	if not is_finite(layout.maximum_yaw_degrees) or layout.maximum_yaw_degrees < 0.0 or layout.maximum_yaw_degrees > 180.0 or not is_finite(layout.maximum_free_yaw_shift) or layout.maximum_free_yaw_shift < 0.0 or layout.maximum_free_yaw_shift > 5.0:
 		report.add_error("FREE_YAW_CONTRACT", "Persisted yaw or placement bounds are invalid.")
 		return report
 	var by_id: Dictionary = {}

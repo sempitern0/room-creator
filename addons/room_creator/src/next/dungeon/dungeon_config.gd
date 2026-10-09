@@ -59,7 +59,7 @@ extends Resource
 ## Optional seeded backtracking. The logical grid remains a topology guide,
 ## but actual room yaw/position and world-space routes can be non-cardinal.
 @export var enable_free_yaw_dungeons: bool = false
-@export_range(0.0, 45.0, 0.5) var free_yaw_max_degrees: float = 24.0
+@export_range(0.0, 180.0, 0.5) var free_yaw_max_degrees: float = 24.0
 @export_range(0.0, 3.0, 0.25) var free_yaw_shift: float = 0.75
 @export_range(4, 32, 1) var free_yaw_candidates: int = 12
 @export_range(100, 20000, 100) var free_yaw_search_budget: int = 3000

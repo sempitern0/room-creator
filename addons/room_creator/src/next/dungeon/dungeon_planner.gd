@@ -106,7 +106,7 @@ static func validate_config(config: DungeonConfig) -> RoomValidationReport:
 	if config.enable_free_yaw_dungeons:
 		if not config.use_variable_grid_spacing or config.min_corridor_gap < 7.0:
 			report.add_error("YAW_SPACE_REQUIRED", "Free-yaw dungeon mode needs variable grid spacing with at least 7 m gap for safe three-leg angled connectors.")
-		if not is_finite(config.free_yaw_max_degrees) or config.free_yaw_max_degrees < 0.0 or config.free_yaw_max_degrees > 45.0 or not is_finite(config.free_yaw_shift) or config.free_yaw_shift < 0.0 or config.free_yaw_shift > 3.0 or config.free_yaw_candidates < 4 or config.free_yaw_candidates > 32 or config.free_yaw_search_budget < 100 or config.free_yaw_search_budget > 20000:
+		if not is_finite(config.free_yaw_max_degrees) or config.free_yaw_max_degrees < 0.0 or config.free_yaw_max_degrees > 180.0 or not is_finite(config.free_yaw_shift) or config.free_yaw_shift < 0.0 or config.free_yaw_shift > 3.0 or config.free_yaw_candidates < 4 or config.free_yaw_candidates > 32 or config.free_yaw_search_budget < 100 or config.free_yaw_search_budget > 20000:
 			report.add_error("YAW_SOLVER_LIMITS", "Free-yaw angles, local shift and backtracking search must stay in finite bounded ranges.")
 	if config.enable_dogleg_corridors:
 		if not config.enable_independent_room_offsets:

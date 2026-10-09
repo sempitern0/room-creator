@@ -23,6 +23,15 @@ const GENERATED_META := "room_creator_generated"
 @export var show_connection_routes: bool = true
 @export var show_entrance_exit_labels: bool = true
 @export_file("*.tscn") var output_scene_path: String = "res://room_creator/dungeons/dungeon.tscn"
+@export_group("F3 Room Editing")
+## Stable ID from LevelLayout.rooms, e.g. room_0003. Locks are stored on the
+## LevelLayout's RoomPlacementData and survive Ctrl+S and editor reopen.
+@export var selected_room_id: String = "room_0000"
+@export var appearance_variation_seed: int = 20001
+@export var show_locked_room_labels: bool = true
+@export_tool_button("Lock Selected Room") var lock_room_action: Callable = _request_lock_room
+@export_tool_button("Unlock Selected Room") var unlock_room_action: Callable = _request_unlock_room
+@export_tool_button("Regenerate Unlocked Rooms") var regenerate_unlocked_action: Callable = _request_regenerate_unlocked
 @export_tool_button("Generate Layout") var generate_action: Callable = _request_generate_layout
 @export_tool_button("Validate Layout") var validate_action: Callable = _request_validate
 @export_tool_button("Preview Layout") var preview_action: Callable = _request_preview
@@ -41,6 +50,18 @@ var _queued_editor_operation: StringName = &""
 
 func _request_generate_layout() -> void:
 	_queue_editor_action(&"generate_new_layout")
+
+
+func _request_lock_room() -> void:
+	_queue_editor_action(&"lock_selected_room")
+
+
+func _request_unlock_room() -> void:
+	_queue_editor_action(&"unlock_selected_room")
+
+
+func _request_regenerate_unlocked() -> void:
+	_queue_editor_action(&"regenerate_unlocked_rooms")
 
 
 func _request_validate() -> void:
@@ -90,6 +111,14 @@ func generate_layout(source: DungeonConfig) -> DungeonBuildResult:
 
 
 func generate_new_layout() -> void:
+	if DungeonRoomEditing.any_locked(layout):
+		var blocked := DungeonBuildResult.new()
+		blocked.report.add_error("ROOM_LOCK_CONFLICT", "Full topology regeneration would discard locked designer rooms. Unlock them or use Regenerate Unlocked Rooms, which preserves all room/socket identities.")
+		last_result = blocked
+		last_report = blocked.report
+		generation_failed.emit(blocked.report)
+		push_warning("DungeonAuthoring3D: " + blocked.report.summary())
+		return
 	var result := generate_layout(config)
 	last_result = result
 	last_report = result.report
@@ -132,6 +161,74 @@ func generate_new_layout() -> void:
 	layout_generated.emit(result)
 
 
+## F3 authoring: lock state is a resource-level edit, not a change to
+## physical geometry. The existing bake remains valid and no scene children
+## are serialized into the user-authored source.
+func lock_selected_room() -> bool:
+	return _edit_lock(true)
+
+
+func unlock_selected_room() -> bool:
+	return _edit_lock(false)
+
+
+func _edit_lock(locked: bool) -> bool:
+	var result := DungeonRoomEditing.toggle_lock(layout, selected_room_id, locked)
+	last_result = result
+	last_report = result.report
+	if not result.success:
+		generation_failed.emit(result.report)
+		push_warning("DungeonAuthoring3D: " + result.report.summary())
+		return false
+	return _commit_room_edit(result, "Lock Dungeon Room" if locked else "Unlock Dungeon Room", true)
+
+
+func regenerate_unlocked_rooms() -> bool:
+	var result := DungeonRoomEditing.regenerate_unlocked(layout, config, appearance_variation_seed)
+	last_result = result
+	last_report = result.report
+	if not result.success:
+		generation_failed.emit(result.report)
+		push_warning("DungeonAuthoring3D: " + result.report.summary())
+		return false
+	return _commit_room_edit(result, "Regenerate Unlocked Dungeon Rooms", false)
+
+
+func _commit_room_edit(result: DungeonBuildResult, label: String, keep_bake: bool) -> bool:
+	if not _can_replace_generated(PREVIEW_NAME) or not _can_replace_generated(BAKE_NAME):
+		result.report.add_error("GENERATED_NAME_OCCUPIED", "Cannot modify user-owned preview or bake nodes.")
+		generation_failed.emit(result.report)
+		return false
+	var old_preview := _snapshot_node(_get_generated(PREVIEW_NAME))
+	var old_bake := _snapshot_node(_get_generated(BAKE_NAME))
+	var next_preview: PackedScene = null
+	if not keep_bake or old_bake == null and (auto_preview_on_generate or old_preview != null):
+		var preview := _build_diagnostic_preview(result.layout)
+		if preview == null:
+			result.report.add_error("F3_PREVIEW", "Cannot compile local room edit. Original layout retained.")
+			generation_failed.emit(result.report)
+			return false
+		next_preview = _snapshot_node(preview)
+		preview.free()
+		if next_preview == null:
+			result.report.add_error("F3_PREVIEW_PACK", "Cannot snapshot room edit preview.")
+			generation_failed.emit(result.report)
+			return false
+	# Lock/unlock never changes layout.fingerprint(); it only changes source
+	# room metadata. Rerolls must clear an old baked mesh fingerprint.
+	var retained_bake: PackedScene = old_bake if keep_bake else null
+	if Engine.is_editor_hint() and is_inside_tree() and get_tree().edited_scene_root != null:
+		var history := EditorInterface.get_editor_undo_redo()
+		history.create_action(label, UndoRedo.MERGE_DISABLE, self)
+		history.add_do_method(self, "_apply_generation", result.layout, next_preview, retained_bake)
+		history.add_undo_method(self, "_apply_generation", layout, old_preview, old_bake)
+		history.commit_action()
+	else:
+		_apply_generation(result.layout, next_preview, retained_bake)
+	layout_generated.emit(result)
+	return true
+
+
 func _can_replace_generated(node_name: String) -> bool:
 	var existing := get_node_or_null(NodePath(node_name))
 	return existing == null or existing.get_meta(GENERATED_META, false)
@@ -170,6 +267,8 @@ func _build_diagnostic_preview(source: LevelLayout) -> Node3D:
 			geometry, source, preview_palette,
 			show_room_role_colors, show_connection_routes, show_entrance_exit_labels
 		)
+	if geometry != null and show_locked_room_labels:
+		DungeonRoomEditing.decorate_preview(geometry, source)
 	return geometry
 
 

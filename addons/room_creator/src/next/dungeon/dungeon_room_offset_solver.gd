@@ -12,14 +12,22 @@ const EPS: float = 0.001
 static func assign(config: DungeonConfig, layout: LevelLayout, rng: RandomNumberGenerator) -> bool:
 	layout.independent_room_offsets_enabled = config.enable_independent_room_offsets
 	layout.maximum_room_offset = config.room_position_jitter if config.enable_independent_room_offsets else 0.0
+	layout.dogleg_corridors_enabled = config.enable_dogleg_corridors
 	if not config.enable_independent_room_offsets:
 		return true
+	# Route selection is seeded once per layout (not once per attempt).
+	# Straight edges still enforce coaxial placement; routed edges may bend.
+	var routed_edges: Dictionary = {}
+	for edge in layout.connections:
+		routed_edges[edge.stable_id] = config.enable_dogleg_corridors and rng.randf() < config.dogleg_frequency
 	var x_groups: Dictionary = {}
 	var z_groups: Dictionary = {}
 	for room in layout.rooms:
 		x_groups[room.stable_id] = room.stable_id
 		z_groups[room.stable_id] = room.stable_id
 	for edge in layout.connections:
+		if routed_edges.get(edge.stable_id, false):
+			continue
 		if edge.from_wall == RoomOpening.Wall.FRONT or edge.from_wall == RoomOpening.Wall.BACK:
 			_join(x_groups, edge.from_room_id, edge.to_room_id)
 		else:
@@ -38,6 +46,22 @@ static func assign(config: DungeonConfig, layout: LevelLayout, rng: RandomNumber
 			center.x += x_offsets[x_id]
 			center.z += z_offsets[z_id]
 			room.world_transform.origin = center
+		for edge in layout.connections:
+			edge.route_points = PackedVector3Array()
+			if not routed_edges.get(edge.stable_id, false):
+				continue
+			var from_room: RoomPlacementData = null
+			var to_room: RoomPlacementData = null
+			for room in layout.rooms:
+				if room.stable_id == edge.from_room_id:
+					from_room = room
+				elif room.stable_id == edge.to_room_id:
+					to_room = room
+			if from_room == null or to_room == null:
+				continue
+			var route := DungeonCorridorRouter.build_route(layout, edge, from_room, to_room)
+			if DungeonCorridorRouter.validate_route(layout, edge, route, from_room, to_room):
+				edge.route_points = route
 		if validate(layout).is_valid():
 			return true
 	return false
@@ -49,6 +73,11 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 		report.add_error("MISSING_LAYOUT", "Missing level layout.")
 		return report
 	if not layout.independent_room_offsets_enabled:
+		if layout.dogleg_corridors_enabled:
+			report.add_error("OFFSET_REQUIRED", "Dogleg corridors require independent room offsets.")
+		for edge in layout.connections:
+			if not edge.route_points.is_empty():
+				report.add_error("UNEXPECTED_ROUTE", "Routed corridor requires independent room offsets.")
 		return report
 	if not is_finite(layout.maximum_room_offset) or layout.maximum_room_offset < 0.0 or layout.maximum_room_offset > 6.0:
 		report.add_error("ROOM_OFFSET_LIMIT", "Persisted maximum room offset is outside safe bounds.")
@@ -72,6 +101,16 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 		var b: RoomPlacementData = by_id[edge.to_room_id]
 		var delta: Vector3 = b.world_transform.origin - a.world_transform.origin
 		var x_direction: bool = edge.from_wall == RoomOpening.Wall.LEFT or edge.from_wall == RoomOpening.Wall.RIGHT
+		if not edge.route_points.is_empty():
+			if not layout.dogleg_corridors_enabled or not DungeonCorridorRouter.validate_route(layout, edge, edge.route_points, a, b):
+				report.add_error("INVALID_DOGLEG", "Invalid route or disabled routing on %s." % edge.stable_id)
+				continue
+			for rect in DungeonCorridorRouter.rectangles(layout, edge, edge.route_points):
+				rect["id"] = edge.stable_id
+				rect["a"] = edge.from_room_id
+				rect["b"] = edge.to_room_id
+				corridors.append(rect)
+			continue
 		var lateral: float = delta.z if x_direction else delta.x
 		if absf(lateral) > EPS:
 			report.add_error("UNALIGNED_PORTAL", "Door sockets on edge %s are no longer coaxial." % edge.stable_id)
@@ -106,7 +145,7 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 			if room.stable_id == corridor["a"] or room.stable_id == corridor["b"]:
 				continue
 			var size: Vector3 = DungeonPlanner.actual_size(layout, room)
-			if _overlaps_xz(corridor["center"], corridor["half"], room.world_transform.origin, Vector2(size.x * 0.5, size.z * 0.5)):
+			if DungeonCorridorRouter.overlap_xz(corridor, {"center": room.world_transform.origin, "half": Vector2(size.x * 0.5, size.z * 0.5)}):
 				report.add_error("CORRIDOR_ROOM_OVERLAP", "Connector %s crosses an unrelated room %s." % [corridor["id"], room.stable_id])
 				break
 	for i in corridors.size():
@@ -115,7 +154,7 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 			var b: Dictionary = corridors[j]
 			if a["a"] == b["a"] or a["a"] == b["b"] or a["b"] == b["a"] or a["b"] == b["b"]:
 				continue
-			if _overlaps_xz(a["center"], a["half"], b["center"], b["half"]):
+			if DungeonCorridorRouter.overlap_xz(a, b):
 				report.add_error("CORRIDOR_CROSSING", "Unconnected corridors %s and %s physically intersect." % [a["id"], b["id"]])
 	return report
 

@@ -93,3 +93,25 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_module_smoke.gd 2>&1 | tee module.log
           grep 'DUNGEON_MODULE_SMOKE: PASS' module.log
           if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_MODULE_SMOKE: FAIL' module.log; then exit 1; fi
+
+      - name: Exercise modular authoring in the actual Godot editor
+        shell: bash
+        run: |
+          set -o pipefail
+          cp project.godot /tmp/room-creator-editor-project.godot
+          trap 'cp /tmp/room-creator-editor-project.godot project.godot' EXIT
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('project.godot')
+          content = p.read_text()
+          addon = 'res://addons/room_creator/plugin.cfg'
+          smoke = 'res://tests/editor_integration/plugin.cfg'
+          if 'enabled=PackedStringArray(' in content:
+              content = content.replace(addon + '")', addon + '", "' + smoke + '")')
+          else:
+              content += '\n[editor_plugins]\nenabled=PackedStringArray("' + addon + '", "' + smoke + '")\n'
+          p.write_text(content)
+          PY
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --quit-after 600 2>&1 | tee editor-integration.log
+          grep 'DUNGEON_EDITOR_INTEGRATION: PASS' editor-integration.log
+          if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_EDITOR_INTEGRATION: FAIL|Attempting to parent and popup a dialog that already has a parent' editor-integration.log; then exit 1; fi

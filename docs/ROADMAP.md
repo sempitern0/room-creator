@@ -17,7 +17,7 @@ Source: `ROOM_CREATOR_NEXT_AGENT_HANDOFF(1).md` (planning guidance, not a previo
 ## Status and next acceptance gates
 
 - **F0 foundation:** new folder under existing self-contained addon; Godot 4.7.2 project settings; headless CI and smoke test added. Clean-project installation still requires validation by users/CI.
-- **F1 manual rooms:** multiple door/window holes, serializable blueprint, surface materials, primitive static collision, sockets, preview/bake/save, validation. Validate in Godot 4.7.2 CI; add viewport undo/redo and gizmos; reference capsule physics test outstanding.
+- **F1 manual rooms:** multiple door/window holes, serializable blueprint, surface materials, primitive static collision, sockets, preview/bake/save, validation. Validate in Godot 4.7.2 CI; check editor Undo/Redo in an interactive session, add viewport gizmos; reference capsule physics test outstanding.
 - **F2 deterministic dungeons (NOT IMPLEMENTED):** typed `DungeonConfig`, `LevelLayout`, logical connectivity graph, seeded local `RandomNumberGenerator`, socket transforms, spatial collision checks, bounded backtracking and replayable tests across 100 seeds. **Never** label a grid-connected layout as agent-walkable without geometry checks.
 - **F3 editing and biomes:** persistent locked IDs/overrides; `RoomBiome`, `CollisionProfile`, `BakeProfile`, non-destructive regeneration, optional navigation, mesh and material batching.
 - **F4 cities:** separate street/parcel/building graph pipeline only after F2 and F3 work reliably.

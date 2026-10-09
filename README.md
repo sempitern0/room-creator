@@ -19,7 +19,7 @@ Copy **`addons/ninetailsrabbit.room_creator/`** into the same path under your Go
 7. Click **Bake Static Room** for standard `MeshInstance3D` + `StaticBody3D` + `BoxShape3D` pieces and `Socket_*` markers. No runtime CSG or script dependency is added to the baked root.
 8. Set **Output Scene Path** to a `res://... .tscn` destination and click **Save Baked Scene**. The exported PackedScene uses only standard engine nodes/resources.
 
-**Editing:** Modify the blueprint and bake again; the authored blueprint remains separate from the baked geometry. The generated nodes are tagged so **Clear Preview** and **Clear Bake** never delete arbitrary children. **Undo/Redo handles, advanced viewport gizmos, per-room locks, and incremental regeneration are not yet implemented.**
+**Editing:** Modify the blueprint and bake again; the authored blueprint remains separate from the baked geometry. The generated nodes are tagged so **Clear Preview** and **Clear Bake** never delete arbitrary children. **Generate Preview, Bake, Clear Preview and Clear Bake integrate with the editor's Undo/Redo history.** Advanced viewport gizmos, per-room locks, and incremental regeneration are not yet implemented.
 
 ## Godot 4.7 validation
 

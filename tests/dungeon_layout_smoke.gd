@@ -87,7 +87,7 @@ func _run() -> void:
 	var reloaded := saved.instantiate()
 	if not _check(reloaded.find_children("*", "CollisionShape3D", true, false).size() == shape_count, "Reload must retain static colliders."):
 		return
-	if not _check(reloaded.find_children("Socket_*", "Marker3D", true, false).size() == 2 * result.layout.connections.size(), "Reload must retain both sockets per edge."):
+	if not _check(reloaded.find_children("Socket_*", "Marker3D", true, false).size() == 2 * result.layout.connections.size() + (2 if result.layout.exterior_doors_enabled else 0), "Reload must retain both sockets per edge."):
 		return
 	reloaded.free()
 	scene_root.free()

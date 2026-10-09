@@ -50,6 +50,12 @@ func _run() -> void:
 	var exit_room := preview.get_node_or_null(NodePath(layout.exit_id))
 	var entrance_floor := _floor(entrance)
 	var exit_floor := _floor(exit_room)
+	var entrance_roof := _roof(entrance)
+	var exit_roof := _roof(exit_room)
+	if not _check(entrance_roof != null and exit_roof != null, "Colored previews must retain roof meshes for a top-down view."):
+		return
+	if not _check((entrance_roof.material_override as StandardMaterial3D).albedo_color == author.preview_palette.entrance and (exit_roof.material_override as StandardMaterial3D).albedo_color == author.preview_palette.exit, "Roofs must use the same semantic color as their room floors."):
+		return
 	if not _check(entrance_floor != null and exit_floor != null, "Floor meshes must be available for role styling."):
 		return
 	if not _check(entrance_floor.material_override is StandardMaterial3D and exit_floor.material_override is StandardMaterial3D, "Role tint must use preview-only material overrides."):
@@ -77,7 +83,7 @@ func _run() -> void:
 	if not _check(layer == null or layer.find_children("Route_*", "MeshInstance3D", true, false).is_empty(), "Routes can be independently hidden."):
 		return
 	entrance_floor = _floor(preview.get_node_or_null(NodePath(layout.entrance_id)))
-	if not _check(entrance_floor.material_override == null, "Disabling tint must keep natural source materials."):
+	if not _check(entrance_floor.material_override == null and _roof(preview.get_node_or_null(NodePath(layout.entrance_id))).material_override == null, "Disabling tint must keep natural source floor and roof materials."):
 		return
 	author.show_room_role_colors = true
 	author.show_connection_routes = true
@@ -89,7 +95,7 @@ func _run() -> void:
 	if not _check(baked != null and baked.get_node_or_null("PreviewRoutes") == null, "Baked output may not contain diagnostic graphics."):
 		return
 	entrance_floor = _floor(baked.get_node_or_null(NodePath(layout.entrance_id)))
-	if not _check(entrance_floor != null and entrance_floor.material_override == null, "Baked room materials must not be tinted."):
+	if not _check(entrance_floor != null and entrance_floor.material_override == null and _roof(baked.get_node_or_null(NodePath(layout.entrance_id))).material_override == null, "Baked floors and roofs must not be tinted."):
 		return
 	var previous_bake := baked
 	author.preview_layout()
@@ -102,6 +108,15 @@ func _run() -> void:
 	author.free()
 	print("DUNGEON_DIAGNOSTICS_SMOKE: PASS (role colors, branch/loop edges, toggle behavior, bake isolation)")
 	quit(0)
+
+
+func _roof(room: Node) -> MeshInstance3D:
+	if room == null:
+		return null
+	for child in room.get_children():
+		if child is MeshInstance3D and (child.name == "Ceiling" or child.name.begins_with("Ceiling_")):
+			return child as MeshInstance3D
+	return null
 
 
 func _floor(room: Node) -> MeshInstance3D:

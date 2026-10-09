@@ -7,11 +7,13 @@ extends VBoxContainer
 
 signal mode_changed(mode: int)
 signal selection_changed(room_id: String)
+signal stamp_wall_changed(wall: int)
 
 const MODE_SELECT: int = 0
 const MODE_LOCK: int = 1
 const MODE_UNLOCK: int = 2
 const MODE_PAINT_ART: int = 3
+const MODE_STAMP: int = 4
 
 var author: DungeonAuthoring3D
 var active_mode: int = MODE_SELECT
@@ -34,6 +36,7 @@ var _rotation: OptionButton
 var _room_tabs: TabContainer
 var _filter: OptionButton
 var _module_picker: OptionButton
+var _stamp_wall: OptionButton
 var _module_profiles: Array[DungeonRoomModule] = []
 var _palette_source: DungeonConfig
 
@@ -69,7 +72,7 @@ func set_author(next: DungeonAuthoring3D) -> void:
 
 
 func set_mode(value: int) -> void:
-	active_mode = clampi(value, MODE_SELECT, MODE_PAINT_ART)
+	active_mode = clampi(value, MODE_SELECT, MODE_STAMP)
 	if _mode_picker != null and _mode_picker.selected != active_mode:
 		_mode_picker.select(active_mode)
 	mode_changed.emit(active_mode)
@@ -97,6 +100,13 @@ func apply_viewport_action(room_id: String) -> bool:
 			author._request_unlock_room()
 		MODE_PAINT_ART:
 			_paint_module()
+		MODE_STAMP:
+			author.stamp_wall_choice = get_stamp_wall()
+			var proposal := author.stamp_room_candidate(room_id, author.stamp_wall_choice)
+			if not proposal.success:
+				_status.text = "Cannot place: " + proposal.report.summary()
+				return false
+			author._request_stamp_room()
 	return true
 
 
@@ -154,11 +164,35 @@ func _build() -> void:
 	_mode_picker.add_item("Paint locks", MODE_LOCK)
 	_mode_picker.add_item("Erase locks", MODE_UNLOCK)
 	_mode_picker.add_item("Paint visual modules", MODE_PAINT_ART)
+	_mode_picker.add_item("Stamp connected room", MODE_STAMP)
 	_mode_picker.item_selected.connect(func(index: int) -> void: set_mode(index))
 	rooms.add_child(_mode_picker)
-	_note(rooms, "Enable Room Tool in the 3D toolbar. Click a room to select or paint a lock/module. Esc exits.")
+	_note(rooms, "Enable Room Tool in the 3D toolbar, then click a room. Esc exits. Stamp mode previews a connected branch in green/red.")
+	_heading(rooms, "Stamp room from an open wall")
+	var stamp_row := HBoxContainer.new()
+	rooms.add_child(stamp_row)
+	_stamp_wall = OptionButton.new()
+	_stamp_wall.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for side in ["Front (-Z)", "Right (+X)", "Back (+Z)", "Left (-X)"]:
+		_stamp_wall.add_item(side)
+	_stamp_wall.item_selected.connect(func(index: int) -> void:
+		if author != null:
+			author.stamp_wall_choice = index
+		stamp_wall_changed.emit(index)
+	)
+	stamp_row.add_child(_stamp_wall)
+	var stamp_button := Button.new()
+	stamp_button.text = "Add connected room"
+	stamp_button.pressed.connect(_stamp_selected)
+	stamp_row.add_child(stamp_button)
+	_note(rooms, "Choose a wall. Click the source room using Stamp mode. Green = valid; red = blocked. New rooms require an existing socket-connected graph.")
 	_heading(rooms, "Visual module palette")
 	_module_picker = OptionButton.new()
+	_module_picker.item_selected.connect(func(index: int) -> void:
+		if is_instance_valid(author) and index >= 0 and index < _module_profiles.size():
+			author.selected_visual_module = _module_profiles[index]
+			stamp_wall_changed.emit(get_stamp_wall())
+	)
 	rooms.add_child(_module_picker)
 	var paint_bar := HBoxContainer.new()
 	rooms.add_child(paint_bar)
@@ -292,6 +326,26 @@ func _fill_palette() -> void:
 			_module_picker.select(selection_index)
 
 
+func get_stamp_wall() -> int:
+	return _stamp_wall.selected if _stamp_wall != null else 0
+
+
+func show_stamp_feedback(message: String) -> void:
+	if _status != null:
+		_status.text = message
+
+
+func _stamp_selected() -> void:
+	if not is_instance_valid(author):
+		return
+	author.stamp_wall_choice = get_stamp_wall()
+	var proposal := author.stamp_room_candidate(author.selected_room_id, author.stamp_wall_choice)
+	if proposal.success:
+		author._request_stamp_room()
+	else:
+		show_stamp_feedback("Cannot place: " + proposal.report.summary())
+
+
 func _paint_module() -> void:
 	if not is_instance_valid(author):
 		return
@@ -344,6 +398,8 @@ func _refresh() -> void:
 	if author.config != _palette_source or _module_profiles.is_empty():
 		_fill_palette()
 	_fill_rooms()
+	if _stamp_wall != null and _stamp_wall.selected != author.stamp_wall_choice:
+		_stamp_wall.select(author.stamp_wall_choice)
 	if author.layout == null:
 		_details.text = "Generate a layout to begin."
 		_status.text = "No layout yet."

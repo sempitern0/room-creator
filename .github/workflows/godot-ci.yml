@@ -229,3 +229,11 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_f2_combined_smoke.gd 2>&1 | tee f2-combined.log
           grep 'DUNGEON_F2_COMBINED_SMOKE: PASS' f2-combined.log
           if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_F2_COMBINED_SMOKE: FAIL' f2-combined.log; then exit 1; fi
+
+      - name: Verify genuinely off-grid socket packed dungeons and physical entrance exit
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_offgrid_socket_smoke.gd 2>&1 | tee offgrid.log
+          grep 'DUNGEON_OFFGRID_SMOKE: PASS' offgrid.log
+          if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_OFFGRID_SMOKE: FAIL' offgrid.log; then exit 1; fi

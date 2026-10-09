@@ -66,7 +66,7 @@ func _run() -> void:
 				return
 			var corridor_floor := connector.get_node_or_null("Floor") as MeshInstance3D
 			var dim: Vector3 = (corridor_floor.mesh as BoxMesh).size
-			if not _check(absf(maxf(dim.x, dim.z) - gap) < 0.001, "Corridor length must match the physical gap."):
+			if not _check(absf((dim.x if a.cell.x != b.cell.x else dim.z) - gap) < 0.001, "Corridor length must match the physical gap."):
 				return
 			connection_count += 1
 	if not _check(connection_count > 0, "Varying room sizes must actually create at least one corridor."):

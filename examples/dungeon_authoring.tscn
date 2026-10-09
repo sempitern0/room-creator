@@ -1,37 +1,302 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://dvbfyux7t6ajs"]
 
-[ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_authoring_3d.gd" id="1_author"]
-[ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_config.gd" id="2_config"]
+[ext_resource type="Script" uid="uid://bu7a3t00sstua" path="res://addons/room_creator/src/next/dungeon/dungeon_authoring_3d.gd" id="1_author"]
+[ext_resource type="Script" uid="uid://crwhd6r0ynft" path="res://addons/room_creator/src/next/dungeon/dungeon_room_module.gd" id="2_64etx"]
+[ext_resource type="Script" uid="uid://bewhjjr4dk7a6" path="res://addons/room_creator/src/next/dungeon/dungeon_config.gd" id="2_config"]
 [ext_resource type="Resource" path="res://examples/dungeon_room_module_profile.tres" id="3_module"]
+[ext_resource type="Script" uid="uid://b567kiu4n3oac" path="res://addons/room_creator/src/next/dungeon/dungeon_structural_prefab.gd" id="5_amklf"]
+[ext_resource type="Script" uid="uid://qmobfli5knjj" path="res://addons/room_creator/src/next/dungeon/room_connection_data.gd" id="6_g588n"]
+[ext_resource type="Script" uid="uid://biutfnkkgw438" path="res://addons/room_creator/src/next/dungeon/room_placement_data.gd" id="7_5yg7a"]
+[ext_resource type="Script" uid="uid://dbdq0slgcx1gf" path="res://addons/room_creator/src/next/dungeon/level_layout.gd" id="8_qbq7w"]
+[ext_resource type="Script" uid="uid://cqoisjvimhsol" path="res://addons/room_creator/src/next/dungeon/dungeon_preview_palette.gd" id="9_86uo1"]
 
 [sub_resource type="Resource" id="DungeonConfig_modular"]
 script = ExtResource("2_config")
 seed = 891
-grid_size = Vector2i(12, 12)
 critical_path_min = 7
 critical_path_max = 9
 branch_count = 5
-loop_count = 0
 rectangle_weight = 12
 cross_weight = 5
 l_shape_weight = 4
 t_shape_weight = 4
-room_modules = Array[Resource]([ExtResource("3_module")])
-require_room_modules = false
+room_modules = Array[ExtResource("2_64etx")]([ExtResource("3_module")])
 vary_room_sizes = true
-min_room_scale = 0.8
 max_room_scale = 0.95
 use_variable_grid_spacing = true
-min_corridor_gap = 1.0
-max_corridor_gap = 4.0
 enable_independent_room_offsets = true
-room_position_jitter = 0.50
+room_position_jitter = 0.5
 placement_attempts = 32
 enable_dogleg_corridors = true
-dogleg_frequency = 0.65
-generate_exterior_doors = true
 
-[node name="DungeonAuthoring3D" type="Node3D"]
+[sub_resource type="Resource" id="Resource_5xqr2"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0000"
+from_room_id = "room_0000"
+to_room_id = "room_0001"
+from_wall = 3
+to_wall = 2
+route_points = PackedVector3Array(110.15, 0, 41.2, 111.225, 0, 41.2, 111.225, 0, 40.45, 112.299995, 0, 40.45)
+
+[sub_resource type="Resource" id="Resource_cya1c"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0001"
+from_room_id = "room_0001"
+to_room_id = "room_0002"
+from_wall = 1
+to_wall = 0
+route_points = PackedVector3Array()
+
+[sub_resource type="Resource" id="Resource_82ixp"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0002"
+from_room_id = "room_0002"
+to_room_id = "room_0003"
+from_wall = 2
+to_wall = 3
+route_points = PackedVector3Array(112.9, 0, 51.65, 111.5, 0, 51.65, 111.5, 0, 52.2, 110.1, 0, 52.2)
+
+[sub_resource type="Resource" id="Resource_7uv0w"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0003"
+from_room_id = "room_0003"
+to_room_id = "room_0004"
+from_wall = 2
+to_wall = 3
+route_points = PackedVector3Array(103.299995, 0, 52.2, 101.399994, 0, 52.2, 101.399994, 0, 51.85, 99.5, 0, 51.85)
+
+[sub_resource type="Resource" id="Resource_opgwl"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0004"
+from_room_id = "room_0004"
+to_room_id = "room_0005"
+route_points = PackedVector3Array()
+
+[sub_resource type="Resource" id="Resource_i6cqp"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0005"
+from_room_id = "room_0005"
+to_room_id = "room_0006"
+route_points = PackedVector3Array(96.3, 0, 37.899998, 96.3, 0, 36.3, 96.05, 0, 36.3, 96.05, 0, 34.7)
+
+[sub_resource type="Resource" id="Resource_3pu1w"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0006"
+from_room_id = "room_0006"
+to_room_id = "room_0007"
+from_wall = 2
+to_wall = 3
+route_points = PackedVector3Array()
+
+[sub_resource type="Resource" id="Resource_u565w"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0007"
+from_room_id = "room_0007"
+to_room_id = "room_0008"
+from_wall = 2
+to_wall = 3
+route_points = PackedVector3Array(83.25, 0, 31.5, 81, 0, 31.5, 81, 0, 30.5, 78.75, 0, 30.5)
+
+[sub_resource type="Resource" id="Resource_2lij0"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0008"
+from_room_id = "room_0001"
+to_room_id = "room_0009"
+route_points = PackedVector3Array()
+
+[sub_resource type="Resource" id="Resource_dsccm"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0009"
+from_room_id = "room_0004"
+to_room_id = "room_0010"
+from_wall = 2
+to_wall = 3
+route_points = PackedVector3Array(93.100006, 0, 51.85, 91.600006, 0, 51.85, 91.600006, 0, 51.55, 90.100006, 0, 51.55)
+
+[sub_resource type="Resource" id="Resource_pm4pp"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0010"
+from_room_id = "room_0008"
+to_room_id = "room_0011"
+from_wall = 1
+to_wall = 0
+route_points = PackedVector3Array(75.35, 0, 33.7, 75.35, 0, 35.475, 75.8, 0, 35.475, 75.8, 0, 37.25)
+
+[sub_resource type="Resource" id="Resource_8p2xm"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0011"
+from_room_id = "room_0011"
+to_room_id = "room_0012"
+from_wall = 1
+to_wall = 0
+route_points = PackedVector3Array(75.8, 0, 44.050003, 75.8, 0, 46.225002, 75.8, 0, 46.225002, 75.8, 0, 48.4)
+
+[sub_resource type="Resource" id="Resource_jcpnj"]
+script = ExtResource("6_g588n")
+stable_id = "edge_0012"
+from_room_id = "room_0011"
+to_room_id = "room_0013"
+from_wall = 2
+to_wall = 3
+route_points = PackedVector3Array(72.200005, 0, 40.65, 70.725006, 0, 40.65, 70.725006, 0, 40.5, 69.25, 0, 40.5)
+
+[sub_resource type="Resource" id="Resource_aq3cs"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0000"
+cell = Vector2i(10, 4)
+room_size = Vector3(6.8, 3.5, 7.6)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 106.75, 0, 41.2)
+role = 0
+exterior_wall = 0
+exterior_id = "exterior_entrance"
+shape = 3
+shape_rotation = 1
+
+[sub_resource type="Resource" id="Resource_lnoro"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0001"
+cell = Vector2i(11, 4)
+room_size = Vector3(7.6, 3.5, 7.2)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 116.1, 0, 40.45)
+module_profile = ExtResource("3_module")
+
+[sub_resource type="Resource" id="Resource_bcsxu"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0002"
+cell = Vector2i(11, 5)
+room_size = Vector3(6.4, 3.5, 7.6)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 116.1, 0, 51.65)
+shape = 3
+
+[sub_resource type="Resource" id="Resource_oyv8q"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0003"
+cell = Vector2i(10, 5)
+room_size = Vector3(6.8, 3.5, 7.6)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 106.7, 0, 52.2)
+module_profile = ExtResource("3_module")
+shape_rotation = 2
+
+[sub_resource type="Resource" id="Resource_tg6th"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0004"
+cell = Vector2i(9, 5)
+room_size = Vector3(6.4, 3.5, 6.8)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 96.3, 0, 51.85)
+shape = 3
+
+[sub_resource type="Resource" id="Resource_mheaa"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0005"
+cell = Vector2i(9, 4)
+room_size = Vector3(6.8, 3.5, 6.4)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 96.3, 0, 41.1)
+module_profile = ExtResource("3_module")
+shape_rotation = 2
+
+[sub_resource type="Resource" id="Resource_2w3sk"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0006"
+cell = Vector2i(9, 3)
+room_size = Vector3(7.2, 3.5, 6.4)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 96.05, 0, 31.5)
+module_profile = ExtResource("3_module")
+shape_rotation = 2
+
+[sub_resource type="Resource" id="Resource_cc3k3"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0007"
+cell = Vector2i(8, 3)
+room_size = Vector3(6.8, 3.5, 6.8)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86.65, 0, 31.5)
+shape = 3
+
+[sub_resource type="Resource" id="Resource_cecbm"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0008"
+cell = Vector2i(7, 3)
+room_size = Vector3(6.8, 3.5, 6.4)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75.35, 0, 30.5)
+role = 2
+module_profile = ExtResource("3_module")
+exterior_wall = 2
+exterior_id = "exterior_exit"
+shape_rotation = 3
+
+[sub_resource type="Resource" id="Resource_p8hp8"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0009"
+cell = Vector2i(11, 3)
+room_size = Vector3(7.2, 3.5, 6.8)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 116.1, 0, 31.05)
+role = 3
+shape = 3
+shape_rotation = 1
+
+[sub_resource type="Resource" id="Resource_obw2h"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0010"
+cell = Vector2i(8, 5)
+room_size = Vector3(7.6, 3.5, 7.2)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 86.3, 0, 51.55)
+role = 3
+module_profile = ExtResource("3_module")
+shape_rotation = 3
+
+[sub_resource type="Resource" id="Resource_35ynq"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0011"
+cell = Vector2i(7, 4)
+room_size = Vector3(7.2, 3.5, 6.8)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75.8, 0, 40.65)
+role = 3
+module_profile = ExtResource("3_module")
+shape_rotation = 1
+
+[sub_resource type="Resource" id="Resource_bp0g5"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0012"
+cell = Vector2i(7, 5)
+room_size = Vector3(7.2, 3.5, 7.2)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75.8, 0, 52)
+role = 3
+module_profile = ExtResource("3_module")
+shape_rotation = 3
+
+[sub_resource type="Resource" id="Resource_ea11j"]
+script = ExtResource("7_5yg7a")
+stable_id = "room_0013"
+cell = Vector2i(6, 4)
+room_size = Vector3(7.6, 3.5, 6.8)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 65.45, 0, 40.5)
+role = 3
+shape = 1
+shape_rotation = 3
+
+[sub_resource type="Resource" id="Resource_dvf3k"]
+script = ExtResource("8_qbq7w")
+seed = 891
+grid_size = Vector2i(12, 12)
+room_size = Vector3(8, 3.5, 8)
+column_positions = PackedFloat32Array(0, 10.25, 19.75, 31, 42.5, 54.25, 65.75, 75.5, 86.5, 96, 107, 116.5)
+row_positions = PackedFloat32Array(0, 10.25, 21.5, 31, 40.75, 51.75, 62.75, 74, 83.5, 94.5, 106.25, 115.5)
+independent_room_offsets_enabled = true
+maximum_room_offset = 0.5
+dogleg_corridors_enabled = true
+exterior_doors_enabled = true
+entrance_id = "room_0000"
+exit_id = "room_0008"
+minimum_critical_rooms = 7
+expected_room_count = 14
+critical_path_ids = PackedStringArray("room_0000", "room_0001", "room_0002", "room_0003", "room_0004", "room_0005", "room_0006", "room_0007", "room_0008")
+rooms = Array[ExtResource("7_5yg7a")]([SubResource("Resource_aq3cs"), SubResource("Resource_lnoro"), SubResource("Resource_bcsxu"), SubResource("Resource_oyv8q"), SubResource("Resource_tg6th"), SubResource("Resource_mheaa"), SubResource("Resource_2w3sk"), SubResource("Resource_cc3k3"), SubResource("Resource_cecbm"), SubResource("Resource_p8hp8"), SubResource("Resource_obw2h"), SubResource("Resource_35ynq"), SubResource("Resource_bp0g5"), SubResource("Resource_ea11j")])
+connections = Array[ExtResource("6_g588n")]([SubResource("Resource_5xqr2"), SubResource("Resource_cya1c"), SubResource("Resource_82ixp"), SubResource("Resource_7uv0w"), SubResource("Resource_opgwl"), SubResource("Resource_i6cqp"), SubResource("Resource_3pu1w"), SubResource("Resource_u565w"), SubResource("Resource_2lij0"), SubResource("Resource_dsccm"), SubResource("Resource_pm4pp"), SubResource("Resource_8p2xm"), SubResource("Resource_jcpnj")])
+
+[sub_resource type="Resource" id="Resource_n8dmj"]
+script = ExtResource("9_86uo1")
+
+[node name="DungeonAuthoring3D" type="Node3D" unique_id=981370818]
 script = ExtResource("1_author")
 config = SubResource("DungeonConfig_modular")
-output_scene_path = "res://room_creator/dungeons/dungeon.tscn"
+layout = SubResource("Resource_dvf3k")
+preview_palette = SubResource("Resource_n8dmj")

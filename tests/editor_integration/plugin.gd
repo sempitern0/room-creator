@@ -43,6 +43,10 @@ func _exercise() -> void:
 	var native_dock := EditorInterface.get_base_control().find_child("RoomCreatorWorkspace", true, false) as EditorDock
 	if not _check(native_dock != null and native_dock.default_slot == EditorDock.DOCK_SLOT_BOTTOM and (native_dock.available_layouts & EditorDock.DOCK_LAYOUT_HORIZONTAL) != 0 and (native_dock.available_layouts & EditorDock.DOCK_LAYOUT_VERTICAL) != 0 and (native_dock.available_layouts & EditorDock.DOCK_LAYOUT_FLOATING) != 0, "Room Creator needs a native movable EditorDock with horizontal/bottom, side and floating layouts."):
 		return
+	var workspace_scroll := room_dock.find_child("Rooms", true, false) as ScrollContainer
+	var workspace_flow: HFlowContainer = workspace_scroll.get_child(0) as HFlowContainer if workspace_scroll != null else null
+	if not _check(workspace_flow != null and workspace_flow.get_child_count() == 3, "Bottom workspace must use responsive tools/list/overrides columns which wrap inside narrow side docks."):
+		return
 	for frame in 25:
 		if room_dock.get("author") == author:
 			break

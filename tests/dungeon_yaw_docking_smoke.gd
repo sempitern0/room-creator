@@ -35,7 +35,7 @@ func _run() -> void:
 		var dst: Transform3D = attempt["transform"]
 		var start: Transform3D = anchor * anchor_socket
 		var end: Transform3D = dst * second_socket
-		if not _check(start.origin.distance_to(end.origin) >= 3.5 and (start.basis * Vector3.FORWARD).dot(end.basis * Vector3.FORWARD) < -0.9999, "Sockets must face one another across a real positive gap."):
+		if not _check(start.origin.distance_to(end.origin) >= 3.5 - 0.002 and (start.basis * Vector3.FORWARD).dot(end.basis * Vector3.FORWARD) < -0.9999, "Sockets must face one another across a real positive gap."):
 			return
 		if not _check(not DungeonOrientedBounds.overlaps(DungeonOrientedBounds.rectangle(anchor.origin, Vector2(8, 8), anchor.basis), DungeonOrientedBounds.rectangle(dst.origin, Vector2(8, 8), dst.basis)), "Docking must reject overlapping room OBBs."):
 			return

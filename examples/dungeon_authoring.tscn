@@ -1,11 +1,22 @@
 [gd_scene load_steps=5 format=3]
 
+<<<<<<< Updated upstream
 [ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_authoring_3d.gd" id="1_author"]
 [ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_config.gd" id="2_config"]
 [ext_resource type="Resource" path="res://examples/dungeon_room_module_profile.tres" id="3_module"]
+=======
+[ext_resource type="Script" uid="uid://bu7a3t00sstua" path="res://addons/room_creator/src/next/dungeon/dungeon_authoring_3d.gd" id="1_author"]
+[ext_resource type="Script" uid="uid://crwhd6r0ynft" path="res://addons/room_creator/src/next/dungeon/dungeon_room_module.gd" id="2_75yhf"]
+[ext_resource type="Script" uid="uid://bewhjjr4dk7a6" path="res://addons/room_creator/src/next/dungeon/dungeon_config.gd" id="2_config"]
+[ext_resource type="Script" uid="uid://qmobfli5knjj" path="res://addons/room_creator/src/next/dungeon/room_connection_data.gd" id="3_v3bdb"]
+[ext_resource type="Script" uid="uid://biutfnkkgw438" path="res://addons/room_creator/src/next/dungeon/room_placement_data.gd" id="4_nrvo8"]
+[ext_resource type="Script" uid="uid://dbdq0slgcx1gf" path="res://addons/room_creator/src/next/dungeon/level_layout.gd" id="5_75yhf"]
+[ext_resource type="Script" uid="uid://cqoisjvimhsol" path="res://addons/room_creator/src/next/dungeon/dungeon_preview_palette.gd" id="6_nrvo8"]
+>>>>>>> Stashed changes
 
 [sub_resource type="Resource" id="DungeonConfig_modular"]
 script = ExtResource("2_config")
+<<<<<<< Updated upstream
 seed = 891
 grid_size = Vector2i(12, 12)
 critical_path_min = 7
@@ -30,3 +41,4446 @@ generate_exterior_doors = true
 script = ExtResource("1_author")
 config = SubResource("DungeonConfig_modular")
 output_scene_path = "res://room_creator/dungeons/dungeon.tscn"
+=======
+seed = 825
+grid_size = Vector2i(24, 24)
+critical_path_max = 8
+branch_count = 8
+loop_count = 1
+rectangle_weight = 5
+cross_weight = 2
+l_shape_weight = 1
+t_shape_weight = 6
+vary_room_sizes = true
+
+[sub_resource type="Resource" id="Resource_0eeib"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0000"
+from_room_id = "room_0000"
+to_room_id = "room_0001"
+
+[sub_resource type="Resource" id="Resource_64etx"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0001"
+from_room_id = "room_0001"
+to_room_id = "room_0002"
+
+[sub_resource type="Resource" id="Resource_amklf"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0002"
+from_room_id = "room_0002"
+to_room_id = "room_0003"
+from_wall = 3
+to_wall = 2
+
+[sub_resource type="Resource" id="Resource_g588n"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0003"
+from_room_id = "room_0003"
+to_room_id = "room_0004"
+
+[sub_resource type="Resource" id="Resource_5yg7a"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0004"
+from_room_id = "room_0004"
+to_room_id = "room_0005"
+
+[sub_resource type="Resource" id="Resource_qbq7w"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0005"
+from_room_id = "room_0005"
+to_room_id = "room_0006"
+
+[sub_resource type="Resource" id="Resource_86uo1"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0006"
+from_room_id = "room_0006"
+to_room_id = "room_0007"
+from_wall = 3
+to_wall = 2
+
+[sub_resource type="Resource" id="Resource_5xqr2"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0007"
+from_room_id = "room_0005"
+to_room_id = "room_0008"
+from_wall = 2
+to_wall = 3
+
+[sub_resource type="Resource" id="Resource_cya1c"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0008"
+from_room_id = "room_0000"
+to_room_id = "room_0009"
+from_wall = 3
+to_wall = 2
+
+[sub_resource type="Resource" id="Resource_82ixp"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0009"
+from_room_id = "room_0001"
+to_room_id = "room_0010"
+from_wall = 3
+to_wall = 2
+
+[sub_resource type="Resource" id="Resource_7uv0w"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0010"
+from_room_id = "room_0004"
+to_room_id = "room_0011"
+from_wall = 3
+to_wall = 2
+
+[sub_resource type="Resource" id="Resource_opgwl"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0011"
+from_room_id = "room_0004"
+to_room_id = "room_0012"
+from_wall = 2
+to_wall = 3
+
+[sub_resource type="Resource" id="Resource_i6cqp"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0012"
+from_room_id = "room_0008"
+to_room_id = "room_0013"
+
+[sub_resource type="Resource" id="Resource_3pu1w"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0013"
+from_room_id = "room_0009"
+to_room_id = "room_0014"
+from_wall = 1
+to_wall = 0
+
+[sub_resource type="Resource" id="Resource_u565w"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0014"
+from_room_id = "room_0014"
+to_room_id = "room_0015"
+from_wall = 2
+to_wall = 3
+
+[sub_resource type="Resource" id="Resource_2lij0"]
+script = ExtResource("3_v3bdb")
+stable_id = "edge_0015"
+from_room_id = "room_0010"
+to_room_id = "room_0009"
+from_wall = 1
+to_wall = 0
+
+[sub_resource type="Resource" id="Resource_dsccm"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0000"
+cell = Vector2i(0, 20)
+room_size = Vector3(8, 3.5, 7.6)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 160)
+role = 0
+exterior_wall = 2
+exterior_id = "exterior_entrance"
+shape = 1
+shape_rotation = 2
+
+[sub_resource type="Resource" id="Resource_pm4pp"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0001"
+cell = Vector2i(0, 19)
+room_size = Vector3(7.2, 3.5, 8)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 152)
+shape = 3
+shape_rotation = 1
+
+[sub_resource type="Resource" id="Resource_8p2xm"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0002"
+cell = Vector2i(0, 18)
+room_size = Vector3(7.2, 3.5, 7.2)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 144)
+shape = 3
+shape_rotation = 2
+
+[sub_resource type="Resource" id="Resource_jcpnj"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0003"
+cell = Vector2i(1, 18)
+room_size = Vector3(6.8, 3.5, 7.2)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 144)
+shape = 3
+
+[sub_resource type="Resource" id="Resource_aq3cs"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0004"
+cell = Vector2i(1, 17)
+room_size = Vector3(7.2, 3.5, 7.2)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 136)
+shape = 1
+shape_rotation = 2
+
+[sub_resource type="Resource" id="Resource_lnoro"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0005"
+cell = Vector2i(1, 16)
+room_size = Vector3(6.8, 3.5, 7.2)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 128)
+shape_rotation = 3
+
+[sub_resource type="Resource" id="Resource_bcsxu"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0006"
+cell = Vector2i(1, 15)
+room_size = Vector3(6.8, 3.5, 6.4)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 120)
+shape = 3
+shape_rotation = 1
+
+[sub_resource type="Resource" id="Resource_oyv8q"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0007"
+cell = Vector2i(2, 15)
+room_size = Vector3(7.2, 3.5, 7.6)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 120)
+role = 2
+exterior_wall = 0
+exterior_id = "exterior_exit"
+shape = 1
+shape_rotation = 3
+
+[sub_resource type="Resource" id="Resource_tg6th"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0008"
+cell = Vector2i(0, 16)
+room_size = Vector3(7.2, 3.5, 8)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 128)
+role = 3
+shape = 3
+
+[sub_resource type="Resource" id="Resource_mheaa"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0009"
+cell = Vector2i(1, 20)
+room_size = Vector3(7.6, 3.5, 6.8)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 160)
+role = 3
+shape = 3
+shape_rotation = 3
+
+[sub_resource type="Resource" id="Resource_2w3sk"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0010"
+cell = Vector2i(1, 19)
+room_size = Vector3(7.6, 3.5, 6.8)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 152)
+role = 3
+shape = 3
+shape_rotation = 2
+
+[sub_resource type="Resource" id="Resource_cc3k3"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0011"
+cell = Vector2i(2, 17)
+room_size = Vector3(7.2, 3.5, 6.8)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 136)
+role = 3
+shape_rotation = 3
+
+[sub_resource type="Resource" id="Resource_cecbm"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0012"
+cell = Vector2i(0, 17)
+room_size = Vector3(6.8, 3.5, 7.2)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 136)
+role = 3
+shape = 1
+shape_rotation = 2
+
+[sub_resource type="Resource" id="Resource_p8hp8"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0013"
+cell = Vector2i(0, 15)
+room_size = Vector3(7.6, 3.5, 8)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 120)
+role = 3
+shape = 1
+shape_rotation = 1
+
+[sub_resource type="Resource" id="Resource_obw2h"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0014"
+cell = Vector2i(1, 21)
+room_size = Vector3(6.8, 3.5, 7.6)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 168)
+role = 3
+shape_rotation = 1
+
+[sub_resource type="Resource" id="Resource_35ynq"]
+script = ExtResource("4_nrvo8")
+stable_id = "room_0015"
+cell = Vector2i(0, 21)
+room_size = Vector3(7.2, 3.5, 7.6)
+world_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 168)
+role = 3
+shape = 3
+
+[sub_resource type="Resource" id="Resource_ea11j"]
+script = ExtResource("5_75yhf")
+seed = 825
+grid_size = Vector2i(24, 24)
+room_size = Vector3(8, 3.5, 8)
+exterior_doors_enabled = true
+entrance_id = "room_0000"
+exit_id = "room_0007"
+minimum_critical_rooms = 8
+expected_room_count = 16
+expected_loops = 1
+critical_path_ids = PackedStringArray("room_0000", "room_0001", "room_0002", "room_0003", "room_0004", "room_0005", "room_0006", "room_0007")
+rooms = Array[ExtResource("4_nrvo8")]([SubResource("Resource_dsccm"), SubResource("Resource_pm4pp"), SubResource("Resource_8p2xm"), SubResource("Resource_jcpnj"), SubResource("Resource_aq3cs"), SubResource("Resource_lnoro"), SubResource("Resource_bcsxu"), SubResource("Resource_oyv8q"), SubResource("Resource_tg6th"), SubResource("Resource_mheaa"), SubResource("Resource_2w3sk"), SubResource("Resource_cc3k3"), SubResource("Resource_cecbm"), SubResource("Resource_p8hp8"), SubResource("Resource_obw2h"), SubResource("Resource_35ynq")])
+connections = Array[ExtResource("3_v3bdb")]([SubResource("Resource_0eeib"), SubResource("Resource_64etx"), SubResource("Resource_amklf"), SubResource("Resource_g588n"), SubResource("Resource_5yg7a"), SubResource("Resource_qbq7w"), SubResource("Resource_86uo1"), SubResource("Resource_5xqr2"), SubResource("Resource_cya1c"), SubResource("Resource_82ixp"), SubResource("Resource_7uv0w"), SubResource("Resource_opgwl"), SubResource("Resource_i6cqp"), SubResource("Resource_3pu1w"), SubResource("Resource_u565w"), SubResource("Resource_2lij0")])
+
+[sub_resource type="Resource" id="Resource_bp0g5"]
+script = ExtResource("6_nrvo8")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvf3k"]
+shading_mode = 0
+albedo_color = Color(0.16078432, 0.72156864, 0.42745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n8dmj"]
+size = Vector3(2.6666667, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cl6dn"]
+size = Vector3(2.6666667, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oxcfb"]
+size = Vector3(2.6666667, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hbxx2"]
+size = Vector3(2.6666667, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0r6hv"]
+size = Vector3(2.6666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_em0jj"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_psxop"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gq2t2"]
+size = Vector3(2.6666667, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vryef"]
+size = Vector3(2.6666667, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w2vk8"]
+size = Vector3(2.6666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tcjg7"]
+size = Vector3(2.6666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_syxaa"]
+size = Vector3(0.2, 2.3, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_k8w71"]
+size = Vector3(0.2, 1.2, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7safe"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ns18n"]
+size = Vector3(0.2, 2.3, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ei7xe"]
+size = Vector3(0.2, 1.2, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fj5r2"]
+size = Vector3(2.6666667, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_asavl"]
+size = Vector3(2.6666667, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hw5ct"]
+size = Vector3(2.6666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lvn80"]
+size = Vector3(2.6666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_65itj"]
+size = Vector3(0.2, 2.3, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2gkvf"]
+size = Vector3(0.2, 1.2, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0furc"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_b6ki0"]
+size = Vector3(0.2, 2.3, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2j5ta"]
+size = Vector3(0.2, 1.2, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2bpra"]
+size = Vector3(2.6666667, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yhcm2"]
+size = Vector3(2.6666667, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w67q0"]
+size = Vector3(0.53333336, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hb6qb"]
+size = Vector3(0.53333336, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ft4tn"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_meb3q"]
+size = Vector3(0.53333336, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ynrx0"]
+size = Vector3(0.53333336, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gw5bx"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dtb48"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kipfw"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pqs1i"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_of76x"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lk2w4"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jukma"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0knbq"]
+size = Vector3(0.2, 2.3, 0.53333336)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5la7m"]
+size = Vector3(0.2, 1.2, 0.53333336)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pqlm8"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_a4e8a"]
+size = Vector3(0.2, 2.3, 0.53333336)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ac0wy"]
+size = Vector3(0.2, 1.2, 0.53333336)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dmafe"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_opbi6"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ccjwv"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2lglm"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nqp0w"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3vsx1"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1aqjv"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jy83m"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_40vxb"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uo3at"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bih6s"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oedyj"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kqms5"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sh4p4"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jk57s"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0sabq"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4k51t"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eg0ii"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4t236"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tn1jx"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3egfo"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w1lfl"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dkqff"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_33mqh"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pi8ui"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_i5m22"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7xo3k"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dcs74"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pihvj"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f35ef"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_30poe"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tsdsn"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g02u3"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eqc35"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_punan"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rfrjq"]
+size = Vector3(0.2, 2.3, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_s3fgg"]
+size = Vector3(0.2, 1.2, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wiag8"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yuwoc"]
+size = Vector3(0.2, 2.3, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4lueh"]
+size = Vector3(0.2, 1.2, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dlbsh"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_if2pg"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ki4xh"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nhwq8"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ek15i"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qfgqb"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6cujl"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_57u2e"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tth4w"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xre02"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3rjji"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8scxw"]
+size = Vector3(0.33333337, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8ievl"]
+size = Vector3(0.33333337, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cvuln"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hlpx5"]
+size = Vector3(0.33333337, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_q3bm0"]
+size = Vector3(0.33333337, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f1tly"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_30t3i"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3xvld"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f2tdn"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2lfin"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fyaut"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4h4u1"]
+size = Vector3(0.2, 2.3, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7yhga"]
+size = Vector3(0.2, 1.2, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pdpde"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f6gq0"]
+size = Vector3(0.2, 2.3, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hedvq"]
+size = Vector3(0.2, 1.2, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vgu3r"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tp8kw"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_105fl"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_urv43"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ijg2i"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2mg4j"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ygr5t"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_15x12"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3q4xv"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bn68v"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rkegi"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_itb87"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mal73"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h35uy"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1fymc"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h06i6"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tqjp1"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8orpa"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cmvlp"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qb76n"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_62a3t"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f1cmv"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_q2aer"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1sww5"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4f1bu"]
+size = Vector3(0.2, 2.3, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_me6f0"]
+size = Vector3(0.2, 1.2, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nbul0"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tr6hf"]
+size = Vector3(0.2, 2.3, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hglxl"]
+size = Vector3(0.2, 1.2, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0a8j7"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1es7f"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ajcg8"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2xxag"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_e8l6m"]
+size = Vector3(0.2, 2.3, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xsmq5"]
+size = Vector3(0.2, 1.2, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5bcv5"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_iwx46"]
+size = Vector3(0.2, 2.3, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cdwcx"]
+size = Vector3(0.2, 1.2, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_t4v0p"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wlohp"]
+size = Vector3(2.3999999, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_baknp"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pra3g"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_m7yog"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3blkk"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0en2w"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jyi0x"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_codp7"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hqtdi"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2ck5m"]
+size = Vector3(6.8, 0.2, 7.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_41llj"]
+size = Vector3(6.8, 0.2, 7.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jtx6o"]
+size = Vector3(2.6000001, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gynrj"]
+size = Vector3(2.6000001, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wat5k"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5dbo2"]
+size = Vector3(2.6000001, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_paxto"]
+size = Vector3(2.6000001, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8lwta"]
+size = Vector3(2.6000001, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yno8s"]
+size = Vector3(2.6000001, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5qyth"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_q6y63"]
+size = Vector3(2.6000001, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_y4gbc"]
+size = Vector3(2.6000001, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_do3bl"]
+size = Vector3(0.2, 2.3, 2.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pyhcv"]
+size = Vector3(0.2, 1.2, 2.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tin2u"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_y3ee6"]
+size = Vector3(0.2, 2.3, 2.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1wqtt"]
+size = Vector3(0.2, 1.2, 2.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nl2yd"]
+size = Vector3(0.2, 3.5, 6.7999997)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_03edc"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ea5u2"]
+size = Vector3(2.2666667, 0.2, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_35tt8"]
+size = Vector3(2.2666667, 0.2, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_a3k80"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n1gsv"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xnwwv"]
+size = Vector3(0.2, 2.3, 0.26666668)
+
+[sub_resource type="BoxMesh" id="BoxMesh_e3oqn"]
+size = Vector3(0.2, 1.2, 0.26666668)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f654e"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_igmoa"]
+size = Vector3(0.2, 2.3, 0.26666668)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2qjvo"]
+size = Vector3(0.2, 1.2, 0.26666668)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7i8kd"]
+size = Vector3(2.2666667, 0.2, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ir5if"]
+size = Vector3(2.2666667, 0.2, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_c4qru"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_us11p"]
+size = Vector3(0.2, 3.5, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wjig5"]
+size = Vector3(0.2, 3.5, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_e24q5"]
+size = Vector3(2.2666667, 0.2, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5kebf"]
+size = Vector3(2.2666667, 0.2, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_e83ov"]
+size = Vector3(0.2, 3.5, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_41p3b"]
+size = Vector3(2.2666667, 0.2, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qsmeu"]
+size = Vector3(2.2666667, 0.2, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ifmc2"]
+size = Vector3(0.33333337, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_om0dg"]
+size = Vector3(0.33333337, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xrush"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5mr14"]
+size = Vector3(0.33333337, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ni7yk"]
+size = Vector3(0.33333337, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4p7v2"]
+size = Vector3(0.2, 3.5, 2.1333334)
+
+[sub_resource type="BoxMesh" id="BoxMesh_stgnp"]
+size = Vector3(0.2, 3.5, 2.1333334)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wnjex"]
+shading_mode = 0
+albedo_color = Color(0.89411765, 0.3137255, 0.3137255, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w56g4"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yq0ex"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ihfgt"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_k46bj"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d7cw0"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rv16w"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_amf0q"]
+size = Vector3(0.2, 2.3, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oimep"]
+size = Vector3(0.2, 1.2, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nhjp1"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pagfa"]
+size = Vector3(0.2, 2.3, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bcdpa"]
+size = Vector3(0.2, 1.2, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3u45y"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n82f7"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2edj2"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_a8dce"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bqqn1"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ueg1s"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w75vm"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_obrxf"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_anljn"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ejeya"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p1tgq"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_y2uxw"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_l1480"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lynfm"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gqrx5"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oxy84"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_c6csv"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ing6s"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_b30fe"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1td26"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6yrfm"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kqtt0"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cyfb8"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uvtmc"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p2uw3"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8sp3b"]
+size = Vector3(0.39999998, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vlgle"]
+size = Vector3(0.39999998, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_a1lih"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eu8ph"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_djn8p"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_v7sse"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_moov3"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_74jp8"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0ry6g"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_44njr"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_84lds"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fqh02"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qw2rq"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_to0ly"]
+size = Vector3(2.3999999, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sjrlr"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6qgpv"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_olt40"]
+size = Vector3(0.2, 2.3, 0.53333336)
+
+[sub_resource type="BoxMesh" id="BoxMesh_l2gtc"]
+size = Vector3(0.2, 1.2, 0.53333336)
+
+[sub_resource type="BoxMesh" id="BoxMesh_56183"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_knalh"]
+size = Vector3(0.2, 2.3, 0.53333336)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cil8i"]
+size = Vector3(0.2, 1.2, 0.53333336)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bld0u"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qjep2"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_r7ysp"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yo07p"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4r41l"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u8g3a"]
+size = Vector3(0.2, 2.3, 0.33333337)
+
+[sub_resource type="BoxMesh" id="BoxMesh_o1che"]
+size = Vector3(0.2, 1.2, 0.33333337)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5125y"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nfba0"]
+size = Vector3(0.2, 2.3, 0.33333337)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jodmc"]
+size = Vector3(0.2, 1.2, 0.33333337)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mkbe7"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_11don"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_e2mba"]
+size = Vector3(0.46666664, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_c1nyk"]
+size = Vector3(0.46666664, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u60cn"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_irsvq"]
+size = Vector3(0.46666664, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pnmql"]
+size = Vector3(0.46666664, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p3ayp"]
+size = Vector3(0.2, 3.5, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_m63yj"]
+size = Vector3(0.2, 3.5, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_634d0"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hc2vw"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1lqg4"]
+size = Vector3(0.2, 3.5, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tjsah"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_80cbs"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_exhp0"]
+size = Vector3(0.46666664, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dvuco"]
+size = Vector3(0.46666664, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_agh5q"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nfb5g"]
+size = Vector3(0.46666664, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5lyeu"]
+size = Vector3(0.46666664, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3gyts"]
+size = Vector3(0.2, 3.5, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_51vnu"]
+size = Vector3(0.2, 3.5, 2.2666667)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nxxlv"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8rf3s"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7l7vk"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_umy0k"]
+size = Vector3(0.46666664, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_v77gt"]
+size = Vector3(0.46666664, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nsrrf"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_a5vd8"]
+size = Vector3(0.46666664, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h1o6p"]
+size = Vector3(0.46666664, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7oyy0"]
+size = Vector3(0.2, 3.5, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qbge0"]
+size = Vector3(0.2, 3.5, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0e7px"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4ypky"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wuvb0"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6mijl"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mhik4"]
+size = Vector3(0.2, 3.5, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vb6us"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jplkd"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cgtn5"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_y4uc5"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d6t5n"]
+size = Vector3(2.5333333, 0.2, 2.2666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0p4ts"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_44ktx"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bwvsf"]
+size = Vector3(0.2, 2.3, 0.33333337)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yht0d"]
+size = Vector3(0.2, 1.2, 0.33333337)
+
+[sub_resource type="BoxMesh" id="BoxMesh_r7w7i"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ktkqd"]
+size = Vector3(0.2, 2.3, 0.33333337)
+
+[sub_resource type="BoxMesh" id="BoxMesh_36h6a"]
+size = Vector3(0.2, 1.2, 0.33333337)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5eae8"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h4kf5"]
+size = Vector3(7.2, 0.2, 6.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_750wb"]
+size = Vector3(7.2, 0.2, 6.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p8y4r"]
+size = Vector3(7.2, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_k1uy4"]
+size = Vector3(7.2, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6xbvn"]
+size = Vector3(0.2, 2.3, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n1y3l"]
+size = Vector3(0.2, 1.2, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_owgn4"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_q81f2"]
+size = Vector3(0.2, 2.3, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_joxdj"]
+size = Vector3(0.2, 1.2, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pwoh0"]
+size = Vector3(0.2, 3.5, 6.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_akrif"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0a68g"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hsq8m"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6acnj"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_k7tlq"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1lpec"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_s5dkm"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ky3ba"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tajfu"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_74rbg"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ju7w2"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2lsu4"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_13t7c"]
+size = Vector3(0.2, 2.3, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kcubn"]
+size = Vector3(0.2, 1.2, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1aes5"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wat2j"]
+size = Vector3(0.2, 2.3, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_aeb4p"]
+size = Vector3(0.2, 1.2, 0.39999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0ip80"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7hefk"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n8trj"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ixvsh"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3ulad"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vu5c8"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bhjme"]
+size = Vector3(2.2666667, 0.2, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_87lfl"]
+size = Vector3(2.2666667, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_43ivh"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="BoxMesh" id="BoxMesh_frotb"]
+size = Vector3(0.2, 3.5, 2.3999999)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mpak0"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ok4sa"]
+size = Vector3(2.5333333, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vnt5e"]
+size = Vector3(2.5333333, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w6gdd"]
+size = Vector3(2.5333333, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pyk1x"]
+size = Vector3(2.5333333, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4w6or"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f5jl3"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yhm7v"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1pofp"]
+size = Vector3(2.5333333, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dbfwv"]
+size = Vector3(2.5333333, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_13hoi"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vrvk6"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0lppc"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_esoqo"]
+size = Vector3(2.5333333, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h8ppa"]
+size = Vector3(2.5333333, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eafhk"]
+size = Vector3(0.46666664, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kwpb2"]
+size = Vector3(0.46666664, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_so7tl"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_iw6ao"]
+size = Vector3(0.46666664, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gmuks"]
+size = Vector3(0.46666664, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6pmue"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8gfoj"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_illgs"]
+size = Vector3(2.5333333, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6e0wd"]
+size = Vector3(2.5333333, 0.2, 2.6666667)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ppse0"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xuea0"]
+size = Vector3(2.5333333, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7x14i"]
+size = Vector3(0.2, 3.5, 2.6666667)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_atcvn"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_03xt6"]
+size = Vector3(6.8, 0.2, 7.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_suysv"]
+size = Vector3(6.8, 0.2, 7.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7awkq"]
+size = Vector3(2.6000001, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ift2b"]
+size = Vector3(2.6000001, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6ropl"]
+size = Vector3(1.6, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_l8sw6"]
+size = Vector3(2.6000001, 2.3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_seyen"]
+size = Vector3(2.6000001, 1.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_liwm8"]
+size = Vector3(6.8, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mwxul"]
+size = Vector3(0.2, 2.3, 2.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_r7p3j"]
+size = Vector3(0.2, 1.2, 2.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_x5b3b"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1bul6"]
+size = Vector3(0.2, 2.3, 2.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_y358o"]
+size = Vector3(0.2, 1.2, 2.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_x00cq"]
+size = Vector3(0.2, 3.5, 7.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i50nr"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_islsk"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_k2jg4"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jh50c"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_affnc"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h8hij"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u6m4l"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u4n5i"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wtf23"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_82g46"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ool6j"]
+size = Vector3(0.2, 3.5, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1go8i"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5rpms"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kgere"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8w3kw"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d635r"]
+size = Vector3(2.3999999, 0.2, 2.5333333)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u5qh6"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6u5rh"]
+size = Vector3(2.3999999, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3p32x"]
+size = Vector3(0.2, 2.3, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_b75qg"]
+size = Vector3(0.2, 1.2, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4u0tu"]
+size = Vector3(0.2, 1.2, 1.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_52m46"]
+size = Vector3(0.2, 2.3, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7si3n"]
+size = Vector3(0.2, 1.2, 0.46666664)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lt6vc"]
+size = Vector3(2, 0.2, 0.20000005)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gllkw"]
+size = Vector3(2, 0.2, 0.20000005)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fv1w0"]
+size = Vector3(0.2, 3.5, 0.20000005)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wfgmf"]
+size = Vector3(0.2, 3.5, 0.20000005)
+
+[sub_resource type="BoxMesh" id="BoxMesh_31i55"]
+size = Vector3(2, 0.2, 0.4000001)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uimo4"]
+size = Vector3(2, 0.2, 0.4000001)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h275y"]
+size = Vector3(0.2, 3.5, 0.4000001)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f2lus"]
+size = Vector3(0.2, 3.5, 0.4000001)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jt5mr"]
+size = Vector3(1, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_umb2k"]
+size = Vector3(1, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pyyof"]
+size = Vector3(1, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rppqi"]
+size = Vector3(1, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_14ipq"]
+size = Vector3(2, 0.2, 0.8000002)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gtk0l"]
+size = Vector3(2, 0.2, 0.8000002)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fr0sn"]
+size = Vector3(0.2, 3.5, 0.8000002)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oov74"]
+size = Vector3(0.2, 3.5, 0.8000002)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ahg6n"]
+size = Vector3(2, 0.2, 0.8000002)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g465b"]
+size = Vector3(2, 0.2, 0.8000002)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xiygi"]
+size = Vector3(0.2, 3.5, 0.8000002)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ay73c"]
+size = Vector3(0.2, 3.5, 0.8000002)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vdvv5"]
+size = Vector3(2, 0.2, 1.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_x7jbw"]
+size = Vector3(2, 0.2, 1.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ft86r"]
+size = Vector3(0.2, 3.5, 1.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_eit3w"]
+size = Vector3(0.2, 3.5, 1.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yb0q0"]
+size = Vector3(1, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_c1ofs"]
+size = Vector3(1, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sdg3o"]
+size = Vector3(1, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xppv7"]
+size = Vector3(1, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1ejg8"]
+size = Vector3(1, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fs1vy"]
+size = Vector3(1, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pdy65"]
+size = Vector3(1, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_j6tu6"]
+size = Vector3(1, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ure8d"]
+size = Vector3(0.20000005, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cbpvb"]
+size = Vector3(0.20000005, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7a7pl"]
+size = Vector3(0.20000005, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pgiuh"]
+size = Vector3(0.20000005, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jon66"]
+size = Vector3(0.60000014, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7dblq"]
+size = Vector3(0.60000014, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kaj3f"]
+size = Vector3(0.60000014, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8baaj"]
+size = Vector3(0.60000014, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_t224a"]
+size = Vector3(0.8000002, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cb02u"]
+size = Vector3(0.8000002, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rlpva"]
+size = Vector3(0.8000002, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ft6os"]
+size = Vector3(0.8000002, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_plk3l"]
+size = Vector3(1, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kcl30"]
+size = Vector3(1, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_j63xl"]
+size = Vector3(1, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gqnon"]
+size = Vector3(1, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ds1l0"]
+size = Vector3(2, 0.2, 0.79999995)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8gq0t"]
+size = Vector3(2, 0.2, 0.79999995)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6ing5"]
+size = Vector3(0.2, 3.5, 0.79999995)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3aarv"]
+size = Vector3(0.2, 3.5, 0.79999995)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wwysc"]
+size = Vector3(1, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u8m8d"]
+size = Vector3(1, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vq7cf"]
+size = Vector3(1, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8ihmt"]
+size = Vector3(1, 3.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dr0j4"]
+size = Vector3(2, 0.2, 1.1999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yx3s0"]
+size = Vector3(2, 0.2, 1.1999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jfvjb"]
+size = Vector3(0.2, 3.5, 1.1999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4d3uy"]
+size = Vector3(0.2, 3.5, 1.1999998)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lru4y"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_16ysa"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sueik"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_x7pbb"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hk1os"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8t3jm"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nb4pv"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qsjll"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r2ryc"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7v4ur"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e1ym1"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qcobi"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ji76"]
+shading_mode = 0
+albedo_color = Color(0.21960784, 0.72156864, 0.8745098, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_v6wqy"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_suljt"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lk7va"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cce0j"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_v6cry"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cmix8"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_s7y6l"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2c4qe"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2bqkt"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_il7dj"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yl5cn"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6p24f"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d4bls"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ckel5"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_68csx"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2sch"]
+shading_mode = 0
+albedo_color = Color(0.9137255, 0.67058825, 0.25882354, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hquh8"]
+size = Vector3(0.3, 0.025, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_17pmk"]
+shading_mode = 0
+albedo_color = Color(0.6627451, 0.4862745, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_llbm1"]
+size = Vector3(0.3, 0.025, 8)
+
+[node name="DungeonAuthoring3D" type="Node3D" unique_id=531022294]
+script = ExtResource("1_author")
+config = SubResource("DungeonConfig_example")
+layout = SubResource("Resource_ea11j")
+preview_palette = SubResource("Resource_bp0g5")
+output_scene_path = "res://room_creator/dungeons/example_dungeon.tscn"
+
+[node name="DungeonPreview" type="Node3D" parent="." unique_id=141843991]
+metadata/room_creator_generated = true
+metadata/layout_fingerprint = "dbf48ee03e525f1036dac4ce680a0e0a"
+metadata/layout_seed = 825
+metadata/entrance_id = "room_0000"
+metadata/exit_id = "room_0007"
+
+[node name="room_0000" type="Node3D" parent="DungeonPreview" unique_id=705778753]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 160)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0000"
+metadata/role = 0
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1321860113]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_dvf3k")
+mesh = SubResource("BoxMesh_n8dmj")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1085290287]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_dvf3k")
+mesh = SubResource("BoxMesh_cl6dn")
+
+[node name="Floor_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1461800708]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 2.5333333)
+material_override = SubResource("StandardMaterial3D_dvf3k")
+mesh = SubResource("BoxMesh_oxcfb")
+
+[node name="Ceiling_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1409048384]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.5333333)
+material_override = SubResource("StandardMaterial3D_dvf3k")
+mesh = SubResource("BoxMesh_hbxx2")
+
+[node name="TileWall_1_2_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=432849792]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 3.7)
+mesh = SubResource("BoxMesh_0r6hv")
+
+[node name="TileWall_1_2_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=293552352]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2333333, 1.75, 2.5333333)
+mesh = SubResource("BoxMesh_em0jj")
+
+[node name="TileWall_1_2_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1543874993]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2333333, 1.75, 2.5333333)
+mesh = SubResource("BoxMesh_psxop")
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1047114599]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6666667, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_dvf3k")
+mesh = SubResource("BoxMesh_gq2t2")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1794632067]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6666667, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_dvf3k")
+mesh = SubResource("BoxMesh_vryef")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=389594449]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6666667, 1.75, -1.1666666)
+mesh = SubResource("BoxMesh_w2vk8")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=717346759]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6666667, 1.75, 1.1666666)
+mesh = SubResource("BoxMesh_tcjg7")
+
+[node name="TileWall_2_1_3_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=686810576]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, 1.15, -1.0333333)
+mesh = SubResource("BoxMesh_syxaa")
+
+[node name="TileWall_2_1_3_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=343986674]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, 2.9, -1.0333333)
+mesh = SubResource("BoxMesh_k8w71")
+
+[node name="TileWall_2_1_3_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1701196121]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, 2.9, 0)
+mesh = SubResource("BoxMesh_7safe")
+
+[node name="TileWall_2_1_3_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1699221246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, 1.15, 1.0333333)
+mesh = SubResource("BoxMesh_ns18n")
+
+[node name="TileWall_2_1_3_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1566864790]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, 2.9, 1.0333333)
+mesh = SubResource("BoxMesh_ei7xe")
+
+[node name="Floor_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1593242119]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6666667, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_dvf3k")
+mesh = SubResource("BoxMesh_fj5r2")
+
+[node name="Ceiling_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1300469931]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6666667, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_dvf3k")
+mesh = SubResource("BoxMesh_asavl")
+
+[node name="TileWall_0_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=67441519]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6666667, 1.75, -1.1666666)
+mesh = SubResource("BoxMesh_hw5ct")
+
+[node name="TileWall_0_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1842099151]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6666667, 1.75, 1.1666666)
+mesh = SubResource("BoxMesh_lvn80")
+
+[node name="TileWall_0_1_2_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1858103397]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 1.15, -1.0333333)
+mesh = SubResource("BoxMesh_65itj")
+
+[node name="TileWall_0_1_2_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1764385290]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 2.9, -1.0333333)
+mesh = SubResource("BoxMesh_2gkvf")
+
+[node name="TileWall_0_1_2_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=2144885945]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 2.9, 0)
+mesh = SubResource("BoxMesh_0furc")
+
+[node name="TileWall_0_1_2_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1190948368]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 1.15, 1.0333333)
+mesh = SubResource("BoxMesh_b6ki0")
+
+[node name="TileWall_0_1_2_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=471152323]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 2.9, 1.0333333)
+mesh = SubResource("BoxMesh_2j5ta")
+
+[node name="Floor_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=335895533]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.5333333)
+material_override = SubResource("StandardMaterial3D_dvf3k")
+mesh = SubResource("BoxMesh_2bpra")
+
+[node name="Ceiling_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1572672297]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -2.5333333)
+material_override = SubResource("StandardMaterial3D_dvf3k")
+mesh = SubResource("BoxMesh_yhcm2")
+
+[node name="TileWall_1_0_0_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=2053801710]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0666667, 1.15, -3.7)
+mesh = SubResource("BoxMesh_w67q0")
+
+[node name="TileWall_1_0_0_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1207331785]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0666667, 2.9, -3.7)
+mesh = SubResource("BoxMesh_hb6qb")
+
+[node name="TileWall_1_0_0_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1054453216]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -3.7)
+mesh = SubResource("BoxMesh_ft4tn")
+
+[node name="TileWall_1_0_0_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=780145075]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0666667, 1.15, -3.7)
+mesh = SubResource("BoxMesh_meb3q")
+
+[node name="TileWall_1_0_0_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=1179187552]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0666667, 2.9, -3.7)
+mesh = SubResource("BoxMesh_ynrx0")
+
+[node name="TileWall_1_0_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=2011767199]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2333333, 1.75, -2.5333333)
+mesh = SubResource("BoxMesh_gw5bx")
+
+[node name="TileWall_1_0_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0000" unique_id=837953055]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2333333, 1.75, -2.5333333)
+mesh = SubResource("BoxMesh_dtb48")
+
+[node name="Socket_exterior_entrance" type="Marker3D" parent="DungeonPreview/room_0000" unique_id=812473434]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4, 0, 0)
+metadata/stable_id = "exterior_entrance"
+metadata/wall = 2
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0000" type="Marker3D" parent="DungeonPreview/room_0000" unique_id=878141258]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.8)
+metadata/stable_id = "edge_0000"
+metadata/wall = 0
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0008" type="Marker3D" parent="DungeonPreview/room_0000" unique_id=1816746908]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4, 0, 0)
+metadata/stable_id = "edge_0008"
+metadata/wall = 3
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0001" type="Node3D" parent="DungeonPreview" unique_id=637836971]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 152)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0001"
+metadata/role = 1
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=1734073081]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_kipfw")
+mesh = SubResource("BoxMesh_pqs1i")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=221676706]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_kipfw")
+mesh = SubResource("BoxMesh_of76x")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=470532770]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, -1.2333333)
+mesh = SubResource("BoxMesh_lk2w4")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=502887230]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, 1.2333333)
+mesh = SubResource("BoxMesh_jukma")
+
+[node name="TileWall_2_1_3_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=1890406062]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.15, -1.0666667)
+mesh = SubResource("BoxMesh_0knbq")
+
+[node name="TileWall_2_1_3_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=455175938]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, -1.0666667)
+mesh = SubResource("BoxMesh_5la7m")
+
+[node name="TileWall_2_1_3_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=72013470]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, 0)
+mesh = SubResource("BoxMesh_pqlm8")
+
+[node name="TileWall_2_1_3_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=58481726]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.15, 1.0666667)
+mesh = SubResource("BoxMesh_a4e8a")
+
+[node name="TileWall_2_1_3_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=1064957899]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, 1.0666667)
+mesh = SubResource("BoxMesh_ac0wy")
+
+[node name="Floor_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=1074580832]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.6666667)
+material_override = SubResource("StandardMaterial3D_kipfw")
+mesh = SubResource("BoxMesh_dmafe")
+
+[node name="Ceiling_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=819099758]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -2.6666667)
+material_override = SubResource("StandardMaterial3D_kipfw")
+mesh = SubResource("BoxMesh_opbi6")
+
+[node name="TileWall_1_0_0_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=856461906]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.15, -3.9)
+mesh = SubResource("BoxMesh_ccjwv")
+
+[node name="TileWall_1_0_0_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=1613171945]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.9, -3.9)
+mesh = SubResource("BoxMesh_2lglm")
+
+[node name="TileWall_1_0_0_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=336950023]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -3.9)
+mesh = SubResource("BoxMesh_nqp0w")
+
+[node name="TileWall_1_0_0_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=362513806]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.15, -3.9)
+mesh = SubResource("BoxMesh_3vsx1")
+
+[node name="TileWall_1_0_0_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=1148579317]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.9, -3.9)
+mesh = SubResource("BoxMesh_1aqjv")
+
+[node name="TileWall_1_0_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=301490263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.75, -2.6666667)
+mesh = SubResource("BoxMesh_jy83m")
+
+[node name="TileWall_1_0_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=751075620]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.75, -2.6666667)
+mesh = SubResource("BoxMesh_40vxb")
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=399202121]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_kipfw")
+mesh = SubResource("BoxMesh_uo3at")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=115174684]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_kipfw")
+mesh = SubResource("BoxMesh_bih6s")
+
+[node name="TileWall_1_1_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=2071867812]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.75, 0)
+mesh = SubResource("BoxMesh_oedyj")
+
+[node name="Floor_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=818848441]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 2.6666667)
+material_override = SubResource("StandardMaterial3D_kipfw")
+mesh = SubResource("BoxMesh_kqms5")
+
+[node name="Ceiling_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=679595469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.6666667)
+material_override = SubResource("StandardMaterial3D_kipfw")
+mesh = SubResource("BoxMesh_sh4p4")
+
+[node name="TileWall_1_2_1_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=958029167]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.15, 3.9)
+mesh = SubResource("BoxMesh_jk57s")
+
+[node name="TileWall_1_2_1_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=1523379852]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.9, 3.9)
+mesh = SubResource("BoxMesh_0sabq")
+
+[node name="TileWall_1_2_1_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=17508747]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 3.9)
+mesh = SubResource("BoxMesh_4k51t")
+
+[node name="TileWall_1_2_1_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=1127800820]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.15, 3.9)
+mesh = SubResource("BoxMesh_eg0ii")
+
+[node name="TileWall_1_2_1_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=237318790]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.9, 3.9)
+mesh = SubResource("BoxMesh_4t236")
+
+[node name="TileWall_1_2_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=1634624994]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.75, 2.6666667)
+mesh = SubResource("BoxMesh_tn1jx")
+
+[node name="TileWall_1_2_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0001" unique_id=1773105297]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.75, 2.6666667)
+mesh = SubResource("BoxMesh_3egfo")
+
+[node name="Socket_edge_0000" type="Marker3D" parent="DungeonPreview/room_0001" unique_id=1102324566]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 4)
+metadata/stable_id = "edge_0000"
+metadata/wall = 1
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0001" type="Marker3D" parent="DungeonPreview/room_0001" unique_id=2127940471]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+metadata/stable_id = "edge_0001"
+metadata/wall = 0
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0009" type="Marker3D" parent="DungeonPreview/room_0001" unique_id=417190964]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.6, 0, 0)
+metadata/stable_id = "edge_0009"
+metadata/wall = 3
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0002" type="Node3D" parent="DungeonPreview" unique_id=384705704]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 144)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0002"
+metadata/role = 1
+
+[node name="Floor_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=1533244192]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 2.3999999)
+material_override = SubResource("StandardMaterial3D_w1lfl")
+mesh = SubResource("BoxMesh_dkqff")
+
+[node name="Ceiling_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=1335566813]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.3999999)
+material_override = SubResource("StandardMaterial3D_w1lfl")
+mesh = SubResource("BoxMesh_33mqh")
+
+[node name="TileWall_1_2_1_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=569394428]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.15, 3.5)
+mesh = SubResource("BoxMesh_pi8ui")
+
+[node name="TileWall_1_2_1_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=1681821652]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.9, 3.5)
+mesh = SubResource("BoxMesh_i5m22")
+
+[node name="TileWall_1_2_1_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=2129688904]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 3.5)
+mesh = SubResource("BoxMesh_7xo3k")
+
+[node name="TileWall_1_2_1_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=1416694634]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.15, 3.5)
+mesh = SubResource("BoxMesh_dcs74")
+
+[node name="TileWall_1_2_1_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=517953187]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.9, 3.5)
+mesh = SubResource("BoxMesh_pihvj")
+
+[node name="TileWall_1_2_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=369178076]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.75, 2.3999999)
+mesh = SubResource("BoxMesh_f35ef")
+
+[node name="TileWall_1_2_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=1811742681]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.75, 2.3999999)
+mesh = SubResource("BoxMesh_30poe")
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=1085484570]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_w1lfl")
+mesh = SubResource("BoxMesh_tsdsn")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=2068661686]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_w1lfl")
+mesh = SubResource("BoxMesh_g02u3")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=92747322]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, -1.1)
+mesh = SubResource("BoxMesh_eqc35")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=2094257836]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, 1.1)
+mesh = SubResource("BoxMesh_punan")
+
+[node name="TileWall_2_1_3_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=2035108075]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.15, -1)
+mesh = SubResource("BoxMesh_rfrjq")
+
+[node name="TileWall_2_1_3_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=431446438]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, -1)
+mesh = SubResource("BoxMesh_s3fgg")
+
+[node name="TileWall_2_1_3_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=653782664]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, 0)
+mesh = SubResource("BoxMesh_wiag8")
+
+[node name="TileWall_2_1_3_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=1659764941]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.15, 1)
+mesh = SubResource("BoxMesh_yuwoc")
+
+[node name="TileWall_2_1_3_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=545751401]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, 1)
+mesh = SubResource("BoxMesh_4lueh")
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=1432607021]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_w1lfl")
+mesh = SubResource("BoxMesh_dlbsh")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=160215994]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_w1lfl")
+mesh = SubResource("BoxMesh_if2pg")
+
+[node name="TileWall_1_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=1292658898]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -1.1)
+mesh = SubResource("BoxMesh_ki4xh")
+
+[node name="Floor_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=1200675242]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_w1lfl")
+mesh = SubResource("BoxMesh_nhwq8")
+
+[node name="Ceiling_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=380047031]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_w1lfl")
+mesh = SubResource("BoxMesh_ek15i")
+
+[node name="TileWall_0_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=1931080823]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 1.75, -1.1)
+mesh = SubResource("BoxMesh_qfgqb")
+
+[node name="TileWall_0_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=237551952]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 1.75, 1.1)
+mesh = SubResource("BoxMesh_6cujl")
+
+[node name="TileWall_0_1_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0002" unique_id=707635967]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1.75, 0)
+mesh = SubResource("BoxMesh_57u2e")
+
+[node name="Socket_edge_0001" type="Marker3D" parent="DungeonPreview/room_0002" unique_id=869434288]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 3.6)
+metadata/stable_id = "edge_0001"
+metadata/wall = 1
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0002" type="Marker3D" parent="DungeonPreview/room_0002" unique_id=1860718135]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.6, 0, 0)
+metadata/stable_id = "edge_0002"
+metadata/wall = 3
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0003" type="Node3D" parent="DungeonPreview" unique_id=1376672220]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 144)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0003"
+metadata/role = 1
+
+[node name="Floor_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=761629935]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.3999999)
+material_override = SubResource("StandardMaterial3D_tth4w")
+mesh = SubResource("BoxMesh_xre02")
+
+[node name="Ceiling_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1354122698]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -2.3999999)
+material_override = SubResource("StandardMaterial3D_tth4w")
+mesh = SubResource("BoxMesh_3rjji")
+
+[node name="TileWall_1_0_0_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1572947573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9666667, 1.15, -3.5)
+mesh = SubResource("BoxMesh_8scxw")
+
+[node name="TileWall_1_0_0_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=827892972]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9666667, 2.9, -3.5)
+mesh = SubResource("BoxMesh_8ievl")
+
+[node name="TileWall_1_0_0_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=527554650]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -3.5)
+mesh = SubResource("BoxMesh_cvuln")
+
+[node name="TileWall_1_0_0_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=703585701]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9666667, 1.15, -3.5)
+mesh = SubResource("BoxMesh_hlpx5")
+
+[node name="TileWall_1_0_0_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1691422877]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9666667, 2.9, -3.5)
+mesh = SubResource("BoxMesh_q3bm0")
+
+[node name="TileWall_1_0_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1813375586]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333334, 1.75, -2.3999999)
+mesh = SubResource("BoxMesh_f1tly")
+
+[node name="TileWall_1_0_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1296775575]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333334, 1.75, -2.3999999)
+mesh = SubResource("BoxMesh_30t3i")
+
+[node name="Floor_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1826378082]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2666667, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_tth4w")
+mesh = SubResource("BoxMesh_3xvld")
+
+[node name="Ceiling_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=2130817947]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2666667, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_tth4w")
+mesh = SubResource("BoxMesh_f2tdn")
+
+[node name="TileWall_0_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=727260246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2666667, 1.75, -1.1)
+mesh = SubResource("BoxMesh_2lfin")
+
+[node name="TileWall_0_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1028382886]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2666667, 1.75, 1.1)
+mesh = SubResource("BoxMesh_fyaut")
+
+[node name="TileWall_0_1_2_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=413244069]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 1.15, -1)
+mesh = SubResource("BoxMesh_4h4u1")
+
+[node name="TileWall_0_1_2_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1400086551]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 2.9, -1)
+mesh = SubResource("BoxMesh_7yhga")
+
+[node name="TileWall_0_1_2_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=250077052]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 2.9, 0)
+mesh = SubResource("BoxMesh_pdpde")
+
+[node name="TileWall_0_1_2_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1747589412]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 1.15, 1)
+mesh = SubResource("BoxMesh_f6gq0")
+
+[node name="TileWall_0_1_2_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=862530357]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 2.9, 1)
+mesh = SubResource("BoxMesh_hedvq")
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1417235721]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_tth4w")
+mesh = SubResource("BoxMesh_vgu3r")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=2140341429]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_tth4w")
+mesh = SubResource("BoxMesh_tp8kw")
+
+[node name="TileWall_1_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=146162903]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 1.1)
+mesh = SubResource("BoxMesh_105fl")
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=781203500]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_tth4w")
+mesh = SubResource("BoxMesh_urv43")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1388586386]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_tth4w")
+mesh = SubResource("BoxMesh_ijg2i")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1282746919]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, 1.75, -1.1)
+mesh = SubResource("BoxMesh_2mg4j")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=1880965267]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, 1.75, 1.1)
+mesh = SubResource("BoxMesh_ygr5t")
+
+[node name="TileWall_2_1_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0003" unique_id=135111580]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 1.75, 0)
+mesh = SubResource("BoxMesh_15x12")
+
+[node name="Socket_edge_0002" type="Marker3D" parent="DungeonPreview/room_0003" unique_id=1265477459]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.4, 0, 0)
+metadata/stable_id = "edge_0002"
+metadata/wall = 2
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0003" type="Marker3D" parent="DungeonPreview/room_0003" unique_id=556340003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.6)
+metadata/stable_id = "edge_0003"
+metadata/wall = 0
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0004" type="Node3D" parent="DungeonPreview" unique_id=573850294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 136)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0004"
+metadata/role = 1
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=60752473]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_3q4xv")
+mesh = SubResource("BoxMesh_bn68v")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=294923440]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_3q4xv")
+mesh = SubResource("BoxMesh_rkegi")
+
+[node name="Floor_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1451135947]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 2.3999999)
+material_override = SubResource("StandardMaterial3D_3q4xv")
+mesh = SubResource("BoxMesh_itb87")
+
+[node name="Ceiling_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=584695814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.3999999)
+material_override = SubResource("StandardMaterial3D_3q4xv")
+mesh = SubResource("BoxMesh_mal73")
+
+[node name="TileWall_1_2_1_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1936385103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.15, 3.5)
+mesh = SubResource("BoxMesh_h35uy")
+
+[node name="TileWall_1_2_1_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=982845224]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.9, 3.5)
+mesh = SubResource("BoxMesh_1fymc")
+
+[node name="TileWall_1_2_1_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1187479538]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 3.5)
+mesh = SubResource("BoxMesh_h06i6")
+
+[node name="TileWall_1_2_1_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1261941297]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.15, 3.5)
+mesh = SubResource("BoxMesh_tqjp1")
+
+[node name="TileWall_1_2_1_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1408209494]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.9, 3.5)
+mesh = SubResource("BoxMesh_8orpa")
+
+[node name="TileWall_1_2_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=557843406]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.75, 2.3999999)
+mesh = SubResource("BoxMesh_cmvlp")
+
+[node name="TileWall_1_2_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1541570830]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.75, 2.3999999)
+mesh = SubResource("BoxMesh_qb76n")
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=785048812]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_3q4xv")
+mesh = SubResource("BoxMesh_62a3t")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=139294077]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_3q4xv")
+mesh = SubResource("BoxMesh_f1cmv")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1483178825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, -1.1)
+mesh = SubResource("BoxMesh_q2aer")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=534829950]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, 1.1)
+mesh = SubResource("BoxMesh_1sww5")
+
+[node name="TileWall_2_1_3_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=202986272]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.15, -1)
+mesh = SubResource("BoxMesh_4f1bu")
+
+[node name="TileWall_2_1_3_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=192273071]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, -1)
+mesh = SubResource("BoxMesh_me6f0")
+
+[node name="TileWall_2_1_3_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1101321275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, 0)
+mesh = SubResource("BoxMesh_nbul0")
+
+[node name="TileWall_2_1_3_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=774294709]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.15, 1)
+mesh = SubResource("BoxMesh_tr6hf")
+
+[node name="TileWall_2_1_3_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1928098253]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, 1)
+mesh = SubResource("BoxMesh_hglxl")
+
+[node name="Floor_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=511120721]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_3q4xv")
+mesh = SubResource("BoxMesh_0a8j7")
+
+[node name="Ceiling_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1141715008]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_3q4xv")
+mesh = SubResource("BoxMesh_1es7f")
+
+[node name="TileWall_0_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=806894086]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 1.75, -1.1)
+mesh = SubResource("BoxMesh_ajcg8")
+
+[node name="TileWall_0_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1060677739]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 1.75, 1.1)
+mesh = SubResource("BoxMesh_2xxag")
+
+[node name="TileWall_0_1_2_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=112358581]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1.15, -1)
+mesh = SubResource("BoxMesh_e8l6m")
+
+[node name="TileWall_0_1_2_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1982507407]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 2.9, -1)
+mesh = SubResource("BoxMesh_xsmq5")
+
+[node name="TileWall_0_1_2_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1362335357]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 2.9, 0)
+mesh = SubResource("BoxMesh_5bcv5")
+
+[node name="TileWall_0_1_2_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=904505411]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1.15, 1)
+mesh = SubResource("BoxMesh_iwx46")
+
+[node name="TileWall_0_1_2_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1184310726]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 2.9, 1)
+mesh = SubResource("BoxMesh_cdwcx")
+
+[node name="Floor_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=189768345]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.3999999)
+material_override = SubResource("StandardMaterial3D_3q4xv")
+mesh = SubResource("BoxMesh_t4v0p")
+
+[node name="Ceiling_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=160937504]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -2.3999999)
+material_override = SubResource("StandardMaterial3D_3q4xv")
+mesh = SubResource("BoxMesh_wlohp")
+
+[node name="TileWall_1_0_0_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1140929417]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.15, -3.5)
+mesh = SubResource("BoxMesh_baknp")
+
+[node name="TileWall_1_0_0_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=45124586]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.9, -3.5)
+mesh = SubResource("BoxMesh_pra3g")
+
+[node name="TileWall_1_0_0_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1159353005]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -3.5)
+mesh = SubResource("BoxMesh_m7yog")
+
+[node name="TileWall_1_0_0_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1032157575]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.15, -3.5)
+mesh = SubResource("BoxMesh_3blkk")
+
+[node name="TileWall_1_0_0_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=1008643561]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.9, -3.5)
+mesh = SubResource("BoxMesh_0en2w")
+
+[node name="TileWall_1_0_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=2086892224]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.75, -2.3999999)
+mesh = SubResource("BoxMesh_jyi0x")
+
+[node name="TileWall_1_0_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0004" unique_id=685047302]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.75, -2.3999999)
+mesh = SubResource("BoxMesh_codp7")
+
+[node name="Socket_edge_0003" type="Marker3D" parent="DungeonPreview/room_0004" unique_id=477276667]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 3.6)
+metadata/stable_id = "edge_0003"
+metadata/wall = 1
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0004" type="Marker3D" parent="DungeonPreview/room_0004" unique_id=560231817]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.6)
+metadata/stable_id = "edge_0004"
+metadata/wall = 0
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0010" type="Marker3D" parent="DungeonPreview/room_0004" unique_id=1643500576]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.6, 0, 0)
+metadata/stable_id = "edge_0010"
+metadata/wall = 3
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0011" type="Marker3D" parent="DungeonPreview/room_0004" unique_id=208653776]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.6, 0, 0)
+metadata/stable_id = "edge_0011"
+metadata/wall = 2
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0005" type="Node3D" parent="DungeonPreview" unique_id=177245942]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 128)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0005"
+metadata/role = 1
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=164636254]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_hqtdi")
+mesh = SubResource("BoxMesh_2ck5m")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=1223599379]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_hqtdi")
+mesh = SubResource("BoxMesh_41llj")
+
+[node name="Wall_0_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=1585254917]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1000001, 1.15, -3.5)
+mesh = SubResource("BoxMesh_jtx6o")
+
+[node name="Wall_0_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=965019104]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1000001, 2.9, -3.5)
+mesh = SubResource("BoxMesh_gynrj")
+
+[node name="Wall_0_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=2010592374]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -3.5)
+mesh = SubResource("BoxMesh_wat5k")
+
+[node name="Wall_0_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=608473323]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1000001, 1.15, -3.5)
+mesh = SubResource("BoxMesh_5dbo2")
+
+[node name="Wall_0_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=473179081]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1000001, 2.9, -3.5)
+mesh = SubResource("BoxMesh_paxto")
+
+[node name="Wall_1_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=799663680]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1000001, 1.15, 3.5)
+mesh = SubResource("BoxMesh_8lwta")
+
+[node name="Wall_1_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=975548415]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1000001, 2.9, 3.5)
+mesh = SubResource("BoxMesh_yno8s")
+
+[node name="Wall_1_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=1751558070]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 3.5)
+mesh = SubResource("BoxMesh_5qyth")
+
+[node name="Wall_1_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=370232735]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1000001, 1.15, 3.5)
+mesh = SubResource("BoxMesh_q6y63")
+
+[node name="Wall_1_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=449975180]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1000001, 2.9, 3.5)
+mesh = SubResource("BoxMesh_y4gbc")
+
+[node name="Wall_2_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=2126862492]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 1.15, -2.1)
+mesh = SubResource("BoxMesh_do3bl")
+
+[node name="Wall_2_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=258880646]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 2.9, -2.1)
+mesh = SubResource("BoxMesh_pyhcv")
+
+[node name="Wall_2_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=53057090]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 2.9, 0)
+mesh = SubResource("BoxMesh_tin2u")
+
+[node name="Wall_2_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=1960218871]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 1.15, 2.1)
+mesh = SubResource("BoxMesh_y3ee6")
+
+[node name="Wall_2_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=1656356040]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 2.9, 2.1)
+mesh = SubResource("BoxMesh_1wqtt")
+
+[node name="Wall_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0005" unique_id=431203731]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 1.75, 0)
+mesh = SubResource("BoxMesh_nl2yd")
+
+[node name="Socket_edge_0004" type="Marker3D" parent="DungeonPreview/room_0005" unique_id=1954169682]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 3.6)
+metadata/stable_id = "edge_0004"
+metadata/wall = 1
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0005" type="Marker3D" parent="DungeonPreview/room_0005" unique_id=422974526]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.6)
+metadata/stable_id = "edge_0005"
+metadata/wall = 0
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0007" type="Marker3D" parent="DungeonPreview/room_0005" unique_id=1081018923]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.4, 0, 0)
+metadata/stable_id = "edge_0007"
+metadata/wall = 2
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0006" type="Node3D" parent="DungeonPreview" unique_id=649178766]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 120)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0006"
+metadata/role = 1
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1673389081]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_03edc")
+mesh = SubResource("BoxMesh_ea5u2")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=850513752]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_03edc")
+mesh = SubResource("BoxMesh_35tt8")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=671343519]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, 1.75, -0.9666667)
+mesh = SubResource("BoxMesh_a3k80")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1729601568]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, 1.75, 0.9666667)
+mesh = SubResource("BoxMesh_n1gsv")
+
+[node name="TileWall_2_1_3_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=499028927]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 1.15, -0.93333334)
+mesh = SubResource("BoxMesh_xnwwv")
+
+[node name="TileWall_2_1_3_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=716332283]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 2.9, -0.93333334)
+mesh = SubResource("BoxMesh_e3oqn")
+
+[node name="TileWall_2_1_3_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1526244183]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 2.9, 0)
+mesh = SubResource("BoxMesh_f654e")
+
+[node name="TileWall_2_1_3_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1324313114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 1.15, 0.93333334)
+mesh = SubResource("BoxMesh_igmoa")
+
+[node name="TileWall_2_1_3_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1104417510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 2.9, 0.93333334)
+mesh = SubResource("BoxMesh_2qjvo")
+
+[node name="Floor_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1084007676]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.1333334)
+material_override = SubResource("StandardMaterial3D_03edc")
+mesh = SubResource("BoxMesh_7i8kd")
+
+[node name="Ceiling_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=740704390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -2.1333334)
+material_override = SubResource("StandardMaterial3D_03edc")
+mesh = SubResource("BoxMesh_ir5if")
+
+[node name="TileWall_1_0_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1667523119]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -3.1000001)
+mesh = SubResource("BoxMesh_c4qru")
+
+[node name="TileWall_1_0_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1483031111]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333334, 1.75, -2.1333334)
+mesh = SubResource("BoxMesh_us11p")
+
+[node name="TileWall_1_0_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=956535342]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333334, 1.75, -2.1333334)
+mesh = SubResource("BoxMesh_wjig5")
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=375650397]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_03edc")
+mesh = SubResource("BoxMesh_e24q5")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1500580584]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_03edc")
+mesh = SubResource("BoxMesh_5kebf")
+
+[node name="TileWall_1_1_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1123330417]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333334, 1.75, 0)
+mesh = SubResource("BoxMesh_e83ov")
+
+[node name="Floor_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1051561068]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 2.1333334)
+material_override = SubResource("StandardMaterial3D_03edc")
+mesh = SubResource("BoxMesh_41p3b")
+
+[node name="Ceiling_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=887394848]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.1333334)
+material_override = SubResource("StandardMaterial3D_03edc")
+mesh = SubResource("BoxMesh_qsmeu")
+
+[node name="TileWall_1_2_1_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=663252900]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9666667, 1.15, 3.1000001)
+mesh = SubResource("BoxMesh_ifmc2")
+
+[node name="TileWall_1_2_1_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=637989898]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9666667, 2.9, 3.1000001)
+mesh = SubResource("BoxMesh_om0dg")
+
+[node name="TileWall_1_2_1_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=29776985]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 3.1000001)
+mesh = SubResource("BoxMesh_xrush")
+
+[node name="TileWall_1_2_1_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1851735712]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9666667, 1.15, 3.1000001)
+mesh = SubResource("BoxMesh_5mr14")
+
+[node name="TileWall_1_2_1_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=2050340967]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9666667, 2.9, 3.1000001)
+mesh = SubResource("BoxMesh_ni7yk")
+
+[node name="TileWall_1_2_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=1412168903]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333334, 1.75, 2.1333334)
+mesh = SubResource("BoxMesh_4p7v2")
+
+[node name="TileWall_1_2_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0006" unique_id=577541671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333334, 1.75, 2.1333334)
+mesh = SubResource("BoxMesh_stgnp")
+
+[node name="Socket_edge_0005" type="Marker3D" parent="DungeonPreview/room_0006" unique_id=1301920201]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 3.2)
+metadata/stable_id = "edge_0005"
+metadata/wall = 1
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0006" type="Marker3D" parent="DungeonPreview/room_0006" unique_id=432999460]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.4, 0, 0)
+metadata/stable_id = "edge_0006"
+metadata/wall = 3
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0007" type="Node3D" parent="DungeonPreview" unique_id=655196502]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 120)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0007"
+metadata/role = 2
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=752372702]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_wnjex")
+mesh = SubResource("BoxMesh_w56g4")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1782823966]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_wnjex")
+mesh = SubResource("BoxMesh_yq0ex")
+
+[node name="Floor_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1558750419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_wnjex")
+mesh = SubResource("BoxMesh_ihfgt")
+
+[node name="Ceiling_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1064642714]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_wnjex")
+mesh = SubResource("BoxMesh_k46bj")
+
+[node name="TileWall_0_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=224567071]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 1.75, -1.1666666)
+mesh = SubResource("BoxMesh_d7cw0")
+
+[node name="TileWall_0_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1945917277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 1.75, 1.1666666)
+mesh = SubResource("BoxMesh_rv16w")
+
+[node name="TileWall_0_1_2_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=118038724]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1.15, -1.0333333)
+mesh = SubResource("BoxMesh_amf0q")
+
+[node name="TileWall_0_1_2_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=182148325]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 2.9, -1.0333333)
+mesh = SubResource("BoxMesh_oimep")
+
+[node name="TileWall_0_1_2_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=2073910817]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 2.9, 0)
+mesh = SubResource("BoxMesh_nhjp1")
+
+[node name="TileWall_0_1_2_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=300150473]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1.15, 1.0333333)
+mesh = SubResource("BoxMesh_pagfa")
+
+[node name="TileWall_0_1_2_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1343078596]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 2.9, 1.0333333)
+mesh = SubResource("BoxMesh_bcdpa")
+
+[node name="Floor_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=220314765]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 2.5333333)
+material_override = SubResource("StandardMaterial3D_wnjex")
+mesh = SubResource("BoxMesh_3u45y")
+
+[node name="Ceiling_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=701154755]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.5333333)
+material_override = SubResource("StandardMaterial3D_wnjex")
+mesh = SubResource("BoxMesh_n82f7")
+
+[node name="TileWall_1_2_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1498586408]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 3.7)
+mesh = SubResource("BoxMesh_2edj2")
+
+[node name="TileWall_1_2_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=242495658]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.75, 2.5333333)
+mesh = SubResource("BoxMesh_a8dce")
+
+[node name="TileWall_1_2_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=848388641]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.75, 2.5333333)
+mesh = SubResource("BoxMesh_bqqn1")
+
+[node name="Floor_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1226013172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.5333333)
+material_override = SubResource("StandardMaterial3D_wnjex")
+mesh = SubResource("BoxMesh_ueg1s")
+
+[node name="Ceiling_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1522677789]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -2.5333333)
+material_override = SubResource("StandardMaterial3D_wnjex")
+mesh = SubResource("BoxMesh_w75vm")
+
+[node name="TileWall_1_0_0_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1687224510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.15, -3.7)
+mesh = SubResource("BoxMesh_obrxf")
+
+[node name="TileWall_1_0_0_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1470469300]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.9, -3.7)
+mesh = SubResource("BoxMesh_anljn")
+
+[node name="TileWall_1_0_0_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1199031295]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -3.7)
+mesh = SubResource("BoxMesh_ejeya")
+
+[node name="TileWall_1_0_0_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=964787662]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.15, -3.7)
+mesh = SubResource("BoxMesh_p1tgq")
+
+[node name="TileWall_1_0_0_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=748174588]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.9, -3.7)
+mesh = SubResource("BoxMesh_y2uxw")
+
+[node name="TileWall_1_0_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1639443414]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.75, -2.5333333)
+mesh = SubResource("BoxMesh_l1480")
+
+[node name="TileWall_1_0_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1437651905]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.75, -2.5333333)
+mesh = SubResource("BoxMesh_lynfm")
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1261995790]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_wnjex")
+mesh = SubResource("BoxMesh_gqrx5")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1190414930]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_wnjex")
+mesh = SubResource("BoxMesh_oxy84")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1147851981]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, -1.1666666)
+mesh = SubResource("BoxMesh_c6csv")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=1483030355]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, 1.1666666)
+mesh = SubResource("BoxMesh_ing6s")
+
+[node name="TileWall_2_1_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0007" unique_id=286618234]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.75, 0)
+mesh = SubResource("BoxMesh_b30fe")
+
+[node name="Socket_exterior_exit" type="Marker3D" parent="DungeonPreview/room_0007" unique_id=1395669720]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.8)
+metadata/stable_id = "exterior_exit"
+metadata/wall = 0
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0006" type="Marker3D" parent="DungeonPreview/room_0007" unique_id=866643924]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.6, 0, 0)
+metadata/stable_id = "edge_0006"
+metadata/wall = 2
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0008" type="Node3D" parent="DungeonPreview" unique_id=952934997]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 128)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0008"
+metadata/role = 3
+
+[node name="Floor_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=457236259]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.6666667)
+material_override = SubResource("StandardMaterial3D_1td26")
+mesh = SubResource("BoxMesh_6yrfm")
+
+[node name="Ceiling_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=36801746]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -2.6666667)
+material_override = SubResource("StandardMaterial3D_1td26")
+mesh = SubResource("BoxMesh_kqtt0")
+
+[node name="TileWall_1_0_0_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=914768071]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.15, -3.9)
+mesh = SubResource("BoxMesh_cyfb8")
+
+[node name="TileWall_1_0_0_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=2108303742]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.9, -3.9)
+mesh = SubResource("BoxMesh_uvtmc")
+
+[node name="TileWall_1_0_0_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=993620048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -3.9)
+mesh = SubResource("BoxMesh_p2uw3")
+
+[node name="TileWall_1_0_0_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=238876749]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.15, -3.9)
+mesh = SubResource("BoxMesh_8sp3b")
+
+[node name="TileWall_1_0_0_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=695231684]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.9, -3.9)
+mesh = SubResource("BoxMesh_vlgle")
+
+[node name="TileWall_1_0_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=195411168]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.75, -2.6666667)
+mesh = SubResource("BoxMesh_a1lih")
+
+[node name="TileWall_1_0_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=154918831]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.75, -2.6666667)
+mesh = SubResource("BoxMesh_eu8ph")
+
+[node name="Floor_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=162558114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_1td26")
+mesh = SubResource("BoxMesh_djn8p")
+
+[node name="Ceiling_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=500075835]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_1td26")
+mesh = SubResource("BoxMesh_v7sse")
+
+[node name="TileWall_0_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=1838023906]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 1.75, -1.2333333)
+mesh = SubResource("BoxMesh_moov3")
+
+[node name="TileWall_0_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=1312375725]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 1.75, 1.2333333)
+mesh = SubResource("BoxMesh_74jp8")
+
+[node name="TileWall_0_1_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=1661350074]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1.75, 0)
+mesh = SubResource("BoxMesh_0ry6g")
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=1341688313]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_1td26")
+mesh = SubResource("BoxMesh_44njr")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=652630566]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_1td26")
+mesh = SubResource("BoxMesh_84lds")
+
+[node name="TileWall_1_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=34899954]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 1.2333333)
+mesh = SubResource("BoxMesh_fqh02")
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=198364382]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_1td26")
+mesh = SubResource("BoxMesh_qw2rq")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=1514020348]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_1td26")
+mesh = SubResource("BoxMesh_to0ly")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=1869396684]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, -1.2333333)
+mesh = SubResource("BoxMesh_sjrlr")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=1636369511]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, 1.2333333)
+mesh = SubResource("BoxMesh_6qgpv")
+
+[node name="TileWall_2_1_3_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=2090578856]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.15, -1.0666667)
+mesh = SubResource("BoxMesh_olt40")
+
+[node name="TileWall_2_1_3_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=1265119246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, -1.0666667)
+mesh = SubResource("BoxMesh_l2gtc")
+
+[node name="TileWall_2_1_3_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=1390148945]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, 0)
+mesh = SubResource("BoxMesh_56183")
+
+[node name="TileWall_2_1_3_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=1751536526]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.15, 1.0666667)
+mesh = SubResource("BoxMesh_knalh")
+
+[node name="TileWall_2_1_3_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0008" unique_id=102561205]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, 1.0666667)
+mesh = SubResource("BoxMesh_cil8i")
+
+[node name="Socket_edge_0007" type="Marker3D" parent="DungeonPreview/room_0008" unique_id=596615086]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.6, 0, 0)
+metadata/stable_id = "edge_0007"
+metadata/wall = 3
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0012" type="Marker3D" parent="DungeonPreview/room_0008" unique_id=1136786781]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+metadata/stable_id = "edge_0012"
+metadata/wall = 0
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0009" type="Node3D" parent="DungeonPreview" unique_id=269168352]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 160)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0009"
+metadata/role = 3
+
+[node name="Floor_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1462040740]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_bld0u")
+mesh = SubResource("BoxMesh_qjep2")
+
+[node name="Ceiling_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=814694932]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_bld0u")
+mesh = SubResource("BoxMesh_r7ysp")
+
+[node name="TileWall_0_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1989689215]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, 1.75, -1.0333334)
+mesh = SubResource("BoxMesh_yo07p")
+
+[node name="TileWall_0_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=123107787]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, 1.75, 1.0333334)
+mesh = SubResource("BoxMesh_4r41l")
+
+[node name="TileWall_0_1_2_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=918535932]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 1.15, -0.9666667)
+mesh = SubResource("BoxMesh_u8g3a")
+
+[node name="TileWall_0_1_2_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=776783885]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 2.9, -0.9666667)
+mesh = SubResource("BoxMesh_o1che")
+
+[node name="TileWall_0_1_2_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1640010320]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 2.9, 0)
+mesh = SubResource("BoxMesh_5125y")
+
+[node name="TileWall_0_1_2_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1715884262]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 1.15, 0.9666667)
+mesh = SubResource("BoxMesh_nfba0")
+
+[node name="TileWall_0_1_2_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=182786672]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 2.9, 0.9666667)
+mesh = SubResource("BoxMesh_jodmc")
+
+[node name="Floor_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1350842217]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 2.2666667)
+material_override = SubResource("StandardMaterial3D_bld0u")
+mesh = SubResource("BoxMesh_mkbe7")
+
+[node name="Ceiling_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=2072533182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.2666667)
+material_override = SubResource("StandardMaterial3D_bld0u")
+mesh = SubResource("BoxMesh_11don")
+
+[node name="TileWall_1_2_1_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1812350629]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333333, 1.15, 3.3000002)
+mesh = SubResource("BoxMesh_e2mba")
+
+[node name="TileWall_1_2_1_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=511744672]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333333, 2.9, 3.3000002)
+mesh = SubResource("BoxMesh_c1nyk")
+
+[node name="TileWall_1_2_1_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1273819937]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 3.3000002)
+mesh = SubResource("BoxMesh_u60cn")
+
+[node name="TileWall_1_2_1_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=2144898864]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333333, 1.15, 3.3000002)
+mesh = SubResource("BoxMesh_irsvq")
+
+[node name="TileWall_1_2_1_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1028439347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333333, 2.9, 3.3000002)
+mesh = SubResource("BoxMesh_pnmql")
+
+[node name="TileWall_1_2_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=558048487]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1666666, 1.75, 2.2666667)
+mesh = SubResource("BoxMesh_p3ayp")
+
+[node name="TileWall_1_2_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1136309002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1666666, 1.75, 2.2666667)
+mesh = SubResource("BoxMesh_m63yj")
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=297814053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_bld0u")
+mesh = SubResource("BoxMesh_634d0")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=773308242]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_bld0u")
+mesh = SubResource("BoxMesh_hc2vw")
+
+[node name="TileWall_1_1_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=501987718]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1666666, 1.75, 0)
+mesh = SubResource("BoxMesh_1lqg4")
+
+[node name="Floor_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1928362671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.2666667)
+material_override = SubResource("StandardMaterial3D_bld0u")
+mesh = SubResource("BoxMesh_tjsah")
+
+[node name="Ceiling_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1768621534]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -2.2666667)
+material_override = SubResource("StandardMaterial3D_bld0u")
+mesh = SubResource("BoxMesh_80cbs")
+
+[node name="TileWall_1_0_0_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1884657819]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333333, 1.15, -3.3000002)
+mesh = SubResource("BoxMesh_exhp0")
+
+[node name="TileWall_1_0_0_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1332048330]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333333, 2.9, -3.3000002)
+mesh = SubResource("BoxMesh_dvuco")
+
+[node name="TileWall_1_0_0_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1456400580]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -3.3000002)
+mesh = SubResource("BoxMesh_agh5q")
+
+[node name="TileWall_1_0_0_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=81057182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333333, 1.15, -3.3000002)
+mesh = SubResource("BoxMesh_nfb5g")
+
+[node name="TileWall_1_0_0_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1770388018]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333333, 2.9, -3.3000002)
+mesh = SubResource("BoxMesh_5lyeu")
+
+[node name="TileWall_1_0_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1478923935]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1666666, 1.75, -2.2666667)
+mesh = SubResource("BoxMesh_3gyts")
+
+[node name="TileWall_1_0_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0009" unique_id=1950507098]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1666666, 1.75, -2.2666667)
+mesh = SubResource("BoxMesh_51vnu")
+
+[node name="Socket_edge_0008" type="Marker3D" parent="DungeonPreview/room_0009" unique_id=1589821565]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.8, 0, 0)
+metadata/stable_id = "edge_0008"
+metadata/wall = 2
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0013" type="Marker3D" parent="DungeonPreview/room_0009" unique_id=998416954]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 3.4)
+metadata/stable_id = "edge_0013"
+metadata/wall = 1
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0015" type="Marker3D" parent="DungeonPreview/room_0009" unique_id=253461079]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.4)
+metadata/stable_id = "edge_0015"
+metadata/wall = 0
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0010" type="Node3D" parent="DungeonPreview" unique_id=929037077]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 152)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0010"
+metadata/role = 3
+
+[node name="Floor_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1955060682]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 2.2666667)
+material_override = SubResource("StandardMaterial3D_nxxlv")
+mesh = SubResource("BoxMesh_8rf3s")
+
+[node name="Ceiling_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1019723174]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.2666667)
+material_override = SubResource("StandardMaterial3D_nxxlv")
+mesh = SubResource("BoxMesh_7l7vk")
+
+[node name="TileWall_1_2_1_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1836383343]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333333, 1.15, 3.3000002)
+mesh = SubResource("BoxMesh_umy0k")
+
+[node name="TileWall_1_2_1_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1344922644]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333333, 2.9, 3.3000002)
+mesh = SubResource("BoxMesh_v77gt")
+
+[node name="TileWall_1_2_1_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=719558147]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 3.3000002)
+mesh = SubResource("BoxMesh_nsrrf")
+
+[node name="TileWall_1_2_1_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1867443708]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333333, 1.15, 3.3000002)
+mesh = SubResource("BoxMesh_a5vd8")
+
+[node name="TileWall_1_2_1_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1634072041]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333333, 2.9, 3.3000002)
+mesh = SubResource("BoxMesh_h1o6p")
+
+[node name="TileWall_1_2_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1170097076]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1666666, 1.75, 2.2666667)
+mesh = SubResource("BoxMesh_7oyy0")
+
+[node name="TileWall_1_2_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1756472579]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1666666, 1.75, 2.2666667)
+mesh = SubResource("BoxMesh_qbge0")
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=430063765]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5333333, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_nxxlv")
+mesh = SubResource("BoxMesh_0e7px")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=483171006]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5333333, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_nxxlv")
+mesh = SubResource("BoxMesh_4ypky")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=694423785]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5333333, 1.75, -1.0333334)
+mesh = SubResource("BoxMesh_wuvb0")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1121344008]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5333333, 1.75, 1.0333334)
+mesh = SubResource("BoxMesh_6mijl")
+
+[node name="TileWall_2_1_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1138880312]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.7, 1.75, 0)
+mesh = SubResource("BoxMesh_mhik4")
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=562725972]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_nxxlv")
+mesh = SubResource("BoxMesh_vb6us")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=447398304]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_nxxlv")
+mesh = SubResource("BoxMesh_jplkd")
+
+[node name="TileWall_1_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=579497195]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -1.0333334)
+mesh = SubResource("BoxMesh_cgtn5")
+
+[node name="Floor_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1281283109]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_nxxlv")
+mesh = SubResource("BoxMesh_y4uc5")
+
+[node name="Ceiling_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1315431178]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_nxxlv")
+mesh = SubResource("BoxMesh_d6t5n")
+
+[node name="TileWall_0_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=911701222]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, 1.75, -1.0333334)
+mesh = SubResource("BoxMesh_0p4ts")
+
+[node name="TileWall_0_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=224165657]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, 1.75, 1.0333334)
+mesh = SubResource("BoxMesh_44ktx")
+
+[node name="TileWall_0_1_2_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1542095435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 1.15, -0.9666667)
+mesh = SubResource("BoxMesh_bwvsf")
+
+[node name="TileWall_0_1_2_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=728736421]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 2.9, -0.9666667)
+mesh = SubResource("BoxMesh_yht0d")
+
+[node name="TileWall_0_1_2_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1248007603]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 2.9, 0)
+mesh = SubResource("BoxMesh_r7w7i")
+
+[node name="TileWall_0_1_2_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=229519966]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 1.15, 0.9666667)
+mesh = SubResource("BoxMesh_ktkqd")
+
+[node name="TileWall_0_1_2_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0010" unique_id=1004273565]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 2.9, 0.9666667)
+mesh = SubResource("BoxMesh_36h6a")
+
+[node name="Socket_edge_0009" type="Marker3D" parent="DungeonPreview/room_0010" unique_id=2068759672]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.8, 0, 0)
+metadata/stable_id = "edge_0009"
+metadata/wall = 2
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0015" type="Marker3D" parent="DungeonPreview/room_0010" unique_id=1694220362]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 3.4)
+metadata/stable_id = "edge_0015"
+metadata/wall = 1
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0011" type="Node3D" parent="DungeonPreview" unique_id=777103564]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 136)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0011"
+metadata/role = 3
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/room_0011" unique_id=1457010449]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_5eae8")
+mesh = SubResource("BoxMesh_h4kf5")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/room_0011" unique_id=1459479714]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_5eae8")
+mesh = SubResource("BoxMesh_750wb")
+
+[node name="Wall_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0011" unique_id=115500616]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -3.3000002)
+mesh = SubResource("BoxMesh_p8y4r")
+
+[node name="Wall_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0011" unique_id=1558061132]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 3.3000002)
+mesh = SubResource("BoxMesh_k1uy4")
+
+[node name="Wall_2_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0011" unique_id=1924260134]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1.15, -2)
+mesh = SubResource("BoxMesh_6xbvn")
+
+[node name="Wall_2_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0011" unique_id=991873982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 2.9, -2)
+mesh = SubResource("BoxMesh_n1y3l")
+
+[node name="Wall_2_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0011" unique_id=2088812834]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 2.9, 0)
+mesh = SubResource("BoxMesh_owgn4")
+
+[node name="Wall_2_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0011" unique_id=589929474]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1.15, 2)
+mesh = SubResource("BoxMesh_q81f2")
+
+[node name="Wall_2_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0011" unique_id=780208164]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 2.9, 2)
+mesh = SubResource("BoxMesh_joxdj")
+
+[node name="Wall_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0011" unique_id=610110193]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.75, 0)
+mesh = SubResource("BoxMesh_pwoh0")
+
+[node name="Socket_edge_0010" type="Marker3D" parent="DungeonPreview/room_0011" unique_id=714644207]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.6, 0, 0)
+metadata/stable_id = "edge_0010"
+metadata/wall = 2
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0012" type="Node3D" parent="DungeonPreview" unique_id=1371210461]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 136)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0012"
+metadata/role = 3
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1682683236]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_akrif")
+mesh = SubResource("BoxMesh_0a68g")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1992176276]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_akrif")
+mesh = SubResource("BoxMesh_hsq8m")
+
+[node name="Floor_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1336418181]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 2.3999999)
+material_override = SubResource("StandardMaterial3D_akrif")
+mesh = SubResource("BoxMesh_6acnj")
+
+[node name="Ceiling_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1310513968]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.3999999)
+material_override = SubResource("StandardMaterial3D_akrif")
+mesh = SubResource("BoxMesh_k7tlq")
+
+[node name="TileWall_1_2_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1200812936]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 3.5)
+mesh = SubResource("BoxMesh_1lpec")
+
+[node name="TileWall_1_2_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=393636745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333334, 1.75, 2.3999999)
+mesh = SubResource("BoxMesh_s5dkm")
+
+[node name="TileWall_1_2_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1114907342]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333334, 1.75, 2.3999999)
+mesh = SubResource("BoxMesh_ky3ba")
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=511623232]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_akrif")
+mesh = SubResource("BoxMesh_tajfu")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=29519894]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_akrif")
+mesh = SubResource("BoxMesh_74rbg")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1489802960]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, 1.75, -1.1)
+mesh = SubResource("BoxMesh_ju7w2")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1554141098]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2666667, 1.75, 1.1)
+mesh = SubResource("BoxMesh_2lsu4")
+
+[node name="TileWall_2_1_3_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1193257940]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 1.15, -1)
+mesh = SubResource("BoxMesh_13t7c")
+
+[node name="TileWall_2_1_3_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=2029301714]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 2.9, -1)
+mesh = SubResource("BoxMesh_kcubn")
+
+[node name="TileWall_2_1_3_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=672632442]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 2.9, 0)
+mesh = SubResource("BoxMesh_1aes5")
+
+[node name="TileWall_2_1_3_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=485752698]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 1.15, 1)
+mesh = SubResource("BoxMesh_wat2j")
+
+[node name="TileWall_2_1_3_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=220512411]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 2.9, 1)
+mesh = SubResource("BoxMesh_aeb4p")
+
+[node name="Floor_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1434809781]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2666667, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_akrif")
+mesh = SubResource("BoxMesh_0ip80")
+
+[node name="Ceiling_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=741074475]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2666667, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_akrif")
+mesh = SubResource("BoxMesh_7hefk")
+
+[node name="TileWall_0_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1238700094]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2666667, 1.75, -1.1)
+mesh = SubResource("BoxMesh_n8trj")
+
+[node name="TileWall_0_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1640206706]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2666667, 1.75, 1.1)
+mesh = SubResource("BoxMesh_ixvsh")
+
+[node name="TileWall_0_1_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=537282964]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 1.75, 0)
+mesh = SubResource("BoxMesh_3ulad")
+
+[node name="Floor_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1135025348]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.3999999)
+material_override = SubResource("StandardMaterial3D_akrif")
+mesh = SubResource("BoxMesh_vu5c8")
+
+[node name="Ceiling_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=909796801]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -2.3999999)
+material_override = SubResource("StandardMaterial3D_akrif")
+mesh = SubResource("BoxMesh_bhjme")
+
+[node name="TileWall_1_0_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1571346134]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -3.5)
+mesh = SubResource("BoxMesh_87lfl")
+
+[node name="TileWall_1_0_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=215885036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333334, 1.75, -2.3999999)
+mesh = SubResource("BoxMesh_43ivh")
+
+[node name="TileWall_1_0_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0012" unique_id=1337471277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333334, 1.75, -2.3999999)
+mesh = SubResource("BoxMesh_frotb")
+
+[node name="Socket_edge_0011" type="Marker3D" parent="DungeonPreview/room_0012" unique_id=1235195412]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.4, 0, 0)
+metadata/stable_id = "edge_0011"
+metadata/wall = 3
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0013" type="Node3D" parent="DungeonPreview" unique_id=76807885]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 120)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0013"
+metadata/role = 3
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=196431658]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_mpak0")
+mesh = SubResource("BoxMesh_ok4sa")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=1918315729]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_mpak0")
+mesh = SubResource("BoxMesh_vnt5e")
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=916909068]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5333333, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_mpak0")
+mesh = SubResource("BoxMesh_w6gdd")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=325641845]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5333333, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_mpak0")
+mesh = SubResource("BoxMesh_pyk1x")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=1343522280]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5333333, 1.75, -1.2333333)
+mesh = SubResource("BoxMesh_4w6or")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=735994732]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5333333, 1.75, 1.2333333)
+mesh = SubResource("BoxMesh_f5jl3")
+
+[node name="TileWall_2_1_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=679279935]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.7, 1.75, 0)
+mesh = SubResource("BoxMesh_yhm7v")
+
+[node name="Floor_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=619710312]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.6666667)
+material_override = SubResource("StandardMaterial3D_mpak0")
+mesh = SubResource("BoxMesh_1pofp")
+
+[node name="Ceiling_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=385091058]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -2.6666667)
+material_override = SubResource("StandardMaterial3D_mpak0")
+mesh = SubResource("BoxMesh_dbfwv")
+
+[node name="TileWall_1_0_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=87134057]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -3.9)
+mesh = SubResource("BoxMesh_13hoi")
+
+[node name="TileWall_1_0_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=1417000459]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1666666, 1.75, -2.6666667)
+mesh = SubResource("BoxMesh_vrvk6")
+
+[node name="TileWall_1_0_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=1289841985]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1666666, 1.75, -2.6666667)
+mesh = SubResource("BoxMesh_0lppc")
+
+[node name="Floor_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=98282825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 2.6666667)
+material_override = SubResource("StandardMaterial3D_mpak0")
+mesh = SubResource("BoxMesh_esoqo")
+
+[node name="Ceiling_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=1972258737]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.6666667)
+material_override = SubResource("StandardMaterial3D_mpak0")
+mesh = SubResource("BoxMesh_h8ppa")
+
+[node name="TileWall_1_2_1_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=1868355347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333333, 1.15, 3.9)
+mesh = SubResource("BoxMesh_eafhk")
+
+[node name="TileWall_1_2_1_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=1725942559]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0333333, 2.9, 3.9)
+mesh = SubResource("BoxMesh_kwpb2")
+
+[node name="TileWall_1_2_1_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=1122226080]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 3.9)
+mesh = SubResource("BoxMesh_so7tl")
+
+[node name="TileWall_1_2_1_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=888480241]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333333, 1.15, 3.9)
+mesh = SubResource("BoxMesh_iw6ao")
+
+[node name="TileWall_1_2_1_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=1273467166]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0333333, 2.9, 3.9)
+mesh = SubResource("BoxMesh_gmuks")
+
+[node name="TileWall_1_2_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=391332970]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1666666, 1.75, 2.6666667)
+mesh = SubResource("BoxMesh_6pmue")
+
+[node name="TileWall_1_2_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=270392834]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1666666, 1.75, 2.6666667)
+mesh = SubResource("BoxMesh_8gfoj")
+
+[node name="Floor_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=415001924]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_mpak0")
+mesh = SubResource("BoxMesh_illgs")
+
+[node name="Ceiling_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=2062900787]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_mpak0")
+mesh = SubResource("BoxMesh_6e0wd")
+
+[node name="TileWall_0_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=1576096042]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, 1.75, -1.2333333)
+mesh = SubResource("BoxMesh_ppse0")
+
+[node name="TileWall_0_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=223395274]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5333333, 1.75, 1.2333333)
+mesh = SubResource("BoxMesh_xuea0")
+
+[node name="TileWall_0_1_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0013" unique_id=1686837157]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 1.75, 0)
+mesh = SubResource("BoxMesh_7x14i")
+
+[node name="Socket_edge_0012" type="Marker3D" parent="DungeonPreview/room_0013" unique_id=1525662215]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 4)
+metadata/stable_id = "edge_0012"
+metadata/wall = 1
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0014" type="Node3D" parent="DungeonPreview" unique_id=542075951]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 168)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0014"
+metadata/role = 3
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=1440186591]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_atcvn")
+mesh = SubResource("BoxMesh_03xt6")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=1029181737]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_atcvn")
+mesh = SubResource("BoxMesh_suysv")
+
+[node name="Wall_0_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=1355455703]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1000001, 1.15, -3.7)
+mesh = SubResource("BoxMesh_7awkq")
+
+[node name="Wall_0_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=1441560909]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1000001, 2.9, -3.7)
+mesh = SubResource("BoxMesh_ift2b")
+
+[node name="Wall_0_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=1147768847]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -3.7)
+mesh = SubResource("BoxMesh_6ropl")
+
+[node name="Wall_0_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=1098814908]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1000001, 1.15, -3.7)
+mesh = SubResource("BoxMesh_l8sw6")
+
+[node name="Wall_0_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=133754595]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1000001, 2.9, -3.7)
+mesh = SubResource("BoxMesh_seyen")
+
+[node name="Wall_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=174754632]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 3.7)
+mesh = SubResource("BoxMesh_liwm8")
+
+[node name="Wall_2_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=1479335237]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 1.15, -2.2)
+mesh = SubResource("BoxMesh_mwxul")
+
+[node name="Wall_2_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=1855589050]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 2.9, -2.2)
+mesh = SubResource("BoxMesh_r7p3j")
+
+[node name="Wall_2_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=2134185026]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 2.9, 0)
+mesh = SubResource("BoxMesh_x5b3b")
+
+[node name="Wall_2_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=888126127]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 1.15, 2.2)
+mesh = SubResource("BoxMesh_1bul6")
+
+[node name="Wall_2_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=234898809]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3000002, 2.9, 2.2)
+mesh = SubResource("BoxMesh_y358o")
+
+[node name="Wall_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0014" unique_id=1223971468]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3000002, 1.75, 0)
+mesh = SubResource("BoxMesh_x00cq")
+
+[node name="Socket_edge_0013" type="Marker3D" parent="DungeonPreview/room_0014" unique_id=1271108043]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.8)
+metadata/stable_id = "edge_0013"
+metadata/wall = 0
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Socket_edge_0014" type="Marker3D" parent="DungeonPreview/room_0014" unique_id=57702760]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.4, 0, 0)
+metadata/stable_id = "edge_0014"
+metadata/wall = 2
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="room_0015" type="Node3D" parent="DungeonPreview" unique_id=1216797020]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 168)
+metadata/room_creator_generated = true
+metadata/stable_id = "room_0015"
+metadata/role = 3
+
+[node name="Floor_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=1036593786]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, -2.5333333)
+material_override = SubResource("StandardMaterial3D_i50nr")
+mesh = SubResource("BoxMesh_islsk")
+
+[node name="Ceiling_1_0" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=783695915]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -2.5333333)
+material_override = SubResource("StandardMaterial3D_i50nr")
+mesh = SubResource("BoxMesh_k2jg4")
+
+[node name="TileWall_1_0_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=1574156299]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -3.7)
+mesh = SubResource("BoxMesh_jh50c")
+
+[node name="TileWall_1_0_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=356141134]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.75, -2.5333333)
+mesh = SubResource("BoxMesh_affnc")
+
+[node name="TileWall_1_0_3_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=465972781]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.75, -2.5333333)
+mesh = SubResource("BoxMesh_h8hij")
+
+[node name="Floor_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=1861489772]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_i50nr")
+mesh = SubResource("BoxMesh_u6m4l")
+
+[node name="Ceiling_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=827770838]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_i50nr")
+mesh = SubResource("BoxMesh_u4n5i")
+
+[node name="TileWall_0_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=153926335]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 1.75, -1.1666666)
+mesh = SubResource("BoxMesh_wtf23")
+
+[node name="TileWall_0_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=292014179]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3999999, 1.75, 1.1666666)
+mesh = SubResource("BoxMesh_82g46")
+
+[node name="TileWall_0_1_2_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=1263998529]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1.75, 0)
+mesh = SubResource("BoxMesh_ool6j")
+
+[node name="Floor_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=2131688456]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_i50nr")
+mesh = SubResource("BoxMesh_1go8i")
+
+[node name="Ceiling_1_1" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=1703950625]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_i50nr")
+mesh = SubResource("BoxMesh_5rpms")
+
+[node name="TileWall_1_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=256114794]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 1.1666666)
+mesh = SubResource("BoxMesh_kgere")
+
+[node name="Floor_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=2110333168]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, -0.1, 0)
+material_override = SubResource("StandardMaterial3D_i50nr")
+mesh = SubResource("BoxMesh_8w3kw")
+
+[node name="Ceiling_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=1662605139]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 3.6, 0)
+material_override = SubResource("StandardMaterial3D_i50nr")
+mesh = SubResource("BoxMesh_d635r")
+
+[node name="TileWall_2_1_0_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=1985830927]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, -1.1666666)
+mesh = SubResource("BoxMesh_u5qh6")
+
+[node name="TileWall_2_1_1_0_0" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=803240288]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3999999, 1.75, 1.1666666)
+mesh = SubResource("BoxMesh_6u5rh")
+
+[node name="TileWall_2_1_3_0_1" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=1031159314]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.15, -1.0333333)
+mesh = SubResource("BoxMesh_3p32x")
+
+[node name="TileWall_2_1_3_0_2" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=1971431908]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, -1.0333333)
+mesh = SubResource("BoxMesh_b75qg")
+
+[node name="TileWall_2_1_3_1_2" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=659827331]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, 0)
+mesh = SubResource("BoxMesh_4u0tu")
+
+[node name="TileWall_2_1_3_2_1" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=157012036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.15, 1.0333333)
+mesh = SubResource("BoxMesh_52m46")
+
+[node name="TileWall_2_1_3_2_2" type="MeshInstance3D" parent="DungeonPreview/room_0015" unique_id=1551347821]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.9, 1.0333333)
+mesh = SubResource("BoxMesh_7si3n")
+
+[node name="Socket_edge_0014" type="Marker3D" parent="DungeonPreview/room_0015" unique_id=645478183]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.6, 0, 0)
+metadata/stable_id = "edge_0014"
+metadata/wall = 3
+metadata/clear_width = 1.6
+metadata/clear_height = 2.3
+
+[node name="Connector_edge_0000" type="Node3D" parent="DungeonPreview" unique_id=1454879396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 156.1)
+metadata/connection_id = "edge_0000"
+metadata/from_room_id = "room_0000"
+metadata/to_room_id = "room_0001"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0000" unique_id=461379598]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_lt6vc")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0000" unique_id=368129254]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_gllkw")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0000" unique_id=1749341218]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_fv1w0")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0000" unique_id=989793035]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_wfgmf")
+
+[node name="Connector_edge_0001" type="Node3D" parent="DungeonPreview" unique_id=684837346]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 147.8)
+metadata/connection_id = "edge_0001"
+metadata/from_room_id = "room_0001"
+metadata/to_room_id = "room_0002"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0001" unique_id=446693174]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_31i55")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0001" unique_id=1736931003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_uimo4")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0001" unique_id=638198759]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_h275y")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0001" unique_id=907297466]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_f2lus")
+
+[node name="Connector_edge_0002" type="Node3D" parent="DungeonPreview" unique_id=2110815762]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1, 0, 144)
+metadata/connection_id = "edge_0002"
+metadata/from_room_id = "room_0002"
+metadata/to_room_id = "room_0003"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0002" unique_id=471909091]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_jt5mr")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0002" unique_id=1620191782]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_umb2k")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0002" unique_id=1513236377]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -0.9)
+mesh = SubResource("BoxMesh_pyyof")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0002" unique_id=246664280]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0.9)
+mesh = SubResource("BoxMesh_rppqi")
+
+[node name="Connector_edge_0003" type="Node3D" parent="DungeonPreview" unique_id=195225354]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 140)
+metadata/connection_id = "edge_0003"
+metadata/from_room_id = "room_0003"
+metadata/to_room_id = "room_0004"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0003" unique_id=338803038]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_14ipq")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0003" unique_id=1593012143]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_gtk0l")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0003" unique_id=1828069830]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_fr0sn")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0003" unique_id=621289022]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_oov74")
+
+[node name="Connector_edge_0004" type="Node3D" parent="DungeonPreview" unique_id=432009316]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 132)
+metadata/connection_id = "edge_0004"
+metadata/from_room_id = "room_0004"
+metadata/to_room_id = "room_0005"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0004" unique_id=1967107761]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_ahg6n")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0004" unique_id=1395266597]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_g465b")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0004" unique_id=514943337]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_xiygi")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0004" unique_id=817064226]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_ay73c")
+
+[node name="Connector_edge_0005" type="Node3D" parent="DungeonPreview" unique_id=1002374390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 123.8)
+metadata/connection_id = "edge_0005"
+metadata/from_room_id = "room_0005"
+metadata/to_room_id = "room_0006"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0005" unique_id=29606351]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_vdvv5")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0005" unique_id=1591272545]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_x7jbw")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0005" unique_id=1037243201]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_ft86r")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0005" unique_id=919337521]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_eit3w")
+
+[node name="Connector_edge_0006" type="Node3D" parent="DungeonPreview" unique_id=929235769]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.9, 0, 120)
+metadata/connection_id = "edge_0006"
+metadata/from_room_id = "room_0006"
+metadata/to_room_id = "room_0007"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0006" unique_id=306636652]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_yb0q0")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0006" unique_id=2055309543]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_c1ofs")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0006" unique_id=788679430]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -0.9)
+mesh = SubResource("BoxMesh_sdg3o")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0006" unique_id=820336107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0.9)
+mesh = SubResource("BoxMesh_xppv7")
+
+[node name="Connector_edge_0007" type="Node3D" parent="DungeonPreview" unique_id=141709251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1, 0, 128)
+metadata/connection_id = "edge_0007"
+metadata/from_room_id = "room_0005"
+metadata/to_room_id = "room_0008"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0007" unique_id=1881911343]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_1ejg8")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0007" unique_id=1567609962]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_fs1vy")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0007" unique_id=567552811]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -0.9)
+mesh = SubResource("BoxMesh_pdy65")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0007" unique_id=32297356]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0.9)
+mesh = SubResource("BoxMesh_j6tu6")
+
+[node name="Connector_edge_0008" type="Node3D" parent="DungeonPreview" unique_id=1655919353]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1, 0, 160)
+metadata/connection_id = "edge_0008"
+metadata/from_room_id = "room_0000"
+metadata/to_room_id = "room_0009"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0008" unique_id=688905339]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_ure8d")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0008" unique_id=369469474]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_cbpvb")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0008" unique_id=1946277170]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -0.9)
+mesh = SubResource("BoxMesh_7a7pl")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0008" unique_id=1315521453]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0.9)
+mesh = SubResource("BoxMesh_pgiuh")
+
+[node name="Connector_edge_0009" type="Node3D" parent="DungeonPreview" unique_id=1722269531]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8999999, 0, 152)
+metadata/connection_id = "edge_0009"
+metadata/from_room_id = "room_0001"
+metadata/to_room_id = "room_0010"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0009" unique_id=470676869]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_jon66")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0009" unique_id=1538127574]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_7dblq")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0009" unique_id=784514720]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -0.9)
+mesh = SubResource("BoxMesh_kaj3f")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0009" unique_id=1040447869]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0.9)
+mesh = SubResource("BoxMesh_8baaj")
+
+[node name="Connector_edge_0010" type="Node3D" parent="DungeonPreview" unique_id=1944823820]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 136)
+metadata/connection_id = "edge_0010"
+metadata/from_room_id = "room_0004"
+metadata/to_room_id = "room_0011"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0010" unique_id=1734351436]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_t224a")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0010" unique_id=34845483]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_cb02u")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0010" unique_id=431855363]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -0.9)
+mesh = SubResource("BoxMesh_rlpva")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0010" unique_id=1665848326]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0.9)
+mesh = SubResource("BoxMesh_ft6os")
+
+[node name="Connector_edge_0011" type="Node3D" parent="DungeonPreview" unique_id=1196249357]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, 0, 136)
+metadata/connection_id = "edge_0011"
+metadata/from_room_id = "room_0004"
+metadata/to_room_id = "room_0012"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0011" unique_id=1271420053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_plk3l")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0011" unique_id=930392988]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_kcl30")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0011" unique_id=931474353]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -0.9)
+mesh = SubResource("BoxMesh_j63xl")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0011" unique_id=348130244]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0.9)
+mesh = SubResource("BoxMesh_gqnon")
+
+[node name="Connector_edge_0013" type="Node3D" parent="DungeonPreview" unique_id=1994340467]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 163.79999)
+metadata/connection_id = "edge_0013"
+metadata/from_room_id = "room_0009"
+metadata/to_room_id = "room_0014"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0013" unique_id=1194753704]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_ds1l0")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0013" unique_id=548058573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_8gq0t")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0013" unique_id=1851013056]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_6ing5")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0013" unique_id=76836956]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_3aarv")
+
+[node name="Connector_edge_0014" type="Node3D" parent="DungeonPreview" unique_id=647103431]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1, 0, 168)
+metadata/connection_id = "edge_0014"
+metadata/from_room_id = "room_0014"
+metadata/to_room_id = "room_0015"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0014" unique_id=958184391]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_wwysc")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0014" unique_id=2006534428]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_u8m8d")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0014" unique_id=157581003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -0.9)
+mesh = SubResource("BoxMesh_vq7cf")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0014" unique_id=2082461853]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0.9)
+mesh = SubResource("BoxMesh_8ihmt")
+
+[node name="Connector_edge_0015" type="Node3D" parent="DungeonPreview" unique_id=2121945804]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 156)
+metadata/connection_id = "edge_0015"
+metadata/from_room_id = "room_0010"
+metadata/to_room_id = "room_0009"
+
+[node name="Floor" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0015" unique_id=1780471851]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_dr0j4")
+
+[node name="Ceiling" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0015" unique_id=799103132]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_yx3s0")
+
+[node name="SideWall_-1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0015" unique_id=716718552]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_jfvjb")
+
+[node name="SideWall_1" type="MeshInstance3D" parent="DungeonPreview/Connector_edge_0015" unique_id=1780023765]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.75, 0)
+mesh = SubResource("BoxMesh_4d3uy")
+
+[node name="PreviewRoutes" type="Node3D" parent="DungeonPreview" unique_id=418570417]
+metadata/room_creator_preview_overlay = true
+
+[node name="Route_edge_0000" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=1993094709]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.85, 156)
+material_override = SubResource("StandardMaterial3D_lru4y")
+mesh = SubResource("BoxMesh_16ysa")
+metadata/connection_id = "edge_0000"
+metadata/path_kind = "critical"
+
+[node name="Route_edge_0001" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=1713887061]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.85, 148)
+material_override = SubResource("StandardMaterial3D_sueik")
+mesh = SubResource("BoxMesh_x7pbb")
+metadata/connection_id = "edge_0001"
+metadata/path_kind = "critical"
+
+[node name="Route_edge_0002" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=505512386]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4, 3.85, 144)
+material_override = SubResource("StandardMaterial3D_hk1os")
+mesh = SubResource("BoxMesh_8t3jm")
+metadata/connection_id = "edge_0002"
+metadata/path_kind = "critical"
+
+[node name="Route_edge_0003" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=956361143]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 3.85, 140)
+material_override = SubResource("StandardMaterial3D_nb4pv")
+mesh = SubResource("BoxMesh_qsjll")
+metadata/connection_id = "edge_0003"
+metadata/path_kind = "critical"
+
+[node name="Route_edge_0004" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=954970590]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 3.85, 132)
+material_override = SubResource("StandardMaterial3D_r2ryc")
+mesh = SubResource("BoxMesh_7v4ur")
+metadata/connection_id = "edge_0004"
+metadata/path_kind = "critical"
+
+[node name="Route_edge_0005" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=1417171435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 3.85, 124)
+material_override = SubResource("StandardMaterial3D_e1ym1")
+mesh = SubResource("BoxMesh_qcobi")
+metadata/connection_id = "edge_0005"
+metadata/path_kind = "critical"
+
+[node name="Route_edge_0006" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=795348530]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 12, 3.85, 120)
+material_override = SubResource("StandardMaterial3D_8ji76")
+mesh = SubResource("BoxMesh_v6wqy")
+metadata/connection_id = "edge_0006"
+metadata/path_kind = "critical"
+
+[node name="Route_edge_0007" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=1297999]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 4, 3.85, 128)
+material_override = SubResource("StandardMaterial3D_suljt")
+mesh = SubResource("BoxMesh_lk7va")
+metadata/connection_id = "edge_0007"
+metadata/path_kind = "branch"
+
+[node name="Route_edge_0008" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=2008524013]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4, 3.85, 160)
+material_override = SubResource("StandardMaterial3D_cce0j")
+mesh = SubResource("BoxMesh_v6cry")
+metadata/connection_id = "edge_0008"
+metadata/path_kind = "branch"
+
+[node name="Route_edge_0009" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=616629440]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4, 3.85, 152)
+material_override = SubResource("StandardMaterial3D_cmix8")
+mesh = SubResource("BoxMesh_s7y6l")
+metadata/connection_id = "edge_0009"
+metadata/path_kind = "branch"
+
+[node name="Route_edge_0010" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=150785719]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 12, 3.85, 136)
+material_override = SubResource("StandardMaterial3D_2c4qe")
+mesh = SubResource("BoxMesh_2bqkt")
+metadata/connection_id = "edge_0010"
+metadata/path_kind = "branch"
+
+[node name="Route_edge_0011" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=1973348915]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 4, 3.85, 136)
+material_override = SubResource("StandardMaterial3D_il7dj")
+mesh = SubResource("BoxMesh_yl5cn")
+metadata/connection_id = "edge_0011"
+metadata/path_kind = "branch"
+
+[node name="Route_edge_0012" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=433571395]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.85, 124)
+material_override = SubResource("StandardMaterial3D_6p24f")
+mesh = SubResource("BoxMesh_d4bls")
+metadata/connection_id = "edge_0012"
+metadata/path_kind = "branch"
+
+[node name="Route_edge_0013" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=521174728]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 8, 3.85, 164)
+material_override = SubResource("StandardMaterial3D_ckel5")
+mesh = SubResource("BoxMesh_68csx")
+metadata/connection_id = "edge_0013"
+metadata/path_kind = "branch"
+
+[node name="Route_edge_0014" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=963471775]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 4, 3.85, 168)
+material_override = SubResource("StandardMaterial3D_h2sch")
+mesh = SubResource("BoxMesh_hquh8")
+metadata/connection_id = "edge_0014"
+metadata/path_kind = "branch"
+
+[node name="Route_edge_0015" type="MeshInstance3D" parent="DungeonPreview/PreviewRoutes" unique_id=83565225]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 8, 3.85, 156)
+material_override = SubResource("StandardMaterial3D_17pmk")
+mesh = SubResource("BoxMesh_llbm1")
+metadata/connection_id = "edge_0015"
+metadata/path_kind = "loop"
+
+[node name="RoleLabel_Entrance" type="Label3D" parent="DungeonPreview/PreviewRoutes" unique_id=1134928731]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 4.4, 160)
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+modulate = Color(0.16078432, 0.72156864, 0.42745098, 1)
+text = "ENTRANCE"
+font_size = 56
+metadata/room_id = "room_0000"
+
+[node name="RoleLabel_Exit" type="Label3D" parent="DungeonPreview/PreviewRoutes" unique_id=2147398902]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 4.4, 116.2)
+pixel_size = 0.008
+billboard = 1
+no_depth_test = true
+modulate = Color(0.89411765, 0.3137255, 0.3137255, 1)
+text = "EXIT"
+font_size = 56
+metadata/room_id = "room_0007"
+>>>>>>> Stashed changes

@@ -28,13 +28,13 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p /tmp/room-creator-clean/addons
-          cp -a addons/ninetailsrabbit.room_creator /tmp/room-creator-clean/addons/
+          cp -a addons/room_creator /tmp/room-creator-clean/addons/
           cat > /tmp/room-creator-clean/project.godot <<'EOF'
           config_version=5
           [application]
           config/name="Room Creator Clean Install"
           [editor_plugins]
-          enabled=PackedStringArray("res://addons/ninetailsrabbit.room_creator/plugin.cfg")
+          enabled=PackedStringArray("res://addons/room_creator/plugin.cfg")
           EOF
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path /tmp/room-creator-clean --editor --quit 2>&1 | tee clean-install.log
           if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script' clean-install.log; then exit 1; fi

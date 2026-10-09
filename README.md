@@ -6,7 +6,7 @@
 
 ## Install
 
-Copy **`addons/ninetailsrabbit.room_creator/`** into the same path under your Godot project's `addons/` directory, then enable **Room Creator** in Project Settings → Plugins. No Barebone, OmniKit, external assets, or player controller is required.
+Copy **`addons/room_creator/`** into the same path under your Godot project's `addons/` directory, then enable **Room Creator** in Project Settings → Plugins. No Barebone, OmniKit, external assets, or player controller is required.
 
 Open [examples/single_room_door.tscn](examples/single_room_door.tscn) for a preconfigured starter blueprint. Use **Generate Preview** in the Inspector to visualize it.
 

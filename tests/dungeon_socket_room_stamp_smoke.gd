@@ -121,7 +121,7 @@ func _run() -> void:
 	if not _check(author.stamp_selected_room() and author.layout.fingerprint() == next.fingerprint(), "Authoring facade must commit the same validated candidate."):
 		return
 	var preview := author.get_node_or_null("DungeonPreview")
-	if not _check(preview != null and preview.find_children("Room_*", "Node3D", true, false).size() > 0, "New branch must appear in the normal editor preview."):
+	if not _check(preview != null and preview.get_node_or_null(NodePath(placed.stable_id)) != null, "New branch must appear in the normal editor preview."):
 		return
 	var packed := PackedScene.new()
 	if not _check(packed.pack(author) == OK and packed.get_state().get_node_count() == 1, "Ctrl+S should contain only the designer's canonical authoring source."):

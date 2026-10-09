@@ -204,9 +204,11 @@ func _check_box_clearance(box: BoxShape3D, center: Vector3, sockets: Dictionary,
 	for side in sockets.keys():
 		var start := Vector3.ZERO
 		var finish := _expected_position(int(side))
-		var sweep_x: float = maxf(absf(start.x), absf(finish.x)) + radius if int(side) == RoomOpening.Wall.LEFT or int(side) == RoomOpening.Wall.RIGHT else radius
-		var sweep_z: float = maxf(absf(start.z), absf(finish.z)) + radius if int(side) == RoomOpening.Wall.FRONT or int(side) == RoomOpening.Wall.BACK else radius
-		var intersects_horizontal: bool = absf(center.x) < sweep_x + half.x - EPS and absf(center.z) < sweep_z + half.z - EPS
+		var min_x: float = minf(start.x, finish.x) - radius
+		var max_x: float = maxf(start.x, finish.x) + radius
+		var min_z: float = minf(start.z, finish.z) - radius
+		var max_z: float = maxf(start.z, finish.z) + radius
+		var intersects_horizontal: bool = center.x + half.x > min_x + EPS and center.x - half.x < max_x - EPS and center.z + half.z > min_z + EPS and center.z - half.z < max_z - EPS
 		var intersects_height: bool = center.y + half.y > bottom + EPS and center.y - half.y < top - EPS
 		if intersects_horizontal and intersects_height:
 			report.add_error("PREFAB_WALKWAY_BLOCKED", "Authored collision box intrudes into a doorway's walkable center route.")

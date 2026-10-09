@@ -6,6 +6,16 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	var example := load("res://examples/dungeon_modular_authoring.tscn") as PackedScene
+	if not _check(example != null, "Bundled modular dungeon example must import."):
+		return
+	var example_author := example.instantiate() as DungeonAuthoring3D
+	if not _check(example_author != null and example_author.config != null and example_author.config.room_modules.size() == 1 and example_author.config.vary_room_sizes, "Bundled modular example must load typed resource properties."):
+		return
+	example_author.generate_new_layout()
+	if not _check(example_author.layout != null and example_author.get_node_or_null("DungeonPreview") != null, "Opening the modular authoring example must generate a valid preview."):
+		return
+	example_author.free()
 	var module_profile := load("res://examples/dungeon_room_module_profile.tres") as DungeonRoomModule
 	if not _check(module_profile != null and module_profile.validate().is_valid(), "Bundled module must be a valid script-free normalized socket prefab."):
 		return

@@ -32,7 +32,7 @@ jobs:
               print("Unresolved merge conflict markers:\\n" + "\\n".join(corrupt))
               sys.exit(1)
           canonical = pathlib.Path("examples/dungeon_authoring.tscn").read_text()
-          if canonical.count("\\n[node ") != 1 or "DungeonPreview" in canonical or "DungeonBake" in canonical:
+          if canonical.count("[node name=") != 1 or "DungeonPreview" in canonical or "DungeonBake" in canonical:
               print("Canonical dungeon_authoring.tscn must be a single-node source-only scene; regenerate preview, do not commit baked nodes.")
               sys.exit(1)
           print("GODOT_ASSET_CONFLICT_GUARD: PASS")

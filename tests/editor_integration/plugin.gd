@@ -117,6 +117,35 @@ func _exercise() -> void:
 	source = PackedScene.new()
 	if not _check(source.pack(author) == OK and source.get_state().get_node_count() == 1, "Generated off-center prefab geometry must remain transient in authoring scenes."):
 		return
+	# The experimental free-yaw pair is a DIFFERENT authoring lab, not a
+	# duplicate general dungeon scene. Exercise its actual Inspector buttons.
+	EditorInterface.open_scene_from_path("res://examples/yaw_socket_pair_lab.tscn")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var yaw_lab := EditorInterface.get_edited_scene_root() as DungeonYawPairLab3D
+	if not _check(yaw_lab != null, "Experimental yaw lab must load in the real Godot editor."):
+		return
+	yaw_lab._request_preview()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(yaw_lab.get_node_or_null("YawPairGenerated") != null, "Yaw lab inspector must generate a docked non-cardinal pair."):
+		return
+	var lab_source := PackedScene.new()
+	if not _check(lab_source.pack(yaw_lab) == OK and lab_source.get_state().get_node_count() == 1, "The yaw authoring lab must also save only its source node, not generated mesh geometry."):
+		return
+	yaw_lab._request_bake()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var physical_pair := yaw_lab.get_node_or_null("YawPairGenerated")
+	if not _check(physical_pair != null and physical_pair.find_children("*", "CollisionShape3D", true, false).size() > 5, "Yaw lab must bake real physical room and corridor collision."):
+		return
+	yaw_lab.export_path = "user://yaw_editor_smoke.tscn"
+	if not _check(yaw_lab.save_pair() == OK, "Yaw lab must export a native PackedScene using the editor action."):
+		return
+	var reopen_pair := ResourceLoader.load(yaw_lab.export_path, "", ResourceLoader.CACHE_MODE_IGNORE) as PackedScene
+	if not _check(reopen_pair != null, "Exported yaw editor scene must reload."):
+		return
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(yaw_lab.export_path))
 	print("DUNGEON_EDITOR_INTEGRATION: PASS")
 	get_tree().quit(0)
 

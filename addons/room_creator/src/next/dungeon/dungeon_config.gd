@@ -45,6 +45,11 @@ extends Resource
 @export var enable_independent_room_offsets: bool = false
 @export_range(0.0, 6.0, 0.05) var room_position_jitter: float = 0.75
 @export_range(1, 64, 1) var placement_attempts: int = 16
+@export_group("Routed corridors (F2.6)")
+## Allows S/dogleg passages between offset room doorways, rather than
+## requiring the door centers to be coaxial. Uses a bounded collision solver.
+@export var enable_dogleg_corridors: bool = false
+@export_range(0.0, 1.0, 0.05) var dogleg_frequency: float = 0.65
 @export_group("Opening and player clearance")
 @export_range(0.5, 5.0, 0.05) var door_width: float = 1.6
 @export_range(0.5, 6.0, 0.05) var door_height: float = 2.3

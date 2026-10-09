@@ -16,6 +16,7 @@ const SCHEMA_VERSION: int = 1
 ## with the layout so standalone validation needs no original DungeonConfig.
 @export var independent_room_offsets_enabled: bool = false
 @export var maximum_room_offset: float = 0.0
+@export var dogleg_corridors_enabled: bool = false
 @export var wall_thickness: float = 0.2
 @export var floor_thickness: float = 0.2
 @export var ceiling_thickness: float = 0.2
@@ -55,4 +56,5 @@ func fingerprint() -> String:
 		parts.append("%s:%d,%d:%d:%.4f,%.4f,%.4f:%d,%d:%d:%s:%.4f,%.4f,%.4f:%s" % [room.stable_id, room.cell.x, room.cell.y, room.role, room.world_transform.origin.x, room.world_transform.origin.y, room.world_transform.origin.z, room.shape, room.shape_rotation, room.exterior_wall, room.exterior_id, room.room_size.x, room.room_size.y, room.room_size.z, room.module_profile.stable_id if room.module_profile != null else ""])
 	for edge in connections:
 		parts.append("%s:%s:%s:%d:%d:%.4f:%.4f" % [edge.stable_id, edge.from_room_id, edge.to_room_id, edge.from_wall, edge.to_wall, edge.clear_width, edge.clear_height])
+		parts.append("route:%s" % str(edge.route_points))
 	return "|".join(parts).md5_text()

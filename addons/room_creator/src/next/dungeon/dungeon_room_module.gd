@@ -75,7 +75,7 @@ func _inspect_sockets(report: RoomValidationReport) -> Array[int]:
 		# Only direct children represent normalized doorway sockets.
 		var direct_path: String = str(state.get_node_path(index))
 		var socket_index: int = MARKERS.find(str(node_name))
-		if socket_index < 0 or direct_path != str(node_name):
+		if socket_index < 0 or (direct_path != str(node_name) and direct_path != "./" + str(node_name)):
 			continue
 		var position: Vector3 = Vector3.ZERO
 		for prop_index in state.get_node_property_count(index):

@@ -31,6 +31,10 @@ static func build(layout: LevelLayout, with_collisions: bool = true) -> Node3D:
 			if art == null:
 				root.free()
 				return null
+			# Flatten the nested PackedScene before it enters a snapshot.
+			# Otherwise repacking its descendants under an outer scene owner
+			# duplicates the prefab instance and may trigger editor load dialogs.
+			art.scene_file_path = ""
 			art.name = "ModuleDecor"
 			# Normalized art is scaled to the actual room extent. Rotations are
 			# quarter turns matching the chosen silhouette orientation.

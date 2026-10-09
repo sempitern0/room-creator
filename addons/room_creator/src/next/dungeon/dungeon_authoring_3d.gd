@@ -23,16 +23,67 @@ const GENERATED_META := "room_creator_generated"
 @export var show_connection_routes: bool = true
 @export var show_entrance_exit_labels: bool = true
 @export_file("*.tscn") var output_scene_path: String = "res://room_creator/dungeons/dungeon.tscn"
-@export_tool_button("Generate Layout") var generate_action: Callable = generate_new_layout
-@export_tool_button("Validate Layout") var validate_action: Callable = validate_current_layout
-@export_tool_button("Preview Layout") var preview_action: Callable = preview_layout
-@export_tool_button("Bake Static Dungeon") var bake_action: Callable = bake
-@export_tool_button("Save Baked Scene") var save_action: Callable = save_scene
-@export_tool_button("Clear Preview") var clear_preview_action: Callable = clear_preview
-@export_tool_button("Clear Bake") var clear_bake_action: Callable = clear_bake
+@export_tool_button("Generate Layout") var generate_action: Callable = _request_generate_layout
+@export_tool_button("Validate Layout") var validate_action: Callable = _request_validate
+@export_tool_button("Preview Layout") var preview_action: Callable = _request_preview
+@export_tool_button("Bake Static Dungeon") var bake_action: Callable = _request_bake
+@export_tool_button("Save Baked Scene") var save_action: Callable = _request_save
+@export_tool_button("Clear Preview") var clear_preview_action: Callable = _request_clear_preview
+@export_tool_button("Clear Bake") var clear_bake_action: Callable = _request_clear_bake
 
 var last_result: DungeonBuildResult
 var last_report: RoomValidationReport
+
+# Inspector tool buttons run from the editor's GUI/Inspector stack. Defer
+# scene replacement until its input/notification transaction is complete to
+# avoid nested editor dialogs and reentrant SceneTree mutations.
+var _queued_editor_operation: StringName = &""
+
+func _request_generate_layout() -> void:
+	_queue_editor_action(&"generate_new_layout")
+
+
+func _request_validate() -> void:
+	_queue_editor_action(&"validate_current_layout")
+
+
+func _request_preview() -> void:
+	_queue_editor_action(&"preview_layout")
+
+
+func _request_bake() -> void:
+	_queue_editor_action(&"bake")
+
+
+func _request_save() -> void:
+	_queue_editor_action(&"save_scene")
+
+
+func _request_clear_preview() -> void:
+	_queue_editor_action(&"clear_preview")
+
+
+func _request_clear_bake() -> void:
+	_queue_editor_action(&"clear_bake")
+
+
+func _queue_editor_action(method: StringName) -> void:
+	if Engine.is_editor_hint() and is_inside_tree():
+		# Coalesce overlapping inspector actions while a build is queued.
+		if _queued_editor_operation != &"":
+			return
+		_queued_editor_operation = method
+		call_deferred("_run_queued_editor_action")
+	else:
+		call(method)
+
+
+func _run_queued_editor_action() -> void:
+	var method: StringName = _queued_editor_operation
+	_queued_editor_operation = &""
+	if not is_inside_tree() or method == &"":
+		return
+	call(method)
 
 func generate_layout(source: DungeonConfig) -> DungeonBuildResult:
 	return DungeonPlanner.generate_layout(source)
@@ -274,5 +325,10 @@ static func _snapshot_node(node: Node3D) -> PackedScene:
 
 static func _set_descendant_owners(parent: Node, target_owner: Node) -> void:
 	for child in parent.get_children():
+		# Generated snapshots own fully independent, script-free native nodes.
+		# Never both reference a foreign PackedScene and override ownership
+		# of all of its internal nodes: the editor may restore them twice.
+		if not child.scene_file_path.is_empty():
+			child.scene_file_path = ""
 		child.owner = target_owner
 		_set_descendant_owners(child, target_owner)

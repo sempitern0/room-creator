@@ -62,7 +62,7 @@ static func propose(source: LevelLayout, source_room_id: String, side: int, modu
 	next_room.room_size = candidate.room_size
 	next_room.shape = RoomFootprint.Shape.RECTANGLE
 	next_room.shape_rotation = 0
-	next_room.world_transform = Transform3D(Basis.IDENTITY, DungeonSpatialEmbedder.expected_origin(candidate, target_cell))
+	next_room.world_transform = preview_pose(candidate, base.stable_id, side).world_transform
 	next_room.authored_override_active = true
 	var new_wall: int = (side + 2) % 4
 	# RoomOpening order is FRONT / RIGHT / BACK / LEFT, opposite is +2.
@@ -78,20 +78,6 @@ static func propose(source: LevelLayout, source_room_id: String, side: int, modu
 	else:
 		connector.clear_width = candidate.connections[0].clear_width
 		connector.clear_height = candidate.connections[0].clear_height
-	if candidate.offgrid_socket_packing_enabled:
-		# For off-grid layouts the source's actual OUTWARD socket (not cell
-		# center) defines the new room position and yaw. Keep the same room
-		# yaw for exactly opposed door normals and straight traversable halls.
-		next_room.world_transform.basis = base.world_transform.basis
-		var outward_pose: Transform3D = DungeonFreeYawRouter.socket_pose(candidate, base, side, 0.0)
-		var dest_pose: Transform3D = DungeonFreeYawRouter.socket_pose(candidate, next_room, new_wall, 0.0)
-		var gap: float = maxf(8.0, minf(candidate.maximum_socket_pack_gap, 12.0))
-		var target_socket: Vector3 = outward_pose.origin + outward_pose.basis * Vector3.FORWARD * gap
-		next_room.world_transform.origin = target_socket - (dest_pose.origin - next_room.world_transform.origin)
-	elif candidate.free_yaw_enabled:
-		# In yaw grid-guide mode a new authored room may start at 0-degree
-		# local yaw, but its full world-space socket route is still validated.
-		next_room.world_transform.basis = Basis.IDENTITY
 	next_room.authored_override_origin = next_room.world_transform.origin
 	if module != null:
 		if not module.validate().is_valid() or module.shape != next_room.shape:
@@ -125,6 +111,32 @@ static func propose(source: LevelLayout, source_room_id: String, side: int, modu
 	outcome.attempts = 1
 	outcome.expansions = 1
 	return outcome
+
+
+static func preview_pose(layout: LevelLayout, source_room_id: String, side: int) -> RoomPlacementData:
+	# Cheap provisional placement for the 3D ghost, even when the actual
+	# placement fails because its destination is occupied or unwalkable.
+	if layout == null or side < 0 or side > 3:
+		return null
+	var anchor: RoomPlacementData
+	for item in layout.rooms:
+		if item.stable_id == source_room_id:
+			anchor = item
+			break
+	if anchor == null:
+		return null
+	var candidate := RoomPlacementData.new()
+	candidate.cell = anchor.cell + DungeonPlanner._delta_for_wall(side)
+	candidate.room_size = layout.room_size
+	candidate.world_transform = Transform3D(Basis.IDENTITY, DungeonSpatialEmbedder.expected_origin(layout, candidate.cell))
+	if layout.offgrid_socket_packing_enabled:
+		candidate.world_transform.basis = anchor.world_transform.basis
+		var source_socket: Transform3D = DungeonFreeYawRouter.socket_pose(layout, anchor, side, 0.0)
+		var child_socket: Transform3D = DungeonFreeYawRouter.socket_pose(layout, candidate, (side + 2) % 4, 0.0)
+		var local_socket_offset: Vector3 = child_socket.origin - candidate.world_transform.origin
+		var gap := maxf(8.0, minf(layout.maximum_socket_pack_gap, 12.0))
+		candidate.world_transform.origin = source_socket.origin + source_socket.basis * Vector3.FORWARD * gap - local_socket_offset
+	return candidate
 
 
 static func _next_id(items: Array, prefix: String) -> String:

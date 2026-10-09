@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.11.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.12.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -17,6 +17,34 @@ The modular path no longer instantiates its `PackedScene` over and over merely t
 This was tested in **Godot 4.7.2** with an actual editor instance in both headless mode and a graphical X11 session under Xvfb, including opening the supplied modular example, generation, preview refresh, bake, regeneration, and PackedScene save/reload. The CI explicitly fails if that recurring dialog error occurs. Windows graphical testing remains a manual acceptance check.
 
 If you still see messages in an existing edited scene after upgrading, close/reopen Godot and press **Generate Layout** to replace the old preview; save a backup before manually removing an already damaged `DungeonPreview`/`DungeonBake` tree. If it persists, capture the first error with its Godot file/line and which Inspector action triggers it.
+
+## F2 complete — seeded single-floor dungeons (v1.12.0)
+
+**F2 is feature-complete for its supported single-floor scope**: reproducible graph topology with branches/optional loops, physical exterior entrance/exit, rectangular/L/T/cross rooms, varying room sizes, visual-only or static physical prefabs, semantic path and roof preview, validated reciprocal sockets, Undo/Redo source-only authoring, playable static collision geometry, and portable native scene export.
+
+### Choose your spatial generation mode
+
+All three modes use the **same** [`examples/dungeon_authoring.tscn`](examples/dungeon_authoring.tscn). Select its `DungeonAuthoring3D` root and change the **Config** resource; no duplicate authoring scene is needed.
+
+| Mode | Configuration | Purpose |
+|---|---|---|
+| Proven cardinal graph | The original embedded Config | Cardinal rooms and physically verified straight/S-shaped orthogonal corridors; optional varied sizes, 3×3 silhouettes and art |
+| Free-yaw seeded grid guide | [`examples/dungeon_free_yaw_preset.tres`](examples/dungeon_free_yaw_preset.tres) | Independent random room yaw up to a configured ±180°, local placement shifts, SAT rotated room/corridor footprints and polygon-union angled corridors; logical cells still guide room positions |
+| **True off-grid socket packing** | [`examples/dungeon_offgrid_socket_preset.tres`](examples/dungeon_offgrid_socket_preset.tres) | Places each new room **from a previously placed real doorway**, not its grid world coordinates. Bounded seeded DFS with backtracking rejects OBB overlaps, invalid socket routes and unrelated corridor crossings |
+
+Press **Generate Layout** to rebuild the colored overhead preview; **Bake Static Dungeon** to build native physics and **Save Baked Scene** to export. Regeneration first verifies geometry and retains the previous preview/bake if a configuration is unsatisfiable. Ordinary Ctrl+S on the authoring scene keeps its resource data but never thousands of generated mesh nodes.
+
+### Under the hood
+
+- `DungeonFreeYawPlacement` and `DungeonSocketGraphPacker` do bounded, reproducible multiroom spatial DFS/backtracking. The `RoomPlacementData.cell` remains a **logical graph identity** in the off-grid mode, not its world-space placement. A failed budget returns an explicit `LAYOUT_UNSATISFIABLE` rather than exporting partial geometry.
+- `DungeonFreeYawRouter` computes real door poses in world space and routes through a **four-point/three-leg angled path**: first doorway stub, middle link and destination stub. It rejects self-folding connections, corridors that enter the wrong side of their own rooms, other rooms, or unrelated corridors.
+- `DungeonFreeYawCorridorBuilder` polygon-unions the swept corridor sections, constructs a continuous triangulated floor and optional roof with native static triangle collision, and creates `BoxShape3D` exterior boundary walls only. No internal wall spans an elbow.
+- `DungeonOrientedBounds` uses separating-axis OBB physics in X/Z; authored static prefabs can also contain yaw-rotated `BoxShape3D` children while retaining validated walkable interior lanes. Meshes, sockets, opening metrics, and world transforms all survive native scene packing. F2 acceptance also covers actual **CharacterBody3D capsule walks across every edge and through the rotated exterior doors**, rather than relying only on graph BFS.
+- Every new angle, position, route, configuration bound and prefab choice enters the `LevelLayout` fingerprint, so the editor refuses exporting a stale bake.
+
+See [`docs/F2_ACCEPTANCE.md`](docs/F2_ACCEPTANCE.md) for the tested acceptance matrix, limitations, commands and Windows manual acceptance checklist.
+
+**Important supported-scope limits:** F2 is a **single-floor procedural authoring system**, not a full 3D multilevel building generator. The off-grid packer is most dependable for branched/tree-like graphs; loops that cannot geometrically close return a bounded failure. Physical prefab doors are currently authored on rectangular cardinal **local wall faces** and rotate with the whole prefab: independent arbitrary-angle door cuts in a prefab shell, compound arbitrary mesh collision, NavMesh baking, partial locked-room regeneration, multilevel portals and unconstrained multi-floor 3D packing are *not* certified F2 features. Those belong to F3+/research or further refinements. Windows interactive user acceptance still needs to be exercised outside Linux CI.
 
 ## Create a dungeon (F2)
 
@@ -57,11 +85,11 @@ In the `DungeonConfig` Inspector, expand **Room silhouettes** and configure four
 
 Each nonrectangular room occupies some of the nine thirds of the same bounding grid cell. Floors, ceilings and colliders follow the actual silhouette; missing tiles remain empty. The entry/exit openings always align with reciprocal external sockets. Door width must fit the narrower one-third connector of the cell: by default an 8-meter room supports the standard 1.6-meter door. Invalid configurations fail validation rather than creating inaccessible walls.
 
-Manual `RoomBlueprint` authoring also exposes `shape` and `shape_rotation`, and currently supports **centered** openings on exposed silhouette boundaries. In dungeons, room size and the world-space distances between aligned grid rows/columns can now vary independently; native static corridors connect room sockets. Custom visual modules may declare normalized sockets. Arbitrary room boundaries, collision-bearing prefabs and unconstrained free rotation are not supported.
+Manual `RoomBlueprint` authoring exposes `shape` and `shape_rotation`. New F2 off-grid and yaw modes now support world-rotated rooms and full collision-bearing prefabs, with the restrictions and door-placement contracts described in the F2 completion section.
 
-**Current F2 scope:** single-floor rooms inside a fixed-size cardinal grid, a seeded main path, branches and optional graph cycles. Each connection defines two mirrored door openings with stable IDs, coincident socket centers and opposite normals. No open unpaired doorways are generated. Impossible layouts return a `DungeonBuildResult` with an error report; they are not exported as success.
+**Current F2 scope:** seeded single-floor room graphs with a logical grid for adjacency. The world-space layout may now be cardinal, yaw-rotated or fully socket-packed off-grid; each graph edge keeps stable reciprocal door identities. Invalid layouts return an explicit `DungeonBuildResult` error and preserve the last valid authoring output.
 
-This is **not** yet arbitrary collision-bearing prefab replacement, free-form rotated spatial packing, multilevel routing, navigation-mesh baking, or partial room-lock regeneration. New hand-authored room prefabs can be added later without changing the graph contract.
+Full physical prefab replacements and bounded yaw-aware off-grid packing are now implemented for one floor. Multilevel routing, NavMesh baking and partial room-lock regeneration remain future work.
 
 ## F2.8.2 — Arbitrary-yaw socket docking, OBB SAT and experimental editor laboratory
 
@@ -81,7 +109,7 @@ Open **[examples/yaw_socket_pair_lab.tscn](examples/yaw_socket_pair_lab.tscn)** 
 
 `DungeonYawDockingSolver` computes a rigid transform for the second prefab by matching the complete **world-space socket transform**, including orientation; it uses a seeded, bounded gap search with obstacle OBB checks, and rejects overlapping candidates. `DungeonYawSocketBridge` compiles a real arbitrarily oriented **straight** floor, roof and side walls with primitive collision. Tests cover **80 deterministic angle cases**, relative yaw from an angled socket, blocked-pose rejection, actual **27° capsule movement** through both rooms and the bridge, portable PackedScene export, and real graphical-editor Inspector buttons.
 
-**This is a limited F2.8.2 step, not finished unrestricted 3D packing.** The laboratory docks *two compatible, opposite-facing sockets along a straight gap*. It does not yet route general multi-leg angled corridors, insert freely rotated rooms into the existing multiroom `LevelLayout` graph, perform deep room-by-room 3D backtracking, or certify arbitrary user-authored meshes/diagonal door cuts. Production `dungeon_authoring.tscn` remains the **proven cardinal graph generator**. Extend the laboratory's socket/OBB and physics contract into that graph in the next phase before offering its yaw control there.
+The original F2.8.2 lab remains a focused two-room diagnostic example. Since v1.12, its SAT, yaw and primitive physics contracts are also integrated into the production multiroom generator; see **F2 complete** above. Full arbitrary-mesh collision and angled door cuts *within* prefab shells remain outside the supported single-floor contract.
 
 ## F2.8 — Asymmetric room sockets (first spatial-packing extension)
 
@@ -100,7 +128,7 @@ The [example structural prefab](examples/dungeon_structural_offset_straight.tscn
 
 The profile validator also checks interior walkable routes from the room center to each offset opening against authored `BoxShape3D` colliders. A broken socket position or stale physical wall cutout prevents accepting that prefab.
 
-**Limitations:** asymmetric door offsets **do not mean arbitrary room yaw**. The rooms still have axis-aligned rectangular bounding footprints and rotate in 90° increments; corridors remain orthogonal three-leg doglegs with enough clearance to turn. Presets without dogleg routing automatically fall back to procedural rooms whenever a displaced socket cannot make a straight, coaxial connection. An experimental two-room free-yaw SAT docking laboratory is available in F2.8.2, but generalized yaw-aware multiroom packing, curved tunnels and multilevel rooms are still future work. This distinction is intentional to preserve physical passability.
+**Limitations:** asymmetric door offsets **do not mean arbitrary room yaw**. The rooms still have axis-aligned rectangular bounding footprints and rotate in 90° increments; corridors remain orthogonal three-leg doglegs with enough clearance to turn. Presets without dogleg routing automatically fall back to procedural rooms whenever a displaced socket cannot make a straight, coaxial connection. Free-yaw multiroom and off-grid packing are now supported by the production F2 planner; curved/vertical tunnels and multilevel worlds remain future work. This distinction is intentional to preserve physical passability.
 
 ## F2.7 — Full collision-bearing room prefabs and oriented sockets
 
@@ -221,7 +249,7 @@ Author module scenes in **normalized coordinates**: X/Z in -0.5…+0.5 and Y in 
 
 The generator selects modules deterministically **only when their markers, shape and rotation match all required wall connections**, including outside doors. Modules must be **script-free and collision-free**: they provide visual detail inside a procedurally validated, walkable room shell. Module instances are scaled to the chosen room dimensions, and sockets align with the actual procedural door markers. The exported `.tscn` contains engine-native geometry and the selected art scene dependencies.
 
-**Still future work:** integrating non-cardinal socket poses into the complete graph generator, deep multiroom OBB backtracking, non-box collision-bearing prefabs, multilevel dungeons and automatic navigation meshes. F2.7 supports collision-bearing **rectangular** replacement shells with exact cardinal sockets, alongside visual-only art modules.
+**Still future work:** non-cardinal door cuts within author-authored prefab shells, compound arbitrary-mesh collision, guaranteed closure of arbitrary off-grid loops, multilevel dungeons and automatic navigation meshes. F2.7 supports collision-bearing **rectangular** replacement shells with exact cardinal sockets, alongside visual-only art modules.
 
 ## Create a manual room (F1)
 
@@ -268,6 +296,9 @@ godot --headless --path . --script res://tests/dungeon_dogleg_smoke.gd
 godot --headless --path . --script res://tests/dungeon_structural_smoke.gd
 godot --headless --path . --script res://tests/dungeon_offset_socket_smoke.gd
 godot --headless --path . --script res://tests/dungeon_yaw_docking_smoke.gd
+godot --headless --path . --script res://tests/dungeon_free_yaw_smoke.gd
+godot --headless --path . --script res://tests/dungeon_f2_combined_smoke.gd
+godot --headless --path . --script res://tests/dungeon_offgrid_socket_smoke.gd
 ```
 
 GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset + 36 routed-dogleg + 34 structural-prefab + 35 asymmetric-socket seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.

@@ -80,6 +80,31 @@ func _run() -> void:
 	dock._apply_override()
 	if not _check(author.layout == snapshot, "Failed dock override must preserve source resource and generated nodes."):
 		return
+	# F3.3 actual asset painting: the palette uses the user's configured
+	# DungeonRoomModule resources, and never edits collision-bearing prefabs.
+	var profile := load("res://examples/dungeon_room_module_profile.tres") as DungeonRoomModule
+	if not _check(profile != null and profile.validate().is_valid(), "Bundled visual art prefab must validate before palette painting."):
+		return
+	config.room_modules = [profile]
+	dock._fill_palette()
+	if not _check(dock._module_profiles.size() == 2 and dock._module_profiles[1] == profile, "Palette must list designer-owned module profiles, with erase at index zero."):
+		return
+	dock._module_picker.select(1)
+	dock.set_mode(3)
+	var art_before: String = author.layout.fingerprint()
+	if not _check(dock.apply_viewport_action(two.stable_id) and author.layout.rooms[1].module_profile == profile and author.layout.rooms[1].authored_override_active and author.layout.fingerprint() != art_before, "Painting a compatible visual module must change only the selected room's persisted appearance."):
+		return
+	var source_painted := author.layout
+	var reroll := DungeonRoomEditing.regenerate_unlocked(author.layout, config, 5501)
+	if not _check(reroll.success and reroll.layout.rooms[1].module_profile == profile, "Designer-painted art must survive automatic unlocked-room appearance rerolls."):
+		return
+	var incompatible := DungeonRoomModulePainter.paint(author.layout, two.stable_id, profile)
+	if not _check(not incompatible.success and author.layout == source_painted, "Painting the same module twice must not duplicate art instances or mutate the source."):
+		return
+	dock._module_picker.select(0)
+	if not _check(dock.apply_viewport_action(two.stable_id) and author.layout.rooms[1].module_profile == null and author.layout.rooms[1].authored_override_active, "The erase slot must remove visual art but preserve authored room protection."):
+		return
+	dock.set_mode(0)
 	dock.queue_free()
 	author.queue_free()
 	await process_frame

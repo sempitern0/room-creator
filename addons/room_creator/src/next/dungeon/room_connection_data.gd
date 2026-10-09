@@ -14,3 +14,8 @@ extends Resource
 ## F2.6 optional orthogonal 3-leg route from one physical door socket to
 ## the other. Empty means the legacy straight corridor.
 @export var route_points: PackedVector3Array = PackedVector3Array()
+
+## F2.8: signed position along each endpoint wall in room-local meters.
+## FRONT/BACK offsets use X; LEFT/RIGHT offsets use Z.
+@export var from_offset: float = 0.0
+@export var to_offset: float = 0.0

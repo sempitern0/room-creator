@@ -17,9 +17,13 @@ static func build_route(layout: LevelLayout, edge: RoomConnectionData, a: RoomPl
 	if x_axis:
 		p0.x += sign_direction * size_a.x * 0.5
 		p3.x -= sign_direction * size_b.x * 0.5
+		p0.z += edge.from_offset
+		p3.z += edge.to_offset
 	else:
 		p0.z += sign_direction * size_a.z * 0.5
 		p3.z -= sign_direction * size_b.z * 0.5
+		p0.x += edge.from_offset
+		p3.x += edge.to_offset
 	var p1: Vector3 = p0
 	var p2: Vector3 = p3
 	if x_axis:

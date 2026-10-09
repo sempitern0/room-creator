@@ -13,7 +13,7 @@ static func build(layout: LevelLayout, edge: RoomConnectionData, from_room: Room
 	var size_a: Vector3 = DungeonPlanner.actual_size(layout, from_room)
 	var size_b: Vector3 = DungeonPlanner.actual_size(layout, to_room)
 	var delta: Vector3 = to_room.world_transform.origin - from_room.world_transform.origin
-	var along_x: bool = absf(delta.x) > absf(delta.z)
+	var along_x: bool = edge.from_wall == RoomOpening.Wall.RIGHT or edge.from_wall == RoomOpening.Wall.LEFT
 	var sign_dir: float = signf(delta.x if along_x else delta.z)
 	var step: float = absf(delta.x if along_x else delta.z)
 	var extent_a: float = size_a.x if along_x else size_a.z
@@ -26,9 +26,13 @@ static func build(layout: LevelLayout, edge: RoomConnectionData, from_room: Room
 	if along_x:
 		face_a.x += sign_dir * extent_a * 0.5
 		face_b.x -= sign_dir * extent_b * 0.5
+		face_a.z += edge.from_offset
+		face_b.z += edge.to_offset
 	else:
 		face_a.z += sign_dir * extent_a * 0.5
 		face_b.z -= sign_dir * extent_b * 0.5
+		face_a.x += edge.from_offset
+		face_b.x += edge.to_offset
 	var center: Vector3 = (face_a + face_b) * 0.5
 	var width: float = edge.clear_width + layout.wall_thickness * 2.0
 	var hallway := Node3D.new()

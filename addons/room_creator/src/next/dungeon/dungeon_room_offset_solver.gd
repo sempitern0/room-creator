@@ -111,7 +111,7 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 				rect["b"] = edge.to_room_id
 				corridors.append(rect)
 			continue
-		var lateral: float = delta.z if x_direction else delta.x
+		var lateral: float = (delta.z + edge.to_offset - edge.from_offset) if x_direction else (delta.x + edge.to_offset - edge.from_offset)
 		if absf(lateral) > EPS:
 			report.add_error("UNALIGNED_PORTAL", "Door sockets on edge %s are no longer coaxial." % edge.stable_id)
 			continue
@@ -129,6 +129,12 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 			continue
 		var p0: Vector3 = a.world_transform.origin
 		var p1: Vector3 = b.world_transform.origin
+		if x_direction:
+			p0.z += edge.from_offset
+			p1.z += edge.to_offset
+		else:
+			p0.x += edge.from_offset
+			p1.x += edge.to_offset
 		var signed_axis: float = 1.0 if axial >= 0.0 else -1.0
 		if x_direction:
 			p0.x += signed_axis * extent_a * 0.5

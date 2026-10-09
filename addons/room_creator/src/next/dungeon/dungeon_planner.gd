@@ -614,6 +614,7 @@ static func make_blueprint(layout: LevelLayout, room: RoomPlacementData) -> Room
 		outside.wall = room.exterior_wall
 		outside.width = layout.exterior_door_width
 		outside.height = layout.exterior_door_height
+		outside.offset = room.exterior_offset
 		blueprint.openings.append(outside)
 	for edge in layout.connections:
 		if edge.from_room_id == room.stable_id or edge.to_room_id == room.stable_id:
@@ -623,6 +624,7 @@ static func make_blueprint(layout: LevelLayout, room: RoomPlacementData) -> Room
 			opening.wall = edge.from_wall if edge.from_room_id == room.stable_id else edge.to_wall
 			opening.width = edge.clear_width
 			opening.height = edge.clear_height
+			opening.offset = edge.from_offset if edge.from_room_id == room.stable_id else edge.to_offset
 			blueprint.openings.append(opening)
 	return blueprint
 

@@ -54,7 +54,8 @@ func fingerprint() -> String:
 	parts.append("rooms:%d edges:%d" % [rooms.size(), connections.size()])
 	for room in rooms:
 		parts.append("%s:%d,%d:%d:%.4f,%.4f,%.4f:%d,%d:%d:%s:%.4f,%.4f,%.4f:%s:%d:%s" % [room.stable_id, room.cell.x, room.cell.y, room.role, room.world_transform.origin.x, room.world_transform.origin.y, room.world_transform.origin.z, room.shape, room.shape_rotation, room.exterior_wall, room.exterior_id, room.room_size.x, room.room_size.y, room.room_size.z, room.module_profile.stable_id if room.module_profile != null else "", room.structural_turns, room.structural_prefab.stable_id if room.structural_prefab != null else ""])
+	parts.append("exterior_offsets:%s" % str(rooms.map(func(r: RoomPlacementData) -> float: return r.exterior_offset)))
 	for edge in connections:
 		parts.append("%s:%s:%s:%d:%d:%.4f:%.4f" % [edge.stable_id, edge.from_room_id, edge.to_room_id, edge.from_wall, edge.to_wall, edge.clear_width, edge.clear_height])
-		parts.append("route:%s" % str(edge.route_points))
+		parts.append("route:%s offsets:%.4f,%.4f" % [str(edge.route_points), edge.from_offset, edge.to_offset])
 	return "|".join(parts).md5_text()

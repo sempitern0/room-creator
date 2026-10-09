@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.14.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.15.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -17,6 +17,16 @@ The modular path no longer instantiates its `PackedScene` over and over merely t
 This was tested in **Godot 4.7.2** with an actual editor instance in both headless mode and a graphical X11 session under Xvfb, including opening the supplied modular example, generation, preview refresh, bake, regeneration, and PackedScene save/reload. The CI explicitly fails if that recurring dialog error occurs. Windows graphical testing remains a manual acceptance check.
 
 If you still see messages in an existing edited scene after upgrading, close/reopen Godot and press **Generate Layout** to replace the old preview; save a backup before manually removing an already damaged `DungeonPreview`/`DungeonBake` tree. If it persists, capture the first error with its Godot file/line and which Inspector action triggers it.
+
+## F3.3 — Integrated dungeon workspace and click-to-paint modules (v1.15.0)
+
+The Room Creator editor plugin now provides a **context-aware dock** and **Room Tool** toggle in the 3D viewport toolbar. This is the first step toward a professional Asset Placer/Terrain3D-style room editing workflow, without duplicating the canonical authoring scene or bypassing its physics.
+
+In `examples/dungeon_authoring.tscn`, select `DungeonAuthoring3D`, use the **Room Creator dock**: `Build` for generate/preview/validate/bake/export; `Rooms` for searchable stable room IDs, role/status filters, selection details, lock controls and F3.2 width/depth/shape/translation edits. Toggle **Room Tool** above the 3D viewport and click any room: it is selected from its real rotated footprint and highlighted. Choose `Paint locks`, `Erase locks` or `Paint visual modules` to apply the active tool **per click**. Press **Esc** to return to normal editor selection.
+
+To paint art, add `DungeonRoomModule` resources to your `Config.room_modules`. Pick one from the dock's **Visual module palette**, then paint over compatible procedural rooms. The **None / erase art** palette entry removes art. All painting uses stable IDs, full socket/shape validation, deep-copied source layouts, deferred Inspector-safe operations and native scene Undo/Redo. Structural prefab collision shells cannot be painted over with visual-only modules. Manual-painted art is protected from automatic unlocked-room rerolls.
+
+This is **room selection and appearance painting**, not arbitrary new-room graph placement. The next step is a ghost-preview socket-linked room placer that checks topology, physical clearance and routes before confirming any new room. See [`docs/EDITOR_WORKSPACE.md`](docs/EDITOR_WORKSPACE.md) for the full UX analysis and staged design.
 
 ## F3.2 — Explicit manual overrides and locally rerouted doorways (v1.14.0)
 
@@ -346,6 +356,7 @@ godot --headless --path . --script res://tests/dungeon_f2_combined_smoke.gd
 godot --headless --path . --script res://tests/dungeon_offgrid_socket_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f3_room_edit_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f3_override_smoke.gd
+godot --headless --path . --script res://tests/dungeon_editor_ui_smoke.gd
 ```
 
 GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset + 36 routed-dogleg + 34 structural-prefab + 35 asymmetric-socket seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.

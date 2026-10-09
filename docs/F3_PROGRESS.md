@@ -1,4 +1,4 @@
-# F3 engineering progress — Room Creator v1.14.0
+# F3 engineering progress — Room Creator v1.15.0
 
 ## F3.1 — implemented
 
@@ -24,13 +24,23 @@
 
 This is a **bounded local** override, **not** globally optimized re-embedding: it never silently moves adjacent rooms, alters the original graph topology or swaps collision prefab sockets. Edits that cannot fit existing neighboring positions fail with actionable validation errors. Preview/bake meshes are still fully recompiled from the validated layout rather than incrementally updated by triangle/mesh region. Arbitrary viewport gizmos remain later.
 
+## F3.3 — editor workspace, room picking and palette painting (implemented)
+
+- `addons/room_creator/plugin.gd` adds a context-bound Room Creator right dock and an explicit 3D editor **Room Tool** toggle. It unbinds on scene changes and only intercepts unmodified left clicks while the tool is active; Esc exits.
+- `src/editor/dungeon_editor_dock.gd`: Build/Rooms tabs, search/filter roles/locks/edited rooms, current room ID and dimensions, shape/size/move controls, immediate lock/erase modes and visual module palette sourced from `DungeonConfig.room_modules`.
+- `src/editor/dungeon_viewport_picker.gd`: accurate Godot camera ray → yaw-rotated room local AABB intersection; works without preview collisions, with editor-only selected outline.
+- `dungeon_room_module_painter.gd`: validated, undoable, resource-persistent **visual-only** art painting and erasing. Prevents structural-prefab collisions and incompatible silhouette/sockets; newly painted rooms are designer-owned and excluded from automatic rerolls.
+- Tests: `tests/dungeon_editor_ui_smoke.gd` and `tests/editor_integration/plugin.gd` verify dock and room selection, painting/erasing, filters, preserving state and real editor Undo/Redo (not full visual usability acceptance).
+
+See `docs/EDITOR_WORKSPACE.md` for the UX comparison, controls and phased successor to Inspector-only workflows.
+
 ## Remaining F3 phases
 
-1. **F3.3 advanced spatial authoring:** neighbor repositioning with bounded backtracking around locked/manual anchors, user-controlled material overrides and explicit prefab replacement compatibility. F3.2 basic bounded room position/size/silhouette overrides are already delivered.
-2. **F3.4 manual viewport gizmos:** selected room and door/socket controls in the Godot editor; Undo/Redo and conflict diagnostics integrated into Inspector.
-3. **F3.5 styling:** `RoomBiome` and `BakeProfile` as resources separate from structural geometry, seeded aesthetic variation and never changing shared designer resources.
-4. **F3.6 navigation/validation:** optional NavigationMesh bake + independent agent-radius/height validation, room-level and global traversal across all connected doors.
-5. **F3.7 performance, regression and release:** profile room-local compilation and exports (20/100/300), legacy layout migration fixtures and Windows acceptance.
+1. **F3.4 placement tooling:** implement ghost preview and safe click-to-place new rooms **linked by source/target sockets**; topology, collision and portal validation must pass before committing any new room.
+2. **F3.5 manual viewport gizmos:** selected room and door/socket controls in the Godot editor; Undo/Redo and conflict diagnostics integrated into Inspector.
+3. **F3.6 styling:** `RoomBiome` and `BakeProfile` as resources separate from structural geometry, seeded aesthetic variation and never changing shared designer resources.
+4. **F3.7 navigation/validation:** optional NavigationMesh bake + independent agent-radius/height validation, room-level and global traversal across all connected doors.
+5. **F3.8 performance, regression and release:** profile room-local compilation and exports (20/100/300), legacy layout migration fixtures and Windows acceptance.
 
 ### Scope boundary
 

@@ -1,6 +1,6 @@
 # AGENTS.md — Room Creator contributor/AI-agent contract
 
-This file is the entry point for coding assistants working on **sempitern0/room-creator**, a Godot **4.7.2 stable** @tool editor addon. Read it before changing any files. Read `docs/ROADMAP.md`, `docs/F2_ACCEPTANCE.md`, and `docs/F3_PROGRESS.md` when working on the dungeon pipeline. **Treat the current `main` HEAD as authoritative, not prior chat summaries or an old checkout.**
+This file is the entry point for coding assistants working on **sempitern0/room-creator**, a Godot **4.7.2 stable** @tool editor addon. Read it before changing any files. Read `docs/ROADMAP.md`, `docs/F2_ACCEPTANCE.md`, `docs/F3_PROGRESS.md`, and `docs/EDITOR_WORKSPACE.md` when working on the dungeon pipeline. **Treat the current `main` HEAD as authoritative, not prior chat summaries or an old checkout.**
 
 ## 1. Mission and priority
 
@@ -26,9 +26,9 @@ Read `README.md` for the current supported feature set. Do not confuse **complet
 | Cardinal spatial layout | `dungeon_spatial_embedder.gd`, `dungeon_room_offset_solver.gd`, `dungeon_corridor_router.gd`, `dungeon_connector_builder.gd` |
 | Yaw/off-grid spatial layout | `dungeon_oriented_bounds.gd`, `dungeon_free_yaw_placement.gd`, `dungeon_socket_graph_packer.gd`, `dungeon_free_yaw_router.gd`, `dungeon_free_yaw_corridor_builder.gd` |
 | Real physical room art and opening validation | `dungeon_structural_prefab.gd`, `dungeon_structural_room_builder.gd`, `dungeon_room_module.gd`, `RoomGeometryBuilder` |
-| F3 protected edits | `dungeon_room_editing.gd`, F3 transactional manual override solver in `dungeon_room_overrides.gd` |
+| F3 protected edits | `dungeon_room_editing.gd`, `dungeon_room_overrides.gd`, `dungeon_room_module_painter.gd` |
 | Conversion to native Godot nodes | `dungeon_scene_compiler.gd` |
-| Editor buttons, generated node lifecycle, undo/redo, export | `dungeon_authoring_3d.gd` |
+| Editor buttons, generated node lifecycle, undo/redo, export | `dungeon_authoring_3d.gd` |\n| New dock, viewport modes and ray picking | `addons/room_creator/src/editor/dungeon_editor_dock.gd`, `dungeon_viewport_picker.gd`, `addons/room_creator/plugin.gd` |
 | Overhead debugging, semantic routes, locked-room labels | `dungeon_preview_overlay.gd`, `dungeon_preview_palette.gd` |
 | Regression and virtual graphical editor | `tests/dungeon_*_smoke.gd`, `tests/editor_integration/plugin.gd`, `.github/workflows/godot-ci.yml` |
 
@@ -66,6 +66,7 @@ Start with import/parse, then targeted suite, then full CI. Godot engine is pinn
 godot --headless --path . --editor --quit
 godot --headless --path . --script res://tests/dungeon_f3_room_edit_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f3_override_smoke.gd
+godot --headless --path . --script res://tests/dungeon_editor_ui_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f2_combined_smoke.gd
 godot --headless --path . --script res://tests/dungeon_offgrid_socket_smoke.gd
 ```
@@ -83,3 +84,11 @@ Use GitHub status **for the pushed SHA**. If source files are updated through Gi
 ## 7. Reporting
 
 Use concise Spanish for user-facing progress and delivery. Describe **what is demonstrably implemented** vs planned; mention whether a mode is opt-in, its restrictions and a quick Godot Inspector test. Provide links to actual commits and the *latest* green CI. Do not mark all F3 “done” when only an iteration is implemented. Do not claim a full Windows manual playtest from Linux CI. Never claim the user's personalized `dungeon_authoring.tscn` was restored or changed unless the exact diff supports it.
+
+## 8. F3.3 editor UX contracts
+
+Read `docs/EDITOR_WORKSPACE.md` before editing the dock/viewport. The **dock is a controller**, not a second data model. It only selects IDs or forwards requests to `DungeonAuthoring3D`; painting modules uses `DungeonRoomModulePainter.paint()` and full physics validation before UndoRedo commit. Geometry decisions never live in the dock.
+
+Do not reinterpret visual module `PackedScene` as a physical structural prefab; it is **collision-free and socket validated**. Never create a new room on raw left-click without connecting its graph-edge sockets first. For future placement, use a ghost preview and reject before committing; test UndoRedo, native export and capsule walking along every newly joined edge.
+
+Selection raycasts against layout OBB, not preview physics. A tool mode must be explicitly enabled (Room Tool top 3D toolbar); Esc exits, Ctrl/Alt/Shift preserve regular camera/editor behavior. The original Inspector remains functional if the dock is not visible.

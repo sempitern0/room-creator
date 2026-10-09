@@ -30,14 +30,16 @@ Architecture derived from `ROOM_CREATOR_NEXT_AGENT_HANDOFF(1).md` (design propos
 | Unrestricted multi-floor 3D packing / arbitrary mesh prefabs | **Out of F2 single-floor scope** | Multi-floor rotated 3D OBBs, diagonal door cuts within arbitrary mesh shells, navigation baking and guaranteed off-grid loop closure are not certified |
 | F3.1 persistent room locks and procedural rerolls | **Implemented + CI-tested** | Scene-serializable per-room lock bit and captured topology signature, lock/unlock Inspector and scene Undo/Redo, editor-only lock labels, deterministic shape/visual module reroll of unlocked procedural rooms, topology-safe rollback and explicit conflicts |
 | F3.2 manual room overrides + incident reroute | **Implemented + CI-tested** | Inspector-selected bounded X/Z room translations, legal X/Z size + L/T/Cross geometry edits, per-room edit anchors, deterministic physical routes through incident sockets, complete collision rollback, protected authored edits and editor Undo/Redo |
-| F3 full adjacent-room replanning, biomes and navigation | **Pending** | Reposition neighboring room centers around locked anchors, arbitrary local graph edits, Godot viewport gizmos, RoomBiome/BakeProfile and NavMesh path validation |
+| F3.3 Room Creator editor workspace + paintable visual modules | **Implemented + CI-tested** | Context-aware right dock, 3D room tool, rotated-room ray selection, room search/status, lock/erase brushes, socket-validated visual module palette with click-to-paint and Undo/Redo |
+| F3.4 socket-linked new-room placement (planned) | **Not implemented** | Ghost placement preview, explicit source/target sockets, physical route/graph transaction, valid/invalid surface feedback, commit/cancel |
+| F3 extended adjacent-room replanning, biomes and navigation | **Pending** | Locked-neighbor replanning, viewport drag gizmos, per-room materials/RoomBiome/BakeProfile, NavMesh path validation |
 | F4 exterior cities | **Not implemented** | Street graph, parcels, road access, zoning |
 | F5 release hardening | Partial (Godot 4.7.2 editor, plus Xvfb graphical regression) | Cross-platform interactive QA, benchmarks, migration fixtures and user acceptance outstanding |
 
 ## Remaining work, in order
 
 1. **Windows interactive F2 acceptance (manual):** validate source-only Ctrl+S, Inspector Undo/Redo, exported gameplay in a Windows Godot 4.7.2 installation with varying physics setups. Linux headless and Xvfb editor CI are green; Windows is not independently tested.
-2. **F3 advanced authoring:** F3.1 preserves topology locks; F3.2 now supports bounded explicit position/shape/size overrides and incident socket reroutes. Next: neighboring-room **position** replanning around hard locks, authored material overrides, viewport gizmos and independent NavMesh/agent route verification.
+2. **F3 editor-first workflow:** F3.3 now provides room selection/search and lock/visual-module brushes in a contextual Godot dock/viewport toolbar. Next: **F3.4 socket-linked room placement preview** with collision/topology-aware commit; then neighboring-room position replanning, material brush/biomes, gizmos and independent NavMesh/agent checks.
 3. **Refinements outside certified F2 scope:** guaranteed closure of arbitrary off-grid cycles, true authored oblique door cutouts, arbitrary mesh colliders, 3D/multilevel rotated packing and non-planar connectors.
 4. **F3 style/data layer:** separate RoomBiome and BakeProfile from geometry; measure then batch meshes by room/chunk/material with no shared Resource mutation.
 5. **F4–F5:** independent city authoring, 20/100/300-room performance targets, migration tools and release hardening.

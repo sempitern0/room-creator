@@ -48,6 +48,45 @@ func _run() -> void:
 		return
 	if not _check(corner.compatible_rotations([RoomOpening.Wall.FRONT, RoomOpening.Wall.RIGHT], Vector3(8, 3.5, 8), 1.6, 2.3).size() == 1, "Corner prefab must admit its unique matching cardinal rotation."):
 		return
+	# F2 completed static prefab contract: custom local-YAW rotated physics
+	# boxes, not only world-rotated axis-aligned walls.
+	var diagonal_source := corner.packed_room.instantiate() as Node3D
+	var diagonal_body := diagonal_source.get_node("RoomPhysics") as StaticBody3D
+	var beam := CollisionShape3D.new()
+	beam.name = "Collision_OrientedBeam"
+	var beam_box := BoxShape3D.new()
+	beam_box.size = Vector3(0.3, 1.5, 0.8)
+	beam.shape = beam_box
+	beam.position = Vector3(3.0, 1.0, 2.85)
+	beam.rotation.y = deg_to_rad(27.0)
+	diagonal_body.add_child(beam)
+	_take_ownership(diagonal_source, diagonal_source)
+	var rotated_scene := PackedScene.new()
+	if not _check(rotated_scene.pack(diagonal_source) == OK, "Rotated authored physics fixture should pack."):
+		return
+	diagonal_source.free()
+	var rotated_profile := DungeonStructuralPrefab.new()
+	rotated_profile.stable_id = "collision_yaw_27"
+	rotated_profile.packed_room = rotated_scene
+	if not _check(rotated_profile.validate().is_valid(), "Rigid, yaw-rotated BoxShape3D colliders inside the room must pass OBB validation: " + rotated_profile.validate().summary()):
+		return
+	var authored := RoomBlueprint.new()
+	authored.room_size = Vector3(8.0, 3.5, 8.0)
+	for side in [RoomOpening.Wall.FRONT, RoomOpening.Wall.RIGHT]:
+		var opening := RoomOpening.new()
+		opening.stable_id = "edge_%d" % side
+		opening.wall = side
+		opening.kind = RoomOpening.Kind.DOOR
+		opening.width = 1.6
+		opening.height = 2.3
+		authored.openings.append(opening)
+	var placement := RoomPlacementData.new()
+	placement.stable_id = "yaw_collider_fixture"
+	placement.structural_prefab = rotated_profile
+	var authored_room := DungeonStructuralRoomBuilder.build(placement, authored, true)
+	if not _check(authored_room != null and authored_room.find_children("Collision_OrientedBeam", "CollisionShape3D", true, false).size() == 1, "Compiled structural prefab must retain real rigid-yaw collision box."):
+		return
+	authored_room.free()
 	var example_preset := load("res://examples/dungeon_structural_preset.tres") as DungeonConfig
 	if not _check(example_preset != null and example_preset.structural_prefabs.size() == 2 and DungeonPlanner.validate_config(example_preset).is_valid(), "Single-scene structural preset should import both real collision prefab profiles."):
 		return

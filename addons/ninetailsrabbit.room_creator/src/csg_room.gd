@@ -18,6 +18,9 @@ var ceil_columns: Array[CSGShape3D] = []
 
 
 func _enter_tree() -> void:
+	if configuration == null:
+		push_warning("CSGRoom: Assign a RoomConfiguration before adding the node.")
+		return
 	if get_child_count() == 0 and not configuration.room_size.is_zero_approx():
 		build()
 

@@ -47,5 +47,4 @@ func _validate_property(property: Dictionary) -> void:
 		"door_in_front_wall",
 		"door_in_back_wall",
 	]:
-		print("what ", property.name)
 		property.usage = PROPERTY_USAGE_READ_ONLY | PROPERTY_USAGE_EDITOR if use_manual_door_mode else PROPERTY_USAGE_EDITOR

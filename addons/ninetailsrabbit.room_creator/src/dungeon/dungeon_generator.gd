@@ -77,7 +77,7 @@ func generate_dungeon() -> void:
 		
 		for row in dungeon_dimension.y:
 			var room: CSGRoom = CSGRoom.new()
-			room.configuration = room_configuration
+			room.configuration = room_configuration.duplicate(true)
 			room.configuration.use_manual_door_mode = true
 			
 			var dungeon_room: DungeonRoom = DungeonRoom.new(

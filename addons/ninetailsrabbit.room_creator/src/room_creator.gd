@@ -162,7 +162,7 @@ func create_csg_room() -> CSGRoom:
 	room.is_bridge_room_connector = is_bridge_connector
 	room.configuration.room_size = generate_room_size_based_on_range(min_bridge_connector_size, max_bridge_connector_size) if is_bridge_connector else generate_room_size_based_on_range()
 	room.configuration.door_size = room_parameters.door_size
-	room.configuration.number_of_doors = 2
+	room.configuration.number_of_doors = clampi(doors_per_room, 1, 4)
 	room.configuration.randomize_door_position_in_wall = room_parameters.randomize_door_position_in_wall
 	room.configuration.include_floor = include_floor
 	room.configuration.include_ceil = include_ceil
@@ -364,9 +364,11 @@ func name_surfaces_on_room_mesh(room: CSGRoom, room_mesh_instance: MeshInstance3
 
 func clear_rooms_in_scene_tree() -> void:
 	if _tool_can_be_used():
-		for child in get_children():
-			child.free()
-			
+		# Never delete arbitrary user-authored children.
+		if is_instance_valid(csg_rooms_output_node):
+			csg_rooms_output_node.free()
+		if is_instance_valid(room_meshes_output_node):
+			room_meshes_output_node.free()
 		csg_rooms_output_node = null
 		room_meshes_output_node = null
 		

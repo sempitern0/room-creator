@@ -119,6 +119,12 @@ func _run() -> void:
 	author.clear_preview()
 	if not _check(author.get_node_or_null("DesignerNotes") == user_child and author.get_node_or_null("DungeonBake") != null, "Clearing preview must preserve designer nodes and bake."):
 		return
+	author.layout = author.layout.duplicate(true) as LevelLayout
+	author.layout.wall_thickness += 0.02
+	if not _check(DungeonPlanner.validate_layout(author.layout).is_valid(), "Edited geometry must remain a valid layout."):
+		return
+	if not _check(author.save_scene() == ERR_INVALID_DATA and author.get_node_or_null("DungeonBake") != null, "A stale but otherwise valid layout must not export the old bake."):
+		return
 	author.layout = impossible_layout()
 	if not _check(author.save_scene() != OK and author.get_node_or_null("DungeonBake") != null, "Invalid layout must not export or destroy a previously good bake."):
 		return

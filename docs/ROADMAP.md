@@ -1,33 +1,38 @@
-# Room Creator agent development roadmap
+# Room Creator — Agent engineering roadmap
 
-Source: `ROOM_CREATOR_NEXT_AGENT_HANDOFF(1).md` (planning guidance, not a previously implemented feature). Target **Godot 4.7.2 stable**. Source code and distributed documentation use English.
+Architecture derived from `ROOM_CREATOR_NEXT_AGENT_HANDOFF(1).md` (design proposal, not code). Godot **4.7.2 stable**, addon path `addons/room_creator/`. Source, APIs and documentation are written in English.
 
-## Migration mapping (legacy to the new core)
+## Current architecture
 
-| Legacy component | Decision | Reason |
+| Area | Status | Contract |
 |---|---|---|
-| `RoomCreator` | PRESERVE + PATCH (compatibility) | Existing scene nodes and inspector workflows |
-| `CSGRoom` | PRESERVE + PATCH | Useful for blockout; no longer final geometry compiler |
-| `RoomConfiguration`, `RoomParameters` | PRESERVE | Existing serialized scenes use these classes |
-| `DungeonGenerator` | PRESERVE AS EXPERIMENTAL | Grid planning mixed with geometry; future reimplementation needs a separate layout |
-| `RoomMesh` | PRESERVE | Existing exports; new pipeline emits native MeshInstance3D nodes |
-| `RoomAuthoring3D`, `RoomBlueprint`, `RoomOpening` | NEW | Editor/resource-first workflow with immutable source of truth |
-| `RoomGeometryBuilder`, `RoomValidationReport` | NEW | Pure validation precedes geometry and save operations |
+| F0 independent addon | Implemented and CI-tested | Clean project copies `addons/room_creator` only; no OmniKit |
+| F1 manual rooms | Implemented; interactive QA remains | Typed `RoomBlueprint`, openings, primitive colliders, preview/bake, scene export |
+| F2 seeded layout | Implemented for cardinal-grid rooms | `DungeonConfig`, `LevelLayout`, `RoomPlacementData`, `RoomConnectionData`, stable IDs, local RNG, bounded path search |
+| F2 graph/geometry validation | Implemented for this subset | BFS reachability, critical path floor, reciprocal door orientations, matched openings, occupancy, schema checks |
+| F2 editor/export | Implemented | `DungeonAuthoring3D` generates/validates/previews/bakes/exports; Undo/Redo for generated nodes; baked scenes are engine-native |
+| F2 validation | Automated in Godot 4.7.2 CI | 100 seeds × 3 presets, loop test, door socket alignment, portable scene reload and capsule sweep |
+| F2 advanced packing | **Not implemented** | Variable-size prefabs, arbitrary rotated sockets, explicit spatial broadphase and bounded backtracking for 3D overlaps |
+| F3 locked editing/biomes | **Not implemented** | Locks, incremental regeneration, biomes, reusable profiles, navigation pipeline |
+| F4 exterior cities | **Not implemented** | Street graph, parcels, road access, zoning |
+| F5 release hardening | Partial | Cross-platform interactive QA, benchmarks, migration fixtures and user acceptance outstanding |
 
-## Status and next acceptance gates
+## Remaining work, in order
 
-- **F0 foundation:** new folder under existing self-contained addon; Godot 4.7.2 project settings; headless CI and smoke test added. Clean-project installation still requires validation by users/CI.
-- **F1 manual rooms:** multiple door/window holes, serializable blueprint, surface materials, primitive static collision, sockets, preview/bake/save, validation. Validate in Godot 4.7.2 CI; check editor Undo/Redo in an interactive session, add viewport gizmos; reference capsule physics test outstanding.
-- **F2 deterministic dungeons (NOT IMPLEMENTED):** typed `DungeonConfig`, `LevelLayout`, logical connectivity graph, seeded local `RandomNumberGenerator`, socket transforms, spatial collision checks, bounded backtracking and replayable tests across 100 seeds. **Never** label a grid-connected layout as agent-walkable without geometry checks.
-- **F3 editing and biomes:** persistent locked IDs/overrides; `RoomBiome`, `CollisionProfile`, `BakeProfile`, non-destructive regeneration, optional navigation, mesh and material batching.
-- **F4 cities:** separate street/parcel/building graph pipeline only after F2 and F3 work reliably.
-- **F5 release QA:** fully clean installation, Windows/Linux editor verification, scene pack/reload without plugin, collision capsule crossing, CI regression suite, deterministic layout fixtures, profiling.
+1. **Interactive F2 QA:** test Undo/Redo with scene saved/reopened in Windows and Linux editor; validate exported gameplay with a controllable character and differing physics profiles.
+2. **Prefab-driven spatial embedding:** read authored sockets from `PackedScene` templates, match facing transforms and clearance, handle differing footprints and transforms (OBB, backtracking), avoid unpaired doors.
+3. **Agent-space validation:** optional NavigationMesh generation and independent path verification (graph connectivity alone is insufficient for full navigation).
+4. **F3 persistent overrides:** stable per-room locks, local overrides, invalid-connection conflict reports, incremental regeneration and undoable viewport gizmos.
+5. **Style/data layer:** separate RoomBiome and BakeProfile from geometry; meshes by room/chunk/material when measured; no shared Resource mutation.
+6. **F4–F5:** independent city authoring, performance targets at 20/100/300 rooms, migration tools, release checks.
 
-## Non-negotiable contracts
+## Contracts
 
-1. Invalid or impossible input must not replace the last valid geometry or produce a successful export.
-2. Never modify user-owned scene children or shared `.tres` presets as a generation side effect.
-3. Keep editable blueprints/layouts independent from generated and baked geometry.
-4. Make generated output standard Godot resources, free from plugin scripts at runtime.
-5. Preserve source licensing and avoid copying code/visual assets from external references without permissions.
-6. Report the exact revision, tests actually run, missing coverage, and limitations for each future iteration.
+- Do not mutate designer-owned SceneTree nodes or shared `.tres` resources during generation.
+- Failed generations are explicit and preserve the last valid layout.
+- Regenerate derived geometry from `LevelLayout`, never from a detached baked mesh.
+- Do not save a stale bake when its source geometry differs from the last baked layout fingerprint.
+- All authored rooms/connectors have stable identities; their paired door openings are derived from a single logical edge.
+- No use of globally seeded random functions in the new planner.
+- Baked output must open without this addon installed.
+- Do not claim full agent navigation, rotated multi-floor packing or low-poly/PSX biome support until tested.

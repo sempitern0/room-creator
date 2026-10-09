@@ -1,48 +1,72 @@
-# Room Creator for Godot 4.7
+# Room Creator — Godot 4.7
 
-3D room authoring and static export addon, with the original `RoomCreator` and experimental `DungeonGenerator` still available for existing projects.
+A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Target:** Godot **4.7.2 stable**. The new parametric authoring pipeline is an F0–F1 implementation; it is **not yet a verified procedural dungeon generator**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.2.0**. Authors: **sempitern0**.
 
 ## Install
 
-Copy **`addons/room_creator/`** into the same path under your Godot project's `addons/` directory, then enable **Room Creator** in Project Settings → Plugins. No Barebone, OmniKit, external assets, or player controller is required.
+Copy the directory `addons/room_creator/` to the same path in your Godot project and enable **Room Creator** under Project Settings → Plugins. No Barebone or OmniKit dependency is needed. The built scenes use only stock engine nodes and can be used without the addon.
 
-Open [examples/single_room_door.tscn](examples/single_room_door.tscn) for a preconfigured starter blueprint. Use **Generate Preview** in the Inspector to visualize it.
+## Create a dungeon (F2)
 
-## New workflow: RoomAuthoring3D
+1. Open **[examples/dungeon_authoring.tscn](examples/dungeon_authoring.tscn)** or add a `DungeonAuthoring3D` Node3D.
+2. In the Inspector, assign a new `DungeonConfig` resource to **Config**. Configure `seed`, `grid_size`, `critical_path_min/max`, `branch_count`, `loop_count`, dimensions, door clearance and collision options.
+3. Click **Generate Layout**. The planner creates an editable/serializable `LevelLayout` resource on the node. An invalid or impossible set of constraints leaves the previous layout and generated scene intact, with an error report.
+4. Click **Validate Layout**, then **Preview Layout** (lightweight native meshes, without colliders).
+5. Click **Bake Static Dungeon** to create `MeshInstance3D`, primitive `StaticBody3D`/`CollisionShape3D` and paired `Socket_*` markers.
+6. Set **Output Scene Path** to a `res://… .tscn` path and press **Save Baked Scene**. The exported scene is an independent, engine-native `PackedScene`.
+7. Save your authoring scene to keep the `DungeonConfig` and `LevelLayout` as the source of truth for later regeneration.
 
-1. Create a new 3D scene and add **RoomAuthoring3D** (Create Node or the custom addon type).
-2. In **Blueprint**, create a new `RoomBlueprint` resource. Set `room_size` (width, standing height, depth) and thicknesses.
-3. In **Openings**, add one or more `RoomOpening` resources. Choose `FRONT` (-Z), `BACK` (+Z), `LEFT` (-X), or `RIGHT` (+X). `offset` is horizontal displacement from that wall's center; all dimensions are in meters. Doors and arches start at floor level; windows may have a sill.
-4. Set optional wall, floor, and ceiling materials; configure physics collision layer/mask and agent radius/height.
-5. Click **Validate Blueprint**. Invalid openings, insufficient player clearance, invalid dimensions, duplicate IDs, and overlapping holes are reported before scene generation.
-6. Click **Generate Preview** to show editable source geometry without physics colliders. This only replaces its own tagged `RoomCreatorPreview` child.
-7. Click **Bake Static Room** for standard `MeshInstance3D` + `StaticBody3D` + `BoxShape3D` pieces and `Socket_*` markers. No runtime CSG or script dependency is added to the baked root.
-8. Set **Output Scene Path** to a `res://... .tscn` destination and click **Save Baked Scene**. The exported PackedScene uses only standard engine nodes/resources.
+Preview, bake, and clearing generated output are Undo/Redo-enabled in the editor. Regeneration is **non-destructive** to your manual child nodes and never overwrites a previously baked scene with an invalid layout. If the source changes after baking, bake again before exporting.
 
-**Editing:** Modify the blueprint and bake again; the authored blueprint remains separate from the baked geometry. The generated nodes are tagged so **Clear Preview** and **Clear Bake** never delete arbitrary children. **Generate Preview, Bake, Clear Preview and Clear Bake integrate with the editor's Undo/Redo history.** Advanced viewport gizmos, per-room locks, and incremental regeneration are not yet implemented.
+**Current F2 scope:** single-floor, fixed-size rectangular rooms, cardinal (90°) grid-aligned connections, a seeded main path, branches and optional graph cycles. Each connection defines two mirrored door openings with stable IDs, coincident socket centers and opposite normals. No open unpaired doorways are generated. Impossible layouts return a `DungeonBuildResult` with an error report; they are not exported as success.
 
-## Godot 4.7 validation
+This is **not** yet arbitrary prefab/socket rotation matching, variable-size spatial packing, multilevel routing, navigation-mesh baking, or partial room-lock regeneration. New hand-authored room prefabs can be added later without changing the graph contract.
 
-With Godot 4.7.2 installed, from the repository root:
+## Create a manual room (F1)
+
+1. Open **[examples/single_room_door.tscn](examples/single_room_door.tscn)** or add `RoomAuthoring3D` to a 3D scene.
+2. Create a `RoomBlueprint` and configure room dimensions (width/height/depth), thicknesses and optional materials.
+3. Under **Openings**, create one or more `RoomOpening` resources and choose a wall: `FRONT` (-Z), `BACK` (+Z), `LEFT` (-X), `RIGHT` (+X). Use `offset`, `width`, `height`, and `sill_height`. Walkable doors/arches must start at floor level.
+4. Use **Validate Blueprint → Generate Preview → Bake Static Room → Save Baked Scene**. You can keep the blueprint and re-bake without editing the generated meshes destructively.
+
+## API
+
+```gdscript
+var config := DungeonConfig.new()
+config.seed = 12345
+config.critical_path_min = 7
+config.critical_path_max = 9
+config.branch_count = 5
+var result: DungeonBuildResult = DungeonPlanner.generate_layout(config)
+if result.success:
+    var layout: LevelLayout = result.layout  # No SceneTree nodes yet
+    var geometry: Node3D = DungeonSceneCompiler.build(layout, true)
+    add_child(geometry)
+else:
+    push_warning(result.report.summary())
+```
+
+`DungeonPlanner.validate_layout(layout)` checks IDs, degree, reachability, min shortest path, grid embedding, reciprocal wall orientations, paired clearances and opening geometry. `LevelLayout.fingerprint()` provides a stable geometric/topological signature for repeated builds; changing a referenced Material in place still requires a manual re-bake.
+
+## Tests
+
+From a working Godot 4.7.2 project, run:
 
 ```sh
 godot --headless --path . --editor --quit
 godot --headless --path . --script res://tests/room_creator_smoke.gd
+godot --headless --path . --script res://tests/dungeon_layout_smoke.gd
+godot --headless --path . --script res://tests/dungeon_capsule_smoke.gd
 ```
 
-The smoke script exercises multiple door holes, a window, collider counts, sockets, invalid blueprints, non-destructive cleanup, Resource isolation, and PackedScene reload. CI is pinned to Godot 4.7.2.
+GitHub Actions additionally verifies **clean addon-only installation**, 300 deterministic seed/preset cases, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
 
-## Compatibility and limitations
-
-- `RoomCreator` and `DungeonGenerator` are legacy tools. The most critical ownership/shared-resource defects are being addressed, but their procedural dungeon connectivity is **not guaranteed**. Prefer `RoomAuthoring3D` for new rooms.
-- F1 supports **rectangular rooms, single floor, axis-aligned walls** and multiple nonoverlapping orthogonal openings. No arbitrary polygon, rotated room assembly, slopes, or navigation bake yet.
-- Generated meshes consist of static boxes with per-piece primitive collision: not merged `ArrayMesh`/UV2/LOD, and not a walkable navigation guarantee. Sockets expose local coordinates and clear dimensions for future alignment.
-- Baked scene output does not depend on the plugin at runtime. Keep the `RoomBlueprint` authoring scene/resource in source control for regeneration.
+The older `RoomCreator` and `DungeonGenerator` nodes remain for compatibility but the legacy dungeon path is not claimed to have the same F2 validation guarantees. Use `DungeonAuthoring3D` for new dungeons.
 
 ## Roadmap
 
-See [development plan](docs/ROADMAP.md) for the F0–F5 milestones, acceptance gates, and the distinction between implementation and verification.
+See [docs/ROADMAP.md](docs/ROADMAP.md) for remaining F2/F3 features, interactive editor QA, biome integration, mesh batching and the later city pipeline.
 
-**License:** repository `LICENSE`. This rewrite draws architectural ideas from the supplied design handoff; it does not incorporate third-party source code.
+**License:** see [LICENSE](LICENSE). External repositories in the architectural handoff were considered as design references; no third-party source code is included in this implementation.

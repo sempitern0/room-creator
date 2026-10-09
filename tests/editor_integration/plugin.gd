@@ -144,6 +144,45 @@ func _exercise() -> void:
 	var free_snapshot := PackedScene.new()
 	if not _check(free_snapshot.pack(author) == OK and free_snapshot.get_state().get_node_count() == 1, "Ctrl+S must keep the full yaw generated scene transient too."):
 		return
+	# F2 full off-grid socket packing must also work through this ONE
+	# canonical dungeon author scene and serialize no derived mesh nodes.
+	var socket_preset := load("res://examples/dungeon_offgrid_socket_preset.tres") as DungeonConfig
+	if not _check(socket_preset != null and DungeonPlanner.validate_config(socket_preset).is_valid(), "The off-grid Inspector preset must load as valid DungeonConfig."):
+		return
+	var found_socket_seed := false
+	for n in 10:
+		socket_preset.seed = 47000 + n
+		if DungeonPlanner.generate_layout(socket_preset).success:
+			found_socket_seed = true
+			break
+	if not _check(found_socket_seed, "The editor preset must produce a valid socket-packed multiroom dungeon."):
+		return
+	author.config = socket_preset
+	author._request_generate_layout()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	preview = author.get_node_or_null("DungeonPreview")
+	if not _check(preview != null and author.layout != null and author.layout.offgrid_socket_packing_enabled, "The canonical Inspector must preview a truly off-grid socket dungeon."):
+		return
+	author._request_bake()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var socket_bake := author.get_node_or_null("DungeonBake")
+	if not _check(socket_bake != null and socket_bake.find_children("Connector_*", "Node3D", true, false).size() == author.layout.connections.size(), "The actual editor Bake action must include every off-grid connector."):
+		return
+	var socket_saved := PackedScene.new()
+	if not _check(socket_saved.pack(author) == OK and socket_saved.get_state().get_node_count() == 1, "Off-grid generated geometry must never pollute the saved authoring scene."):
+		return
+	# Failed new configurations preserve the last successful F2 bake/layout.
+	var prior_layout: LevelLayout = author.layout
+	var broken_config := DungeonConfig.new()
+	broken_config.enable_offgrid_socket_packing = true
+	author.config = broken_config
+	author._request_generate_layout()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(author.layout == prior_layout and author.get_node_or_null("DungeonBake") != null, "An unsatisfiable off-grid edit must preserve the previous baked dungeon."):
+		return
 	# The experimental free-yaw pair is a DIFFERENT authoring lab, not a
 	# duplicate general dungeon scene. Exercise its actual Inspector buttons.
 	EditorInterface.open_scene_from_path("res://examples/yaw_socket_pair_lab.tscn")

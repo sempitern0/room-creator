@@ -96,6 +96,47 @@ func _exercise() -> void:
 	await get_tree().process_frame
 	if not _check(author.get_node_or_null("DungeonBake") == null and author.get_node_or_null("DungeonPreview") != null, "Regeneration should replace bake with a fresh modular preview."):
 		return
+	# F3.2: the real Inspector runs the same transactional manual override as
+	# headless tests, including scene-owned UndoRedo and exact source-only save.
+	var edit_config := DungeonConfig.new()
+	edit_config.seed = 19850
+	edit_config.grid_size = Vector2i(12, 12)
+	edit_config.critical_path_min = 7
+	edit_config.critical_path_max = 9
+	edit_config.branch_count = 5
+	edit_config.max_attempts = 24
+	edit_config.use_variable_grid_spacing = true
+	edit_config.min_corridor_gap = 10.0
+	edit_config.max_corridor_gap = 13.0
+	author.config = edit_config
+	author._request_generate_layout()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(author.layout != null and author.layout.rooms.size() >= 10, "Room Override editor fixture must generate a stable canonical dungeon."):
+		return
+	author.selected_room_id = author.layout.rooms[-1].stable_id
+	author.manual_translation = Vector3(0.25, 0, 0.25)
+	author.manual_room_size = Vector2(7.2, 7.6)
+	author.manual_shape_choice = 2
+	author.manual_shape_rotation = 0
+	var before_override := author.layout.fingerprint()
+	author._request_apply_room_override()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(author.layout.fingerprint() != before_override and author.layout.rooms[-1].authored_override_active and author.get_node_or_null("DungeonPreview").find_children("Edited_*", "Label3D", true, false).size() == 1, "Deferred Inspector room overrides should produce validated, visibly edited geometry."):
+		return
+	scene_history = history.get_history_undo_redo(history.get_object_history_id(author))
+	scene_history.undo()
+	await get_tree().process_frame
+	if not _check(author.layout.fingerprint() == before_override, "Undo must recover original physical rooms and corridors."):
+		return
+	scene_history.redo()
+	await get_tree().process_frame
+	if not _check(author.layout.rooms[-1].authored_override_active and author.layout.fingerprint() != before_override, "Redo must recover the persisted designer edit and local reroute."):
+		return
+	var authored_snapshot := PackedScene.new()
+	if not _check(authored_snapshot.pack(author) == OK and authored_snapshot.get_state().get_node_count() == 1, "Ctrl+S after manual edits must keep only the single source authoring node."):
+		return
 	# Exercise actual Inspector/UndoRedo transactions with collision-bearing
 	# room prefabs in a real graphical editor, not just a SceneTree test.
 	var profile_preset := load("res://examples/dungeon_structural_preset.tres") as DungeonConfig

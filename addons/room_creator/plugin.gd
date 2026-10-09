@@ -8,6 +8,7 @@ const Picker = preload("res://addons/room_creator/src/editor/dungeon_viewport_pi
 
 var inspector_plugin
 var _dungeon_dock: Control
+var _editor_dock: EditorDock
 var _tool_button: Button
 var _active_author: DungeonAuthoring3D
 var _viewport_camera: Camera3D
@@ -37,8 +38,21 @@ func _enter_tree() -> void:
 	)
 	inspector_plugin = preload("res://addons/room_creator/src/inspector/inspector_button_plugin.gd").new()
 	add_inspector_plugin(inspector_plugin)
+	# Godot 4.7's EditorDock is draggable between bottom, side and
+	# floating layouts. The old add_control_to_dock() API restricts the
+	# original Room Creator panel to vertical positions.
+	_editor_dock = EditorDock.new()
+	_editor_dock.name = "RoomCreatorWorkspace"
+	_editor_dock.title = "Room Creator"
+	_editor_dock.layout_key = "room_creator_spatial_workspace_v2"
+	_editor_dock.default_slot = EditorDock.DOCK_SLOT_BOTTOM
+	_editor_dock.available_layouts = EditorDock.DOCK_LAYOUT_ALL
+	_editor_dock.dock_icon = preload("res://addons/room_creator/assets/icon.svg")
 	_dungeon_dock = DockScript.new()
-	add_control_to_dock(DOCK_SLOT_RIGHT_BL, _dungeon_dock)
+	_dungeon_dock.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_dungeon_dock.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_editor_dock.add_child(_dungeon_dock)
+	add_dock(_editor_dock)
 	_dungeon_dock.mode_changed.connect(_on_mode_changed)
 	_dungeon_dock.selection_changed.connect(_on_selection_changed)
 	_tool_button = Button.new()
@@ -58,9 +72,11 @@ func _exit_tree() -> void:
 	if is_instance_valid(_tool_button):
 		remove_control_from_container(CONTAINER_SPATIAL_EDITOR_MENU, _tool_button)
 		_tool_button.queue_free()
-	if is_instance_valid(_dungeon_dock):
-		remove_control_from_docks(_dungeon_dock)
-		_dungeon_dock.queue_free()
+	if is_instance_valid(_editor_dock):
+		remove_dock(_editor_dock)
+		_editor_dock.queue_free()
+		_editor_dock = null
+	_dungeon_dock = null
 	remove_custom_type("RoomAuthoring3D")
 	remove_custom_type("DungeonAuthoring3D")
 	remove_custom_type("DungeonGenerator")

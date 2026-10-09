@@ -1,0 +1,32 @@
+name: Godot 4.7.2 addon smoke
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  headless:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download pinned Godot 4.7.2 stable
+        run: |
+          curl -fL --retry 3 -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+          ./Godot_v4.7.2-stable_linux.x86_64 --version
+      - name: Import and parse addon and test project
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --quit 2>&1 | tee import.log
+          if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script' import.log; then exit 1; fi
+      - name: Test geometry, validation, preservation, and export round-trip
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/room_creator_smoke.gd 2>&1 | tee test.log
+          grep 'ROOM_CREATOR_SMOKE: PASS' test.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ROOM_CREATOR_SMOKE: FAIL' test.log; then exit 1; fi

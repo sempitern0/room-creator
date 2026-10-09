@@ -1,31 +1,46 @@
-<div align="center">
-	<img src="icon.svg" alt="Logo" width="160" height="160">
+# Room Creator for Godot 4.7
 
-<h3 align="center">Room creator</h3>
+3D room authoring and static export addon, with the original `RoomCreator` and experimental `DungeonGenerator` still available for existing projects.
 
-  <p align="center">
-   Easily design and build basic 3D spaces using our intuitive editor, featuring quick room creation, customizable properties, and effortless mesh output
-	<br />
-	·
-	<a href="https://github.com/ninetailsrabbit/room-creator/issues/new?assignees=ninetailsrabbit&labels=%F0%9F%90%9B+bug&projects=&template=bug_report.md&title=">Report Bug</a>
-	·
-	<a href="https://github.com/ninetailsrabbit/room-creator/issues/new?assignees=ninetailsrabbit&labels=%E2%AD%90+feature&projects=&template=feature_request.md&title=">Request Features</a>
-  </p>
-</div>
+**Target:** Godot **4.7.2 stable**. The new parametric authoring pipeline is an F0–F1 implementation; it is **not yet a verified procedural dungeon generator**.
 
-<br>
-<br>
+## Install
 
-- [📦 Installation](#-installation)
+Copy **`addons/ninetailsrabbit.room_creator/`** into the same path under your Godot project's `addons/` directory, then enable **Room Creator** in Project Settings → Plugins. No Barebone, OmniKit, external assets, or player controller is required.
 
-# 📦 Installation
+## New workflow: RoomAuthoring3D
 
-1. [Download Latest Release](https://github.com/ninetailsrabbit/room-creator/releases/latest)
-2. Unpack the `addons/ninetailsrabbit.room-creator` folder into your `/addons` folder within the Godot project
-3. Enable this addon within the Godot settings: `Project > Project Settings > Plugins`
+1. Create a new 3D scene and add **RoomAuthoring3D** (Create Node or the custom addon type).
+2. In **Blueprint**, create a new `RoomBlueprint` resource. Set `room_size` (width, standing height, depth) and thicknesses.
+3. In **Openings**, add one or more `RoomOpening` resources. Choose `FRONT` (-Z), `BACK` (+Z), `LEFT` (-X), or `RIGHT` (+X). `offset` is horizontal displacement from that wall's center; all dimensions are in meters. Doors and arches start at floor level; windows may have a sill.
+4. Set optional wall, floor, and ceiling materials; configure physics collision layer/mask and agent radius/height.
+5. Click **Validate Blueprint**. Invalid openings, insufficient player clearance, invalid dimensions, duplicate IDs, and overlapping holes are reported before scene generation.
+6. Click **Generate Preview** to show editable source geometry without physics colliders. This only replaces its own tagged `RoomCreatorPreview` child.
+7. Click **Bake Static Room** for standard `MeshInstance3D` + `StaticBody3D` + `BoxShape3D` pieces and `Socket_*` markers. No runtime CSG or script dependency is added to the baked root.
+8. Set **Output Scene Path** to a `res://... .tscn` destination and click **Save Baked Scene**. The exported PackedScene uses only standard engine nodes/resources.
 
-To better understand what branch to choose from for which Godot version, please refer to this table:
-|Godot Version|room-creator Branch|room-creator Version|
-|---|---|--|
-|[![GodotEngine](https://img.shields.io/badge/Godot_4.3.x_stable-blue?logo=godotengine&logoColor=white)](https://godotengine.org/)|`4.3`|`1.x`|
-|[![GodotEngine](https://img.shields.io/badge/Godot_4.4.x_stable-blue?logo=godotengine&logoColor=white)](https://godotengine.org/)|`main`|`1.x`|
+**Editing:** Modify the blueprint and bake again; the authored blueprint remains separate from the baked geometry. The generated nodes are tagged so **Clear Preview** and **Clear Bake** never delete arbitrary children. **Undo/Redo handles, advanced viewport gizmos, per-room locks, and incremental regeneration are not yet implemented.**
+
+## Godot 4.7 validation
+
+With Godot 4.7.2 installed, from the repository root:
+
+```sh
+godot --headless --path . --editor --quit
+godot --headless --path . --script res://tests/room_creator_smoke.gd
+```
+
+The smoke script exercises multiple door holes, a window, collider counts, sockets, invalid blueprints, non-destructive cleanup, Resource isolation, and PackedScene reload. CI is pinned to Godot 4.7.2.
+
+## Compatibility and limitations
+
+- `RoomCreator` and `DungeonGenerator` are legacy tools. The most critical ownership/shared-resource defects are being addressed, but their procedural dungeon connectivity is **not guaranteed**. Prefer `RoomAuthoring3D` for new rooms.
+- F1 supports **rectangular rooms, single floor, axis-aligned walls** and multiple nonoverlapping orthogonal openings. No arbitrary polygon, rotated room assembly, slopes, or navigation bake yet.
+- Generated meshes consist of static boxes with per-piece primitive collision: not merged `ArrayMesh`/UV2/LOD, and not a walkable navigation guarantee. Sockets expose local coordinates and clear dimensions for future alignment.
+- Baked scene output does not depend on the plugin at runtime. Keep the `RoomBlueprint` authoring scene/resource in source control for regeneration.
+
+## Roadmap
+
+See [development plan](docs/ROADMAP.md) for the F0–F5 milestones, acceptance gates, and the distinction between implementation and verification.
+
+**License:** repository `LICENSE`. This rewrite draws architectural ideas from the supplied design handoff; it does not incorporate third-party source code.

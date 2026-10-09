@@ -173,12 +173,17 @@ func _build() -> void:
 	rooms.add_child(stamp_row)
 	_stamp_wall = OptionButton.new()
 	_stamp_wall.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	for side in ["Front (-Z)", "Right (+X)", "Back (+Z)", "Left (-X)"]:
-		_stamp_wall.add_item(side)
+	# Display order follows spatial orientation; IDs are ACTUAL Godot
+	# RoomOpening enum values, not their visual list indices.
+	_stamp_wall.add_item("Front (-Z)", RoomOpening.Wall.FRONT)
+	_stamp_wall.add_item("Right (+X)", RoomOpening.Wall.RIGHT)
+	_stamp_wall.add_item("Back (+Z)", RoomOpening.Wall.BACK)
+	_stamp_wall.add_item("Left (-X)", RoomOpening.Wall.LEFT)
 	_stamp_wall.item_selected.connect(func(index: int) -> void:
+		var wall: int = _stamp_wall.get_item_id(index)
 		if author != null:
-			author.stamp_wall_choice = index
-		stamp_wall_changed.emit(index)
+			author.stamp_wall_choice = wall
+		stamp_wall_changed.emit(wall)
 	)
 	stamp_row.add_child(_stamp_wall)
 	var stamp_button := Button.new()
@@ -327,7 +332,7 @@ func _fill_palette() -> void:
 
 
 func get_stamp_wall() -> int:
-	return _stamp_wall.selected if _stamp_wall != null else 0
+	return _stamp_wall.get_selected_id() if _stamp_wall != null else RoomOpening.Wall.FRONT
 
 
 func show_stamp_feedback(message: String) -> void:
@@ -398,8 +403,11 @@ func _refresh() -> void:
 	if author.config != _palette_source or _module_profiles.is_empty():
 		_fill_palette()
 	_fill_rooms()
-	if _stamp_wall != null and _stamp_wall.selected != author.stamp_wall_choice:
-		_stamp_wall.select(author.stamp_wall_choice)
+	if _stamp_wall != null and _stamp_wall.get_selected_id() != author.stamp_wall_choice:
+		for i in _stamp_wall.item_count:
+			if _stamp_wall.get_item_id(i) == author.stamp_wall_choice:
+				_stamp_wall.select(i)
+				break
 	if author.layout == null:
 		_details.text = "Generate a layout to begin."
 		_status.text = "No layout yet."

@@ -64,8 +64,8 @@ static func propose(source: LevelLayout, source_room_id: String, side: int, modu
 	next_room.shape_rotation = 0
 	next_room.world_transform = preview_pose(candidate, base.stable_id, side).world_transform
 	next_room.authored_override_active = true
-	var new_wall: int = (side + 2) % 4
-	# RoomOpening order is FRONT / RIGHT / BACK / LEFT, opposite is +2.
+	var new_wall: int = _opposite(side)
+	# Actual Godot enum order: FRONT=0, BACK=1, LEFT=2, RIGHT=3.
 	var connector := RoomConnectionData.new()
 	connector.stable_id = _next_id(candidate.connections, "edge_")
 	connector.from_room_id = base.stable_id
@@ -113,6 +113,17 @@ static func propose(source: LevelLayout, source_room_id: String, side: int, modu
 	return outcome
 
 
+static func _opposite(side: int) -> int:
+	match side:
+		RoomOpening.Wall.FRONT:
+			return RoomOpening.Wall.BACK
+		RoomOpening.Wall.BACK:
+			return RoomOpening.Wall.FRONT
+		RoomOpening.Wall.LEFT:
+			return RoomOpening.Wall.RIGHT
+	return RoomOpening.Wall.LEFT
+
+
 static func preview_pose(layout: LevelLayout, source_room_id: String, side: int) -> RoomPlacementData:
 	# Cheap provisional placement for the 3D ghost, even when the actual
 	# placement fails because its destination is occupied or unwalkable.
@@ -132,7 +143,7 @@ static func preview_pose(layout: LevelLayout, source_room_id: String, side: int)
 	if layout.offgrid_socket_packing_enabled:
 		candidate.world_transform.basis = anchor.world_transform.basis
 		var source_socket: Transform3D = DungeonFreeYawRouter.socket_pose(layout, anchor, side, 0.0)
-		var child_socket: Transform3D = DungeonFreeYawRouter.socket_pose(layout, candidate, (side + 2) % 4, 0.0)
+		var child_socket: Transform3D = DungeonFreeYawRouter.socket_pose(layout, candidate, _opposite(side), 0.0)
 		var local_socket_offset: Vector3 = child_socket.origin - candidate.world_transform.origin
 		var gap := maxf(8.0, minf(layout.maximum_socket_pack_gap, 12.0))
 		candidate.world_transform.origin = source_socket.origin + source_socket.basis * Vector3.FORWARD * gap - local_socket_offset

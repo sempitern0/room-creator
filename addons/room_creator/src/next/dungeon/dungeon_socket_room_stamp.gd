@@ -87,7 +87,7 @@ static func propose(source: LevelLayout, source_room_id: String, side: int, modu
 		var dest_pose: Transform3D = DungeonFreeYawRouter.socket_pose(candidate, next_room, new_wall, 0.0)
 		var gap: float = maxf(8.0, minf(candidate.maximum_socket_pack_gap, 12.0))
 		var target_socket: Vector3 = outward_pose.origin + outward_pose.basis * Vector3.FORWARD * gap
-		next_room.world_transform.origin = target_socket - dest_pose.origin
+		next_room.world_transform.origin = target_socket - (dest_pose.origin - next_room.world_transform.origin)
 	elif candidate.free_yaw_enabled:
 		# In yaw grid-guide mode a new authored room may start at 0-degree
 		# local yaw, but its full world-space socket route is still validated.

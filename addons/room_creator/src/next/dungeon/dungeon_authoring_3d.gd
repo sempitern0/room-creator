@@ -45,6 +45,9 @@ const GENERATED_META := "room_creator_generated"
 ## Visual-only socket-matched art; selected in the dock or advanced Inspector.
 @export var selected_visual_module: DungeonRoomModule
 @export_tool_button("Paint Selected Room Module") var paint_room_module_action: Callable = _request_paint_room_module
+@export_subgroup("F3.4 Socket Placement")
+@export_enum("Front", "Right", "Back", "Left") var stamp_wall_choice: int = 0
+@export_tool_button("Add Connected Branch Room") var stamp_room_action: Callable = _request_stamp_room
 @export_tool_button("Generate Layout") var generate_action: Callable = _request_generate_layout
 @export_tool_button("Validate Layout") var validate_action: Callable = _request_validate
 @export_tool_button("Preview Layout") var preview_action: Callable = _request_preview
@@ -83,6 +86,10 @@ func _request_apply_room_override() -> void:
 
 func _request_paint_room_module() -> void:
 	_queue_editor_action(&"paint_selected_room_module")
+
+
+func _request_stamp_room() -> void:
+	_queue_editor_action(&"stamp_selected_room")
 
 
 func _request_validate() -> void:
@@ -237,6 +244,25 @@ func paint_selected_room_module() -> bool:
 		push_warning("DungeonAuthoring3D: " + result.report.summary())
 		return false
 	return _commit_room_edit(result, "Paint Dungeon Room Visual Module", false)
+
+
+func stamp_room_candidate(room_id: String, wall: int) -> DungeonBuildResult:
+	# Pure candidate evaluation for viewport ghost preview. Does not mutate
+	# source scene, change editor selection or create temporary tree nodes.
+	return DungeonSocketRoomStamp.propose(layout, room_id, wall, selected_visual_module)
+
+
+func stamp_selected_room() -> bool:
+	var result := stamp_room_candidate(selected_room_id, stamp_wall_choice)
+	last_result = result
+	last_report = result.report
+	if not result.success:
+		generation_failed.emit(result.report)
+		push_warning("DungeonAuthoring3D: " + result.report.summary())
+		return false
+	# Existing UndoRedo clears old baked static geometry, reconstructs the
+	# whole canonical preview, and preserves source-only saved authoring.
+	return _commit_room_edit(result, "Add Socket-Connected Dungeon Branch", false)
 
 
 func _commit_room_edit(result: DungeonBuildResult, label: String, keep_bake: bool) -> bool:

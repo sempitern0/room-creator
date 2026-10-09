@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="DungeonStructuralPrefab" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_structural_prefab.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://examples/dungeon_structural_offset_straight.tscn" id="2_room"]
+
+[resource]
+script = ExtResource("1_script")
+stable_id = "offset_straight"
+weight = 10
+authored_size = Vector3(8, 3.5, 8)
+doorway_width = 1.6
+doorway_height = 2.3
+packed_room = ExtResource("2_room")

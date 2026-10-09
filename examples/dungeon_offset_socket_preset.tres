@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="DungeonConfig" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_config.gd" id="1_script"]
+[ext_resource type="Resource" path="res://examples/dungeon_structural_offset_profile.tres" id="2_offset"]
+
+[resource]
+script = ExtResource("1_script")
+seed = 27000
+grid_size = Vector2i(14, 14)
+critical_path_min = 8
+critical_path_max = 10
+branch_count = 5
+loop_count = 0
+rectangle_weight = 10
+cross_weight = 0
+l_shape_weight = 0
+t_shape_weight = 0
+max_attempts = 32
+generate_exterior_doors = false
+structural_prefabs = Array[Resource]([ExtResource("2_offset")])
+structural_prefab_chance = 1.0
+use_variable_grid_spacing = true
+min_corridor_gap = 3.0
+max_corridor_gap = 4.0
+enable_independent_room_offsets = true
+room_position_jitter = 0.50
+placement_attempts = 32
+enable_dogleg_corridors = true
+dogleg_frequency = 0.50

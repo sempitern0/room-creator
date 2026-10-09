@@ -41,6 +41,10 @@ const GENERATED_META := "room_creator_generated"
 @export_enum("Keep", "Rectangle", "Cross", "L Shape", "T Shape") var manual_shape_choice: int = 0
 @export_range(-1, 3, 1) var manual_shape_rotation: int = -1
 @export_tool_button("Apply Selected Room Override") var apply_room_override_action: Callable = _request_apply_room_override
+@export_subgroup("F3.3 Room Palette")
+## Visual-only socket-matched art; selected in the dock or advanced Inspector.
+@export var selected_visual_module: DungeonRoomModule
+@export_tool_button("Paint Selected Room Module") var paint_room_module_action: Callable = _request_paint_room_module
 @export_tool_button("Generate Layout") var generate_action: Callable = _request_generate_layout
 @export_tool_button("Validate Layout") var validate_action: Callable = _request_validate
 @export_tool_button("Preview Layout") var preview_action: Callable = _request_preview
@@ -75,6 +79,10 @@ func _request_regenerate_unlocked() -> void:
 
 func _request_apply_room_override() -> void:
 	_queue_editor_action(&"apply_selected_room_override")
+
+
+func _request_paint_room_module() -> void:
+	_queue_editor_action(&"paint_selected_room_module")
 
 
 func _request_validate() -> void:
@@ -218,6 +226,17 @@ func apply_selected_room_override() -> bool:
 		return false
 	# The override can move a doorway: always clear stale baked connectors.
 	return _commit_room_edit(result, "Apply Selected Dungeon Room Override", false)
+
+
+func paint_selected_room_module() -> bool:
+	var result := DungeonRoomModulePainter.paint(layout, selected_room_id, selected_visual_module)
+	last_result = result
+	last_report = result.report
+	if not result.success:
+		generation_failed.emit(result.report)
+		push_warning("DungeonAuthoring3D: " + result.report.summary())
+		return false
+	return _commit_room_edit(result, "Paint Dungeon Room Visual Module", false)
 
 
 func _commit_room_edit(result: DungeonBuildResult, label: String, keep_bake: bool) -> bool:

@@ -61,3 +61,11 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_capsule_smoke.gd 2>&1 | tee capsule.log
           grep 'DUNGEON_CAPSULE_SMOKE: PASS' capsule.log
           if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_CAPSULE_SMOKE: FAIL' capsule.log; then exit 1; fi
+
+      - name: Validate silhouette variants and automatic preview lifecycle
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/room_shapes_smoke.gd 2>&1 | tee shapes.log
+          grep 'ROOM_SHAPES_SMOKE: PASS' shapes.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ROOM_SHAPES_SMOKE: FAIL' shapes.log; then exit 1; fi

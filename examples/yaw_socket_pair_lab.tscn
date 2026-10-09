@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_yaw_pair_lab_3d.gd" id="1_lab"]
+
+[node name="YawSocketPairLab3D" type="Node3D"]
+script = ExtResource("1_lab")
+first_yaw_degrees = 27.0
+min_gap = 4.0
+max_gap = 6.0

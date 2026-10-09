@@ -10,6 +10,29 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - name: Reject unresolved merge markers in authored Godot assets
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import pathlib, subprocess, sys
+          paths = subprocess.check_output(["git", "ls-files", "-z"]).decode().split("\0")
+          corrupt = []
+          for rel in paths:
+              if not rel or pathlib.Path(rel).suffix not in {".tscn", ".tres", ".gd", ".cfg"}:
+                  continue
+              try:
+                  lines = pathlib.Path(rel).read_text(encoding="utf-8").splitlines()
+              except UnicodeError:
+                  continue
+              for number, line in enumerate(lines, 1):
+                  if line.startswith(("<<<<<<< ", ">>>>>>> ", "=======")):
+                      corrupt.append(f"{rel}:{number}: {line[:100]}")
+          if corrupt:
+              print("Unresolved merge conflict markers:\\n" + "\\n".join(corrupt))
+              sys.exit(1)
+          print("GODOT_ASSET_CONFLICT_GUARD: PASS")
+          PY
+
       - uses: actions/checkout@v4
       - name: Download pinned Godot 4.7.2 stable
         run: |

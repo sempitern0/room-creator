@@ -16,7 +16,7 @@ static func cells(shape: Shape, turns: int = 0) -> Array[Vector2i]:
 		Shape.CROSS:
 			occupied = [Vector2i(1, 1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(2, 1), Vector2i(1, 2)]
 		Shape.L_SHAPE:
-			occupied = [Vector2i(0, 0), Vector2i(0, 1), Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2)]
+			occupied = [Vector2i(0, 0), Vector2i(0, 1), Vector2i(0, 2), Vector2i(1, 1), Vector2i(1, 2), Vector2i(2, 2)]
 		Shape.T_SHAPE:
 			occupied = [Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
 		_:

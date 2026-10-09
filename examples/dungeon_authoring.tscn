@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_authoring_3d.gd" id="1_author"]
+[ext_resource type="Script" path="res://addons/room_creator/src/next/dungeon/dungeon_config.gd" id="2_config"]
+
+[sub_resource type="Resource" id="DungeonConfig_example"]
+script = ExtResource("2_config")
+seed = 822
+grid_size = Vector2i(12, 12)
+critical_path_min = 8
+critical_path_max = 8
+branch_count = 8
+loop_count = 1
+
+[node name="DungeonAuthoring3D" type="Node3D"]
+script = ExtResource("1_author")
+config = SubResource("DungeonConfig_example")
+output_scene_path = "res://room_creator/dungeons/example_dungeon.tscn"

@@ -126,6 +126,10 @@ static func _color_surface_meshes(room_node: Node, color: Color) -> void:
 	for child in room_node.get_children():
 		if child is MeshInstance3D and (child.name == "Floor" or child.name.begins_with("Floor_") or child.name == "Ceiling" or child.name.begins_with("Ceiling_")):
 			(child as MeshInstance3D).material_override = material
+		elif child is Node3D and child.name == "StructuralShell":
+			for surface in child.get_children():
+				if surface is MeshInstance3D and (surface.name == "Floor" or surface.name == "Ceiling" or surface.name.begins_with("Floor_") or surface.name.begins_with("Ceiling_")):
+					(surface as MeshInstance3D).material_override = material
 
 
 static func _unshaded(color: Color) -> StandardMaterial3D:

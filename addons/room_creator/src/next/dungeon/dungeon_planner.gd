@@ -39,6 +39,8 @@ static func generate_layout(config: DungeonConfig) -> DungeonBuildResult:
 			continue
 		if not _add_loops(config, layout, occupied, rng):
 			continue
+		if not _assign_room_shapes(config, layout, rng):
+			continue
 		var report := validate_layout(layout)
 		if report.is_valid():
 			result.success = true
@@ -86,6 +88,13 @@ static func validate_config(config: DungeonConfig) -> RoomValidationReport:
 			report.add_error("PLAYER_HEIGHT", "Door must clear the standing player height.")
 	if config.floor_thickness <= 0.0 or config.ceiling_thickness <= 0.0:
 		report.add_error("SURFACE_THICKNESS", "Floor and ceiling thickness must be positive.")
+	if config.rectangle_weight < 0 or config.cross_weight < 0 or config.l_shape_weight < 0 or config.t_shape_weight < 0:
+		report.add_error("SHAPE_WEIGHT", "Room shape weights must be nonnegative.")
+	if config.rectangle_weight + config.cross_weight + config.l_shape_weight + config.t_shape_weight <= 0:
+		report.add_error("SHAPE_POOL_EMPTY", "Enable at least one room silhouette.")
+	if config.cross_weight + config.l_shape_weight + config.t_shape_weight > 0:
+		if config.door_width > minf(config.room_size.x, config.room_size.z) / 3.0 - config.wall_thickness * 2.0:
+			report.add_error("SHAPE_DOOR_WIDTH", "With nonrectangular silhouettes, the door must fit the one-third-wide boundary connector.")
 	return report
 
 
@@ -211,6 +220,51 @@ static func _add_loops(config: DungeonConfig, layout: LevelLayout, occupied: Dic
 	return true
 
 
+## Match every actual doorway to an occupied, centered boundary tile.
+## Choosing a shape never alters graph edges; incompatible profiles cannot
+## silently create unpaired openings or discontinuous passageways.
+static func _assign_room_shapes(config: DungeonConfig, layout: LevelLayout, rng: RandomNumberGenerator) -> bool:
+	var weights: Array[int] = [
+		config.rectangle_weight, config.cross_weight,
+		config.l_shape_weight, config.t_shape_weight
+	]
+	for room in layout.rooms:
+		var needed: Array[int] = []
+		for edge in layout.connections:
+			if edge.from_room_id == room.stable_id:
+				needed.append(edge.from_wall)
+			elif edge.to_room_id == room.stable_id:
+				needed.append(edge.to_wall)
+		var candidates: Array[Dictionary] = []
+		var total: int = 0
+		for kind in weights.size():
+			if weights[kind] <= 0:
+				continue
+			var compatible_rotations: Array[int] = []
+			for turns in 4:
+				var compatible := true
+				for side in needed:
+					if not RoomFootprint.supports_wall(kind as RoomFootprint.Shape, turns, side):
+						compatible = false
+						break
+				if compatible:
+					compatible_rotations.append(turns)
+			if not compatible_rotations.is_empty():
+				candidates.append({"shape": kind, "weight": weights[kind], "rotations": compatible_rotations})
+				total += weights[kind]
+		if total == 0:
+			return false
+		var ticket: int = rng.randi_range(0, total - 1)
+		for option in candidates:
+			ticket -= int(option["weight"])
+			if ticket < 0:
+				room.shape = option["shape"]
+				var rotations: Array[int] = option["rotations"]
+				room.shape_rotation = rotations[rng.randi_range(0, rotations.size() - 1)]
+				break
+	return true
+
+
 static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 	var report := RoomValidationReport.new()
 	if layout == null:
@@ -241,6 +295,8 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 			report.add_error("SPATIAL_OVERLAP", "Duplicate or out-of-bounds cell: %s" % str(room.cell))
 		if not room.world_transform.basis.is_equal_approx(Basis.IDENTITY) or not room.world_transform.origin.is_equal_approx(Vector3(float(room.cell.x) * layout.room_size.x, 0.0, float(room.cell.y) * layout.room_size.z)):
 			report.add_error("ROOM_TRANSFORM", "Room transform disagrees with the grid footprint: %s" % room.stable_id)
+		if not RoomFootprint.is_valid_shape(int(room.shape)) or room.shape_rotation < 0 or room.shape_rotation > 3:
+			report.add_error("ROOM_SHAPE", "Invalid shape or rotation in %s." % room.stable_id)
 		by_id[room.stable_id] = room
 		by_cell[room.cell] = room
 		adjacency[room.stable_id] = PackedStringArray()
@@ -316,6 +372,8 @@ static func make_blueprint(layout: LevelLayout, room: RoomPlacementData) -> Room
 	var blueprint := RoomBlueprint.new()
 	blueprint.stable_id = room.stable_id
 	blueprint.room_size = layout.room_size
+	blueprint.shape = room.shape
+	blueprint.shape_rotation = room.shape_rotation
 	blueprint.wall_thickness = layout.wall_thickness
 	blueprint.floor_thickness = layout.floor_thickness
 	blueprint.ceiling_thickness = layout.ceiling_thickness

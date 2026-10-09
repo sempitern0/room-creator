@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Room Creator"
 config/description="3D room authoring with validated static baking"
-config/version="1.8.0"
+config/version="1.9.0"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 

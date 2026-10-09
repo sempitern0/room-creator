@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.8.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.9.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -63,6 +63,39 @@ Manual `RoomBlueprint` authoring also exposes `shape` and `shape_rotation`, and 
 
 This is **not** yet arbitrary collision-bearing prefab replacement, free-form rotated spatial packing, multilevel routing, navigation-mesh baking, or partial room-lock regeneration. New hand-authored room prefabs can be added later without changing the graph contract.
 
+## F2.7 — Full collision-bearing room prefabs and oriented sockets
+
+Room Creator can now **replace the procedural room shell** with an authored `PackedScene` containing its own meshes, `StaticBody3D` and `BoxShape3D` collision. This is separate from the older `DungeonRoomModule` system (visual-only, no collision). Both remain supported as independent workflows.
+
+### Try real prefab rooms without another duplicated dungeon scene
+
+1. Open the existing **[examples/dungeon_authoring.tscn](examples/dungeon_authoring.tscn)**, select `DungeonAuthoring3D`, and load **[examples/dungeon_structural_preset.tres](examples/dungeon_structural_preset.tres)** into its `config` property.
+2. Press **Generate Layout**. The preset combines two full physical room prefabs, a straight passage and a corner, with procedurally generated rooms for other doorway topologies.
+3. Observe the cyan/amber/green/red diagnostic floor and roof colors even on prefab rooms. **Bake Static Dungeon** enables the authored physics; **Save Baked Scene** exports standard Godot geometry and collision without requiring the editor plugin at runtime.
+
+The preset is a **config resource, not a second authoring scene**. Your existing example's configuration remains available in its original scene when you reopen it without saving the modified config reference.
+
+### Author your own physical prefab
+
+Create a script-free `Node3D` scene containing meshes and **direct child `StaticBody3D` nodes** with axis-aligned `BoxShape3D` children. The physics bodies must have identity transforms; put box positions on the `CollisionShape3D` nodes. Add direct `Marker3D` children named `SocketFront`, `SocketBack`, `SocketLeft`, and/or `SocketRight` only for **real, open, traversable doors**. These sockets are expressed in authored room **meters**, not normalized coordinates, at wall-face centers (Y=0):
+
+| Marker | Position (for authored 8 × 3.5 × 8 m) | Facing outward |
+|---|---|---|
+| `SocketFront` | (0, 0, -4) | -Z |
+| `SocketBack` | (0, 0, +4) | +Z |
+| `SocketLeft` | (-4, 0, 0) | -X |
+| `SocketRight` | (+4, 0, 0) | +X |
+
+Marker **local -Z** must point outward. Rotating the entire prefab by **0°, 90°, 180° or 270°** allows the same asset to satisfy corresponding cardinal-facing graph sockets. Example sources: [straight scene](examples/dungeon_structural_straight.tscn) and [corner scene](examples/dungeon_structural_corner.tscn), with accompanying `DungeonStructuralPrefab` resources.
+
+Add profiles under `DungeonConfig.structural_prefabs` and set `structural_prefab_chance` (0–1). For each rectangular room, the seeded planner considers a prefab only when **the actual room dimensions, clear door width/height and the entire set of required door walls** match the prefab in a valid quarter-turn orientation. There must be **no extra physical doorways**. Incompatible rooms automatically fall back to the validated procedural shell; this is expected.
+
+The profile validator checks script-free engine-native scene nodes, genuine primitive colliders, rigid body offsets, outward marker directions, walking clearance from the room center to every active doorway, and physical blocking of walls without matching sockets. A prefab is **not** scaled to fit another size; if `vary_room_sizes` is enabled, only rooms that precisely match a prefab's authored dimensions qualify. Use `vary_room_sizes=false` to see more full-prefab rooms in a reproducible dungeon.
+
+The compiler preserves the same logical `Socket_<edge_id>` markers for straight, dogleg and exterior connections regardless of which shell built the room. **Preview omits the authored collision**; bake and export preserve it. Existing F2.0–F2.6 configurations remain valid because `structural_prefabs` defaults to empty.
+
+**F2.7 is not arbitrary 3D prefab packing.** Full prefabs are currently restricted to rectangular bounding footprints, cardinal sockets, exact sizes, quarter-turn rotations and primitive static box colliders. Collision-bearing prefabs with arbitrary yaw or shape, offset/tilted sockets, non-box geometry, multi-floor connections and generalized 3D OBB/backtracking placement remain future priorities.
+
 ## F2.6 — Orthogonal dogleg corridors and spatial routing
 
 The canonical **[examples/dungeon_authoring.tscn](examples/dungeon_authoring.tscn)** now demonstrates routed corridors alongside mixed room silhouettes, independent positions, variable sizes, optional artwork modules and exterior entrance/exit doors.
@@ -112,7 +145,7 @@ In `DungeonConfig → Spatial embedding (F2.4)`, enable `use_variable_grid_spaci
 
 The resulting `LevelLayout.column_positions` and `row_positions` are **serialized source data**. The validator rejects missing arrays, invalid ordering, intersections or room transforms that disagree with the persisted embedding. Previously authored layouts omit these arrays and continue to use the original uniform grid. Spatial variations, room silhouettes and compatible modules remain repeatable with the same seed.
 
-**Scope:** this is a first *non-uniform, axis-aligned spatial embedding*, **not** unrestricted room-by-room off-grid placement with arbitrary rotations, 3D OBB packing or backtracking. Free spatial embedding and collision-bearing prefab replacement remain roadmap work. For longer connectors, remember that more static meshes increase scene cost.
+**Scope:** this is a first *non-uniform, axis-aligned spatial embedding*, **not** unrestricted room-by-room off-grid placement with arbitrary rotations, 3D OBB packing or backtracking. Unrestricted 3D spatial embedding and arbitrary rotated collision-bearing prefab placement remain roadmap work. For longer connectors, remember that more static meshes increase scene cost.
 
 ## Exterior doors, top-down colors and modular rooms (F2.3)
 
@@ -149,7 +182,7 @@ Author module scenes in **normalized coordinates**: X/Z in -0.5…+0.5 and Y in 
 
 The generator selects modules deterministically **only when their markers, shape and rotation match all required wall connections**, including outside doors. Modules must be **script-free and collision-free**: they provide visual detail inside a procedurally validated, walkable room shell. Module instances are scaled to the chosen room dimensions, and sockets align with the actual procedural door markers. The exported `.tscn` contains engine-native geometry and the selected art scene dependencies.
 
-**Still future work:** replacing the *entire* parametric shell with arbitrary collision-bearing prefabs; arbitrary yaw/socket offsets; genuine free-form spatial placement with rotated OBB and bounded spatial backtracking; multilevel dungeons and automatic navigation meshes. The current implementation offers validated **custom visual modules and varying dimensions within the grid**, not these advanced placement modes.
+**Still future work:** arbitrary yaw/socket offsets, fully unbounded spatial placement with rotated OBB and backtracking, non-box collision-bearing prefabs, multilevel dungeons and automatic navigation meshes. F2.7 supports collision-bearing **rectangular** replacement shells with exact cardinal sockets, alongside visual-only art modules.
 
 ## Create a manual room (F1)
 
@@ -193,9 +226,10 @@ godot --headless --path . --script res://tests/dungeon_module_smoke.gd
 godot --headless --path . --script res://tests/dungeon_embedding_smoke.gd
 godot --headless --path . --script res://tests/dungeon_offsets_smoke.gd
 godot --headless --path . --script res://tests/dungeon_dogleg_smoke.gd
+godot --headless --path . --script res://tests/dungeon_structural_smoke.gd
 ```
 
-GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset + 36 routed-dogleg seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
+GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset + 36 routed-dogleg + 34 structural-prefab seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
 
 The older `RoomCreator` and `DungeonGenerator` nodes remain for compatibility but the legacy dungeon path is not claimed to have the same F2 validation guarantees. Use `DungeonAuthoring3D` for new dungeons.
 

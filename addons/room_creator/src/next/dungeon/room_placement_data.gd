@@ -11,6 +11,7 @@ enum Role { ENTRANCE, MAIN, EXIT, BRANCH }
 @export var room_size: Vector3 = Vector3.ZERO
 @export var world_transform: Transform3D = Transform3D.IDENTITY
 @export var role: Role = Role.MAIN
+@export var module_profile: DungeonRoomModule
 ## Exterior doorway is independent from the internal room-connection graph.
 ## -1 means no exterior opening. Uses the same outward-facing wall convention.
 @export var exterior_wall: int = -1

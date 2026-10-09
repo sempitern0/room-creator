@@ -23,6 +23,11 @@ extends Resource
 @export_range(0.05, 1.0, 0.01) var floor_thickness: float = 0.2
 @export_range(0.05, 1.0, 0.01) var ceiling_thickness: float = 0.2
 @export var include_ceiling: bool = true
+@export_group("Socket-aware room modules")
+## Optional normalized art scenes with Marker3D connectors; physics shell stays procedural.
+@export var room_modules: Array[DungeonRoomModule] = []
+@export var require_room_modules: bool = false
+@export_range(0.0, 1.0, 0.05) var module_chance: float = 1.0
 @export_group("Variable room sizes")
 ## Rooms stay centered in fixed grid cells; smaller rooms use short connector corridors.
 @export var vary_room_sizes: bool = false

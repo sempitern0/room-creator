@@ -44,6 +44,8 @@ static func generate_layout(config: DungeonConfig) -> DungeonBuildResult:
 		if not _assign_room_shapes(config, layout, rng):
 			continue
 		_assign_room_sizes(config, layout, rng)
+		if not _assign_room_modules(config, layout, rng):
+			continue
 		var report := validate_layout(layout)
 		if report.is_valid():
 			result.success = true
@@ -98,6 +100,20 @@ static func validate_config(config: DungeonConfig) -> RoomValidationReport:
 			report.add_error("VARIABLE_DOOR_FIT", "The smallest nonrectangular room must fit the player doorway on its boundary tile.")
 		elif config.door_width + 2.0 * config.wall_thickness > minf(config.room_size.x, config.room_size.z) * config.min_room_scale - 0.001:
 			report.add_error("VARIABLE_DOOR_FIT", "The smallest room must fit the door width.")
+	var seen_module_ids: Dictionary = {}
+	for module_profile in config.room_modules:
+		if module_profile == null:
+			report.add_error("NULL_MODULE", "Remove null entries from room_modules.")
+			continue
+		var validation := module_profile.validate()
+		if not validation.is_valid():
+			for error in validation.errors:
+				report.add_error("INVALID_MODULE", "%s: %s" % [module_profile.stable_id, error])
+		if seen_module_ids.has(module_profile.stable_id):
+			report.add_error("DUPLICATE_MODULE", "Module IDs must be unique.")
+		seen_module_ids[module_profile.stable_id] = true
+	if config.require_room_modules and config.room_modules.is_empty():
+		report.add_error("REQUIRED_MODULES_MISSING", "Require Room Modules needs at least one module profile.")
 	if config.rectangle_weight < 0 or config.cross_weight < 0 or config.l_shape_weight < 0 or config.t_shape_weight < 0:
 		report.add_error("SHAPE_WEIGHT", "Room shape weights must be nonnegative.")
 	if config.rectangle_weight + config.cross_weight + config.l_shape_weight + config.t_shape_weight <= 0:
@@ -314,6 +330,39 @@ static func actual_size(layout: LevelLayout, room: RoomPlacementData) -> Vector3
 	return layout.room_size if room.room_size == Vector3.ZERO else room.room_size
 
 
+static func _assign_room_modules(config: DungeonConfig, layout: LevelLayout, rng: RandomNumberGenerator) -> bool:
+	for room in layout.rooms:
+		room.module_profile = null
+		if config.room_modules.is_empty() or (not config.require_room_modules and rng.randf() > config.module_chance):
+			continue
+		var required: Array[int] = []
+		if room.exterior_wall >= 0:
+			required.append(room.exterior_wall)
+		for edge in layout.connections:
+			if edge.from_room_id == room.stable_id:
+				required.append(edge.from_wall)
+			elif edge.to_room_id == room.stable_id:
+				required.append(edge.to_wall)
+		var candidates: Array[DungeonRoomModule] = []
+		var total: int = 0
+		for module_profile in config.room_modules:
+			if module_profile.shape != room.shape or not module_profile.supports(required, room.shape_rotation):
+				continue
+			candidates.append(module_profile)
+			total += module_profile.weight
+		if total <= 0:
+			if config.require_room_modules:
+				return false
+			continue
+		var ticket: int = rng.randi_range(0, total - 1)
+		for module_profile in candidates:
+			ticket -= module_profile.weight
+			if ticket < 0:
+				room.module_profile = module_profile
+				break
+	return true
+
+
 static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 	var report := RoomValidationReport.new()
 	if layout == null:
@@ -346,6 +395,21 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 			report.add_error("ROOM_TRANSFORM", "Room transform disagrees with the grid footprint: %s" % room.stable_id)
 		if not RoomFootprint.is_valid_shape(int(room.shape)) or room.shape_rotation < 0 or room.shape_rotation > 3:
 			report.add_error("ROOM_SHAPE", "Invalid shape or rotation in %s." % room.stable_id)
+		if room.module_profile != null:
+			var module_report := room.module_profile.validate()
+			if not module_report.is_valid() or room.module_profile.shape != room.shape:
+				report.add_error("MODULE_MISMATCH", "Assigned room module is invalid or incompatible: %s" % room.stable_id)
+			else:
+				var necessary: Array[int] = []
+				if room.exterior_wall >= 0:
+					necessary.append(room.exterior_wall)
+				for connection in layout.connections:
+					if connection.from_room_id == room.stable_id:
+						necessary.append(connection.from_wall)
+					elif connection.to_room_id == room.stable_id:
+						necessary.append(connection.to_wall)
+				if not room.module_profile.supports(necessary, room.shape_rotation):
+					report.add_error("MODULE_PORTAL", "Room module cannot match required wall sockets: %s" % room.stable_id)
 		var size: Vector3 = actual_size(layout, room)
 		if not size.is_finite() or size.x < layout.room_size.x * 0.5 or size.x > layout.room_size.x + 0.0001 or absf(size.y - layout.room_size.y) > 0.0001 or size.z < layout.room_size.z * 0.5 or size.z > layout.room_size.z + 0.0001:
 			report.add_error("ROOM_EXTENT", "Room footprint is invalid or larger than its grid cell: %s" % room.stable_id)

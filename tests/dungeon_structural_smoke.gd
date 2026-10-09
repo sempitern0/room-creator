@@ -109,6 +109,7 @@ func _run() -> void:
 	var preview := DungeonSceneCompiler.build(fixture, false)
 	if not _check(preview != null, "The mixed authored/procedural preview must compile."):
 		return
+	DungeonPreviewOverlay.apply(preview, fixture, DungeonPreviewPalette.new())
 	for room in fixture.rooms:
 		if room.structural_prefab == null:
 			continue
@@ -116,6 +117,10 @@ func _run() -> void:
 		if not _check(root_room != null and root_room.get_node_or_null("StructuralShell") != null, "Structurally authored rooms must replace the procedural shell."):
 			return
 		if not _check(root_room.find_children("*", "CollisionShape3D", true, false).is_empty(), "Editor preview must not retain runtime physics."):
+			return
+		var floor := root_room.get_node_or_null("StructuralShell/Floor") as MeshInstance3D
+		var ceiling := root_room.get_node_or_null("StructuralShell/Ceiling") as MeshInstance3D
+		if not _check(floor != null and ceiling != null and floor.material_override != null and ceiling.material_override != null, "Editor diagnostic palette must tint prefab floors and roofs too."):
 			return
 	preview.free()
 	var baked := DungeonSceneCompiler.build(fixture, true)

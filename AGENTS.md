@@ -26,7 +26,7 @@ Read `README.md` for the current supported feature set. Do not confuse **complet
 | Cardinal spatial layout | `dungeon_spatial_embedder.gd`, `dungeon_room_offset_solver.gd`, `dungeon_corridor_router.gd`, `dungeon_connector_builder.gd` |
 | Yaw/off-grid spatial layout | `dungeon_oriented_bounds.gd`, `dungeon_free_yaw_placement.gd`, `dungeon_socket_graph_packer.gd`, `dungeon_free_yaw_router.gd`, `dungeon_free_yaw_corridor_builder.gd` |
 | Real physical room art and opening validation | `dungeon_structural_prefab.gd`, `dungeon_structural_room_builder.gd`, `dungeon_room_module.gd`, `RoomGeometryBuilder` |
-| F3 protected edits | `dungeon_room_editing.gd`, F3 override/geometry helper when implemented |
+| F3 protected edits | `dungeon_room_editing.gd`, F3 transactional manual override solver in `dungeon_room_overrides.gd` |
 | Conversion to native Godot nodes | `dungeon_scene_compiler.gd` |
 | Editor buttons, generated node lifecycle, undo/redo, export | `dungeon_authoring_3d.gd` |
 | Overhead debugging, semantic routes, locked-room labels | `dungeon_preview_overlay.gd`, `dungeon_preview_palette.gd` |
@@ -65,6 +65,7 @@ Start with import/parse, then targeted suite, then full CI. Godot engine is pinn
 ```bash
 godot --headless --path . --editor --quit
 godot --headless --path . --script res://tests/dungeon_f3_room_edit_smoke.gd
+godot --headless --path . --script res://tests/dungeon_f3_override_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f2_combined_smoke.gd
 godot --headless --path . --script res://tests/dungeon_offgrid_socket_smoke.gd
 ```
@@ -76,7 +77,7 @@ Use GitHub status **for the pushed SHA**. If source files are updated through Gi
 ## 6. Guidelines for scoped F3 development
 
 - Current F3.1: room locks persist and protect topology; `Regenerate Unlocked Rooms` rerolls only procedural silhouette and visual module without changing room positions, door graph or structural prefab. These are limitations, not defects.
-- For F3.2 overrides: treat a designer edit as a **transaction**. Freeze the selected room identity and all unrelated rooms, update only sockets and incident corridors, run whole-layout validation and only then commit through the editor UndoRedo lifecycle. Locked rooms are editable **explicitly by the designer**, but not silently by procedural regeneration. Reject impossible manual changes with a specific conflict code.
+- For F3.2 overrides, consult `DungeonRoomOverrides.apply()`: treat a designer edit as a **transaction**. Freeze the selected room identity and all unrelated rooms, update only sockets and incident corridors, run whole-layout validation and only then commit through the editor UndoRedo lifecycle. Locked rooms are editable **explicitly by the designer**, but not silently by procedural regeneration. Reject impossible manual changes with a specific conflict code.
 - For later NavMesh/biome features: keep these separate from the physical topology source; test they never alter the wall cutout contract or shared Resource instances.
 
 ## 7. Reporting

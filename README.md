@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.13.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.14.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -17,6 +17,28 @@ The modular path no longer instantiates its `PackedScene` over and over merely t
 This was tested in **Godot 4.7.2** with an actual editor instance in both headless mode and a graphical X11 session under Xvfb, including opening the supplied modular example, generation, preview refresh, bake, regeneration, and PackedScene save/reload. The CI explicitly fails if that recurring dialog error occurs. Windows graphical testing remains a manual acceptance check.
 
 If you still see messages in an existing edited scene after upgrading, close/reopen Godot and press **Generate Layout** to replace the old preview; save a backup before manually removing an already damaged `DungeonPreview`/`DungeonBake` tree. If it persists, capture the first error with its Godot file/line and which Inspector action triggers it.
+
+## F3.2 — Explicit manual overrides and locally rerouted doorways (v1.14.0)
+
+F3.2 adds **real, persistent designer edits** on the canonical `examples/dungeon_authoring.tscn` author node. Manual changes survive Ctrl+S, editor reopening and Godot scene Undo/Redo. Every candidate is prepared on a **deep-copied `LevelLayout`**, validated against the full F2 room/socket/corridor contract, and committed only if valid.
+
+### Try F3.2 in Godot
+
+1. Open `examples/dungeon_authoring.tscn` and Generate Layout, then inspect `Layout → Rooms` for a room's `stable_id` such as `room_0007`.
+2. Under **F3 Room Editing**, set `selected_room_id`; under **F3.2 Explicit Overrides**, enter any of:
+   - `manual_translation`: an X/Z displacement in meters (Y must remain 0), with a cumulative **3 m per-axis limit** from the first saved anchor.
+   - `manual_room_size`: width (X) and depth (Z) in meters. Each field set to 0 keeps its previous value. Sizes must remain between **50% and 100%** of the shared base room size.
+   - `manual_shape_choice`: Keep, Rectangle, Cross, L Shape or T Shape; `manual_shape_rotation`: -1 keeps the current quarter-turn, 0–3 selects an orientation.
+3. Press **Apply Selected Room Override**. The preview rebuilds and displays cyan **EDITED** over authored rooms (gold **LOCKED** remains for protected rooms).
+4. Preview or bake; use **Bake Static Dungeon** and **Save Baked Scene** to export a fully native result. The bake is invalidated whenever manual geometry changes. Ctrl+S preserves only the authored source, not generated mesh nodes.
+
+Only graph edges **incident to the edited room** are rerouted. The entire room graph, all unrelated room transforms/shapes and all unrelated edge paths remain identical. Existing cardinal settings can opt into the F2.5 independent/dogleg validator automatically for a moved room; yaw and off-grid settings use the corresponding world-socket and SAT route validator.
+
+**Guardrails:** a manually authored room (even when unlocked) is excluded from subsequent automatic F3.1 appearance rerolls; lock status is unchanged by an explicit designer edit. You can explicitly edit a locked room, but automatic full-topology regeneration still refuses to overwrite locks. A selected **structural** prefab with its own physical door cuts can be repositioned when legal, but cannot be arbitrarily resized or re-shaped: those changes require a separately compatible authored prefab. The same rule applies to incompatible existing visual modules—these edits are *rejected*, not silently stripped.
+
+All changes are bounded; invalid socket paths, OBB overlap, geometry constraints, nonexistent IDs, impossible sizes, nonzero Y shifts and accumulated movement beyond the saved anchor produce explicit `RoomValidationReport` errors without touching the previous preview/bake/layout. Room overrides persist in `RoomPlacementData` through `authored_override_active` and `authored_override_origin`; physically significant transforms, sizes, shape and edge routes already enter `LevelLayout.fingerprint()`.
+
+**Not yet implemented:** arbitrary long-distance manual translations, free-form non-cardinal door cuts in structural prefabs, automatic movement of neighboring room centers around a locked room, editing the connection graph itself or interactive 3D drag gizmos. This iteration updates **local incident connections only**, then recompiles preview/bake snapshots normally; it does **not** claim incremental mesh recompile performance. See `docs/F3_PROGRESS.md`.
 
 ## F3.1 — Persistent room locks and local authoring regeneration (v1.13.0)
 
@@ -39,7 +61,7 @@ The lock bit is persisted inside `RoomPlacementData` in the source `LevelLayout`
 
 `tests/dungeon_f3_room_edit_smoke.gd` verifies determinism, locked-room invariants, graph/socket stability, explicit stale lock conflicts, lock recovery, source-only save/reopen, native physics and editor-only overhead labels. `tests/editor_integration/plugin.gd` drives real deferred Inspector actions and a scene-history Undo/Redo roundtrip in graphical Godot 4.7.2.
 
-F3 remains **in progress**: position/shape/material overrides with durable local conflict resolution, regeneration of adjacent rooms and corridors, viewport drag gizmos, separated RoomBiome/BakeProfile resources, NavMesh/independent agent route validation and performance work are planned follow-ups. The current F3.1 tool is intentionally a **same-topology local appearance regeneration**, not unrestricted incremental graph replanning.
+F3 remains **in progress**: F3.2 now includes bounded per-room position/size/silhouette overrides and incident connector rerouting; nonlocal neighbor re-embedding, materials, viewport drag gizmos, separated RoomBiome/BakeProfile resources, NavMesh/independent agent route validation and performance work remain follow-ups. The current F3.1 tool is intentionally a **same-topology local appearance regeneration**, not unrestricted incremental graph replanning.
 
 ## F2 complete — seeded single-floor dungeons (v1.12.0)
 
@@ -323,6 +345,7 @@ godot --headless --path . --script res://tests/dungeon_free_yaw_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f2_combined_smoke.gd
 godot --headless --path . --script res://tests/dungeon_offgrid_socket_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f3_room_edit_smoke.gd
+godot --headless --path . --script res://tests/dungeon_f3_override_smoke.gd
 ```
 
 GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset + 36 routed-dogleg + 34 structural-prefab + 35 asymmetric-socket seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.

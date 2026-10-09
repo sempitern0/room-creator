@@ -57,6 +57,23 @@ func _run() -> void:
 	if not _check(total_turns > 40, "Dogleg mode must generate a meaningful number of real turning corridors."):
 		return
 	print("DUNGEON_DOGLEG_SMOKE: 36 reproducible layouts, %d turning connections" % total_turns)
+	var preview := DungeonSceneCompiler.build(fixture, false)
+	if not _check(preview != null, "Routed dungeons need a buildable preview."):
+		return
+	DungeonPreviewOverlay.apply(preview, fixture, DungeonPreviewPalette.new())
+	var route_group := preview.get_node_or_null("PreviewRoutes")
+	if not _check(route_group != null and route_group.find_children("Route_*", "MeshInstance3D", true, false).size() == fixture.connections.size(), "The editor must show one primary route per logical connection."):
+		return
+	var routed_lines := route_group.find_children("RoutePart_*", "MeshInstance3D", true, false)
+	if not _check(routed_lines.size() > 0, "Doglegs must be visible as multiple color-coded pieces from an overhead camera."):
+		return
+	var edge_ids: Dictionary = {}
+	for edge in fixture.connections:
+		edge_ids[edge.stable_id] = true
+	for segment in routed_lines:
+		if not _check(edge_ids.has(segment.get_meta("connection_id", "")), "Every drawn elbow segment must refer to its original graph edge."):
+			return
+	preview.free()
 	var geometry := DungeonSceneCompiler.build(fixture, true)
 	if not _check(geometry != null, "Turning corridors must compile native Godot collision."):
 		return
@@ -111,6 +128,37 @@ func _run() -> void:
 				return
 			actor.global_position = end_position
 	physics_stage.free()
+	var exported := DungeonSceneCompiler.build(fixture, true)
+	var static_count: int = exported.find_children("*", "CollisionShape3D", true, false).size()
+	var wrapper := Node3D.new()
+	wrapper.name = "ExportedDoglegDungeon"
+	wrapper.add_child(exported)
+	exported.owner = wrapper
+	_set_owners(exported, wrapper)
+	var packed := PackedScene.new()
+	if not _check(packed.pack(wrapper) == OK, "Native routed dungeon must pack without plugin runtime nodes."):
+		return
+	var file_name := "user://dogleg_smoke.tscn"
+	if not _check(ResourceSaver.save(packed, file_name) == OK, "Native routed dungeon must save."):
+		return
+	var reloaded := ResourceLoader.load(file_name, "", ResourceLoader.CACHE_MODE_IGNORE) as PackedScene
+	if not _check(reloaded != null, "Native routed dungeon must reload."):
+		return
+	var restored := reloaded.instantiate()
+	if not _check(restored.find_children("*", "CollisionShape3D", true, false).size() == static_count, "Exported dogleg must retain every primitive collider."):
+		return
+	var saved_elbows: int = 0
+	for edge in fixture.connections:
+		if edge.route_points.size() != 4:
+			continue
+		var node := restored.get_node_or_null(NodePath("DungeonGeometry/Connector_" + edge.stable_id))
+		if node != null and node.get_meta("route_points", PackedVector3Array()).size() == 4:
+			saved_elbows += 1
+	if not _check(saved_elbows == rendered_turns, "The exported scene must preserve all routed connectors and their identities."):
+		return
+	restored.free()
+	wrapper.free()
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(file_name))
 	var modified := fixture.duplicate(true) as LevelLayout
 	for edge in modified.connections:
 		if edge.route_points.size() == 4:
@@ -126,6 +174,12 @@ func _run() -> void:
 		return
 	print("DUNGEON_DOGLEG_SMOKE: PASS (seed replay, bent collision geometry, capsule corner sweeps and route contract)")
 	quit(0)
+
+
+func _set_owners(node: Node, owner: Node) -> void:
+	for child in node.get_children():
+		child.owner = owner
+		_set_owners(child, owner)
 
 
 func _check(ok: bool, message: String) -> bool:

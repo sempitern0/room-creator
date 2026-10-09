@@ -44,7 +44,7 @@ func _run() -> void:
 		return
 
 	var corner := load("res://examples/dungeon_structural_corner_profile.tres") as DungeonStructuralPrefab
-	if not _check(corner != null and corner.validate().is_valid(), "Corner structural room must have two turned-out physical socket markers."):
+	if not _check(corner != null and corner.validate().is_valid(), "Corner structural room must have two turned-out physical socket markers: " + (corner.validate().summary() if corner != null else "resource missing")):
 		return
 	if not _check(corner.compatible_rotations([RoomOpening.Wall.FRONT, RoomOpening.Wall.RIGHT], Vector3(8, 3.5, 8), 1.6, 2.3).size() == 1, "Corner prefab must admit its unique matching cardinal rotation."):
 		return

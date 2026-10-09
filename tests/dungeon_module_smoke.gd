@@ -6,7 +6,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	var example := load("res://examples/dungeon_modular_authoring.tscn") as PackedScene
+	var example := load("res://examples/dungeon_authoring.tscn") as PackedScene
 	if not _check(example != null, "Bundled modular dungeon example must import."):
 		return
 	var example_author := example.instantiate() as DungeonAuthoring3D

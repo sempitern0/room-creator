@@ -8,7 +8,7 @@ func _enter_tree() -> void:
 
 
 func _exercise() -> void:
-	EditorInterface.open_scene_from_path("res://examples/dungeon_modular_authoring.tscn")
+	EditorInterface.open_scene_from_path("res://examples/dungeon_authoring.tscn")
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var author := EditorInterface.get_edited_scene_root() as DungeonAuthoring3D

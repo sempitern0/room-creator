@@ -10,7 +10,7 @@ Copy the directory `addons/room_creator/` to the same path in your Godot project
 
 ## Godot editor modular preview hotfix (1.5.1)
 
-If `examples/dungeon_modular_authoring.tscn` previously spammed `Attempting to parent and popup a dialog that already has a parent` on **Generate Layout** or **Preview Layout**, update the addon to **1.5.1** and restart the Godot editor.
+If `examples/dungeon_authoring.tscn` previously spammed `Attempting to parent and popup a dialog that already has a parent` on **Generate Layout** or **Preview Layout**, update the addon to **1.5.1** and restart the Godot editor.
 
 The modular path no longer instantiates its `PackedScene` over and over merely to inspect socket compatibility. `DungeonRoomModule` reads node types, validated normalized marker coordinates and script/collision restrictions directly from `PackedScene.get_state()`. Generated module nodes are detached from their source scene-instance path before recursively assigning scene owners, which prevents ambiguous nested `PackedScene` ownership on save/reload. `@export_tool_button` actions execute deferred after the Inspector finishes processing input, avoiding synchronous editor SceneTree mutations.
 
@@ -65,6 +65,8 @@ This is **not** yet arbitrary collision-bearing prefab replacement, free-form ro
 
 ## Exterior doors, top-down colors and modular rooms (F2.3)
 
+The **single canonical dungeon example** is `examples/dungeon_authoring.tscn`. It includes optional module presets and per-room sizing; adjust `rectangle_weight/cross_weight/l_shape_weight/t_shape_weight` and `room_modules` in the Inspector. The older `examples/dungeon_modular_authoring.tscn` has been removed because both scenes use the exact same `DungeonAuthoring3D` implementation.
+
 ### Entrance and exit are now real openings
 
 The former `ENTRANCE` and `EXIT` labels only identified a logical graph endpoint, leaving its exterior walls solid. The planner now selects a **free outside-facing wall** on each endpoint and cuts a real walkable door-sized hole through the generated room wall, plus a dedicated `Socket_exterior_entrance` or `Socket_exterior_exit` marker. The validator rejects blocked, missing or malformed outside access; the builder and exported scene retain both openings. These are **open doorways** with collision-free passages, not an animated swinging door leaf.
@@ -83,7 +85,7 @@ Room heights stay shared; varied sizes do **not** yet mean completely free XZ pa
 
 ### Optional socket-aware decorative prefabs
 
-Open **[examples/dungeon_modular_authoring.tscn](examples/dungeon_modular_authoring.tscn)** and click **Generate Layout** for a complete variable-size example with a supplied custom module. You can also create a `DungeonRoomModule` Resource under `DungeonConfig.room_modules`, assign its `visual_scene` (`PackedScene`), `shape`, `weight` and `stable_id`, then use `module_chance` or `require_room_modules`.
+Open **[examples/dungeon_authoring.tscn](examples/dungeon_authoring.tscn)** and click **Generate Layout** for a complete variable-size example with a supplied custom module. You can also create a `DungeonRoomModule` Resource under `DungeonConfig.room_modules`, assign its `visual_scene` (`PackedScene`), `shape`, `weight` and `stable_id`, then use `module_chance` or `require_room_modules`.
 
 Author module scenes in **normalized coordinates**: X/Z in -0.5…+0.5 and Y in 0…1. Place `Marker3D` children at the supported wall midpoints:
 

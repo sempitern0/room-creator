@@ -50,6 +50,7 @@ static func generate_layout(config: DungeonConfig) -> DungeonBuildResult:
 		if not _assign_room_modules(config, layout, rng):
 			continue
 		_assign_structural_prefabs(config, layout, rng)
+		DungeonSocketOffsetPlacer.resolve(layout)
 		var report := validate_layout(layout)
 		if report.is_valid():
 			result.success = true
@@ -473,9 +474,14 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 			var required: Array[int] = []
 			for opening in make_blueprint(layout, room).openings:
 				required.append(opening.wall)
+				var expected_offset: float = room.structural_prefab.rotated_socket_offset(opening.wall, room.structural_turns)
+				if absf(opening.offset - expected_offset) > 0.005:
+					report.add_error("STRUCTURAL_OFFSET", "Physical socket and graph doorway offset differ on %s." % room.stable_id)
 			var possible := room.structural_prefab.compatible_rotations(required, actual_size(layout, room), layout.exterior_door_width, layout.exterior_door_height)
 			if not possible.has(room.structural_turns):
 				report.add_error("STRUCTURAL_SOCKETS", "A collision prefab or rotation disagrees with real door sockets: %s" % room.stable_id)
+		elif absf(room.exterior_offset) > 0.001:
+			report.add_error("UNOWNED_EXTERIOR_OFFSET", "Procedural rooms cannot carry an unpaired authored exterior socket offset.")
 		if room.module_profile != null:
 			var module_report := room.module_profile.validate()
 			if not module_report.is_valid() or room.module_profile.shape != room.shape:
@@ -552,6 +558,10 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 			report.add_error("SOCKET_RECIPROCITY", "Connection %s has incorrect wall normals." % edge.stable_id)
 		if edge.clear_width <= 0.0 or edge.clear_height <= 0.0 or not is_finite(edge.clear_width) or not is_finite(edge.clear_height):
 			report.add_error("CLEARANCE", "Invalid opening metrics: %s" % edge.stable_id)
+		if not is_finite(edge.from_offset) or not is_finite(edge.to_offset):
+			report.add_error("EDGE_OFFSET_FINITE", "Door socket offsets must be finite: %s" % edge.stable_id)
+		elif (a.structural_prefab == null and absf(edge.from_offset) > 0.001) or (b.structural_prefab == null and absf(edge.to_offset) > 0.001):
+			report.add_error("EDGE_OFFSET_OWNER", "Door socket offset requires a matching structural prefab: %s" % edge.stable_id)
 		adjacency[a.stable_id].append(b.stable_id)
 		adjacency[b.stable_id].append(a.stable_id)
 	for id in adjacency:

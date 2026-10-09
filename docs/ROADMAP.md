@@ -28,14 +28,15 @@ Architecture derived from `ROOM_CREATOR_NEXT_AGENT_HANDOFF(1).md` (design propos
 | F2.10 true off-grid socket packing | **Implemented + CI-tested** | Attach a new room from a previously authored socket rather than grid coordinates, bounded seeded world-space DFS/backtracking, SAT clearance, real entrance/exit and graph-edge capsule sweeps, native export |
 | F2 completed single-floor acceptance | **Implemented + CI-tested** | Old F2 path seeds plus full-yaw, loop/mixed-silhouette/size, structural rotated-collider and true off-grid socket regression, graphical Editor Inspector and source-only save |
 | Unrestricted multi-floor 3D packing / arbitrary mesh prefabs | **Out of F2 single-floor scope** | Multi-floor rotated 3D OBBs, diagonal door cuts within arbitrary mesh shells, navigation baking and guaranteed off-grid loop closure are not certified |
-| F3 locked editing/biomes | **Not implemented** | Locks, incremental regeneration, biomes, reusable profiles, navigation pipeline |
+| F3.1 persistent room locks and procedural rerolls | **Implemented + CI-tested** | Scene-serializable per-room lock bit and captured topology signature, lock/unlock Inspector and scene Undo/Redo, editor-only lock labels, deterministic shape/visual module reroll of unlocked procedural rooms, topology-safe rollback and explicit conflicts |
+| F3 incremental world edits, biomes and navigation | **In progress** | Adjacent spatial/route replanning around hard room locks, custom overrides, 3D gizmos, RoomBiome/BakeProfile, and NavMesh agent validation |
 | F4 exterior cities | **Not implemented** | Street graph, parcels, road access, zoning |
 | F5 release hardening | Partial (Godot 4.7.2 editor, plus Xvfb graphical regression) | Cross-platform interactive QA, benchmarks, migration fixtures and user acceptance outstanding |
 
 ## Remaining work, in order
 
 1. **Windows interactive F2 acceptance (manual):** validate source-only Ctrl+S, Inspector Undo/Redo, exported gameplay in a Windows Godot 4.7.2 installation with varying physics setups. Linux headless and Xvfb editor CI are green; Windows is not independently tested.
-2. **F3 locked editing and navigation:** per-room persistent edits, incremental regeneration and room-lock conflicts; optional NavMesh generation and independent agent path verification.
+2. **F3 advanced authoring:** F3.1 now persists room locks, validates incident-door conflicts and rerolls unlocked procedural appearance without moving corridors. Next: authored position/geometry/material overrides, bounded rerouting of neighbors around locked rooms, viewport gizmos and independent NavMesh/agent route verification.
 3. **Refinements outside certified F2 scope:** guaranteed closure of arbitrary off-grid cycles, true authored oblique door cutouts, arbitrary mesh colliders, 3D/multilevel rotated packing and non-planar connectors.
 4. **F3 style/data layer:** separate RoomBiome and BakeProfile from geometry; measure then batch meshes by room/chunk/material with no shared Resource mutation.
 5. **F4–F5:** independent city authoring, 20/100/300-room performance targets, migration tools and release hardening.

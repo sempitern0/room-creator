@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.12.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.13.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -17,6 +17,29 @@ The modular path no longer instantiates its `PackedScene` over and over merely t
 This was tested in **Godot 4.7.2** with an actual editor instance in both headless mode and a graphical X11 session under Xvfb, including opening the supplied modular example, generation, preview refresh, bake, regeneration, and PackedScene save/reload. The CI explicitly fails if that recurring dialog error occurs. Windows graphical testing remains a manual acceptance check.
 
 If you still see messages in an existing edited scene after upgrading, close/reopen Godot and press **Generate Layout** to replace the old preview; save a backup before manually removing an already damaged `DungeonPreview`/`DungeonBake` tree. If it persists, capture the first error with its Godot file/line and which Inspector action triggers it.
+
+## F3.1 — Persistent room locks and local authoring regeneration (v1.13.0)
+
+F3 begins with **designer-owned, persistent room protection** on the same canonical [`examples/dungeon_authoring.tscn`](examples/dungeon_authoring.tscn). No duplicate `DungeonAuthoring3D` scene is required, and existing F2 room/corridor geometry stays compatible.
+
+### Inspector workflow
+
+1. **Generate Layout** once. Expand `Layout → Rooms` to inspect `stable_id` for each room (e.g. `room_0000`).
+2. Under **F3 Room Editing**, set `selected_room_id` to the desired room's stable ID and click **Lock Selected Room**. A golden `LOCKED` label is displayed above that room in the 3D preview (optionally hide with `show_locked_room_labels`). Repeat for any rooms you want to preserve.
+3. Set `appearance_variation_seed` and click **Regenerate Unlocked Rooms**. The tool reselects valid **procedural silhouettes and visual-only room module profiles** for unlocked rooms, while preserving the **entire graph, door widths, exterior entrance/exit, collision-authoritative room sizes, world transforms, socket positions, corridor routes and locked room geometry**. Its results are deterministic for a given seed and initial layout.
+4. Use **Unlock Selected Room** to remove protection. Room edits and lock changes participate in Godot editor **Undo/Redo** and survive ordinary Ctrl+S, project reopen and layout re-preview.
+
+The variation tool *does not regenerate global topology or replace static structural prefab shells* (which could require a new connector collision solve); existing structural `PackedScene` rooms remain fixed in this first F3 slice. Regenerating room appearance safely depends on its existing sockets, so profiles and shapes with incompatible openings are skipped. When no unlocked procedural room can be varied, the tool reports a problem without changing the current scene.
+
+**Important guard:** the original **Generate Layout** action deliberately **refuses to replace any layout with locked rooms**; use the local regeneration action or unlock the affected rooms first. Locks capture an identity/cell/role/incident-door topology signature. If those relationships are edited behind a lock, `Validate Layout` reports an explicit `ROOM_LOCK_CONFLICT`; **Unlock Selected Room** remains usable to recover and recapture a consistent lock.
+
+The lock bit is persisted inside `RoomPlacementData` in the source `LevelLayout`. Lock metadata does **not** change the physical geometry fingerprint, so simply locking/unlocking a room does not stale an otherwise valid bake. A successful unlocked geometry reroll **does** invalidate the old bake, clears it, refreshes the editor preview and requires **Bake Static Dungeon** before native scene export. The locked-room labels are editor-only and are never present in baked scenes.
+
+### QA and next slices
+
+`tests/dungeon_f3_room_edit_smoke.gd` verifies determinism, locked-room invariants, graph/socket stability, explicit stale lock conflicts, lock recovery, source-only save/reopen, native physics and editor-only overhead labels. `tests/editor_integration/plugin.gd` drives real deferred Inspector actions and a scene-history Undo/Redo roundtrip in graphical Godot 4.7.2.
+
+F3 remains **in progress**: position/shape/material overrides with durable local conflict resolution, regeneration of adjacent rooms and corridors, viewport drag gizmos, separated RoomBiome/BakeProfile resources, NavMesh/independent agent route validation and performance work are planned follow-ups. The current F3.1 tool is intentionally a **same-topology local appearance regeneration**, not unrestricted incremental graph replanning.
 
 ## F2 complete — seeded single-floor dungeons (v1.12.0)
 
@@ -299,6 +322,7 @@ godot --headless --path . --script res://tests/dungeon_yaw_docking_smoke.gd
 godot --headless --path . --script res://tests/dungeon_free_yaw_smoke.gd
 godot --headless --path . --script res://tests/dungeon_f2_combined_smoke.gd
 godot --headless --path . --script res://tests/dungeon_offgrid_socket_smoke.gd
+godot --headless --path . --script res://tests/dungeon_f3_room_edit_smoke.gd
 ```
 
 GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset + 36 routed-dogleg + 34 structural-prefab + 35 asymmetric-socket seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.

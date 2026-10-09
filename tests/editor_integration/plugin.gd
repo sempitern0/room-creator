@@ -60,6 +60,28 @@ func _exercise() -> void:
 	await get_tree().process_frame
 	if not _check(author.get_node_or_null("DungeonBake") == null and author.get_node_or_null("DungeonPreview") != null, "Regeneration should replace bake with a fresh modular preview."):
 		return
+	# Exercise actual Inspector/UndoRedo transactions with collision-bearing
+	# room prefabs in a real graphical editor, not just a SceneTree test.
+	var profile_preset := load("res://examples/dungeon_structural_preset.tres") as DungeonConfig
+	if not _check(profile_preset != null, "Structural room preset must be importable from Inspector."):
+		return
+	author.config = profile_preset
+	author._request_generate_layout()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	preview = author.get_node_or_null("DungeonPreview")
+	var structural_count := _count_nodes(preview, "StructuralShell")
+	if not _check(preview != null and structural_count > 0, "Inspector must compile full collision-bearing room prefabs inside the existing authoring scene."):
+		return
+	author._request_bake()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var structural_bake := author.get_node_or_null("DungeonBake")
+	if not _check(structural_bake != null and _count_nodes(structural_bake, "StructuralShell") == structural_count, "Baking must preserve exact authored prefab identities without duplicate scene instances."):
+		return
+	var source := PackedScene.new()
+	if not _check(source.pack(author) == OK and source.get_state().get_node_count() == 1, "Ctrl+S must never serialize prefab meshes inside the authoring scene."):
+		return
 	print("DUNGEON_EDITOR_INTEGRATION: PASS")
 	get_tree().quit(0)
 

@@ -137,10 +137,17 @@ func _build() -> void:
 	_action(build, "Export baked scene", "_request_save")
 	_note(build, "Preview and bake remain transient; exported scenes contain native collision.")
 
+	# Rooms contains browsing, palette and precision fields. A real dock can
+	# be only ~300 px wide and ~450 px high, so scroll instead of clipping UI.
+	var room_scroll := ScrollContainer.new()
+	room_scroll.name = "Rooms"
+	room_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	room_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	tabs.add_child(room_scroll)
 	var rooms := VBoxContainer.new()
-	rooms.name = "Rooms"
-	rooms.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	tabs.add_child(rooms)
+	rooms.custom_minimum_size.x = 268
+	rooms.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	room_scroll.add_child(rooms)
 	_heading(rooms, "Viewport tool")
 	_mode_picker = OptionButton.new()
 	_mode_picker.add_item("Select room", MODE_SELECT)
@@ -269,6 +276,7 @@ func _fill_palette() -> void:
 	_module_picker.clear()
 	_module_picker.add_item("None / erase art")
 	_module_profiles.append(null)
+	_palette_source = author.config if author != null else null
 	if author == null or author.config == null:
 		return
 	for module in author.config.room_modules:
@@ -278,7 +286,10 @@ func _fill_palette() -> void:
 			continue
 		_module_profiles.append(module)
 		_module_picker.add_item(module.stable_id)
-	_palette_source = author.config
+	if author.selected_visual_module != null:
+		var selection_index: int = _module_profiles.find(author.selected_visual_module)
+		if selection_index >= 0:
+			_module_picker.select(selection_index)
 
 
 func _paint_module() -> void:

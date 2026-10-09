@@ -504,10 +504,8 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 			if other == room or other == null:
 				continue
 			var other_size: Vector3 = actual_size(layout, other)
-			var overlap_x: bool = absf(room.world_transform.origin.x - other.world_transform.origin.x) < (size.x + other_size.x) * 0.5 - 0.0001
-			var overlap_z: bool = absf(room.world_transform.origin.z - other.world_transform.origin.z) < (size.z + other_size.z) * 0.5 - 0.0001
-			if overlap_x and overlap_z:
-				report.add_error("ROOM_OVERLAP", "Room footprints overlap: %s and %s" % [room.stable_id, other.stable_id])
+			if DungeonOrientedBounds.overlaps(DungeonOrientedBounds.room(room, size), DungeonOrientedBounds.room(other, other_size)):
+				report.add_error("ROOM_OVERLAP", "Room OBB footprints overlap: %s and %s" % [room.stable_id, other.stable_id])
 		by_id[room.stable_id] = room
 		by_cell[room.cell] = room
 		adjacency[room.stable_id] = PackedStringArray()

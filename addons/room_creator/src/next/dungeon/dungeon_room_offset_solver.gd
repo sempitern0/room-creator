@@ -151,7 +151,10 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 			if room.stable_id == corridor["a"] or room.stable_id == corridor["b"]:
 				continue
 			var size: Vector3 = DungeonPlanner.actual_size(layout, room)
-			if DungeonCorridorRouter.overlap_xz(corridor, {"center": room.world_transform.origin, "half": Vector2(size.x * 0.5, size.z * 0.5)}):
+			if DungeonOrientedBounds.overlaps(
+				DungeonOrientedBounds.corridor(corridor["center"], corridor["half"]),
+				DungeonOrientedBounds.room(room, size)
+			):
 				report.add_error("CORRIDOR_ROOM_OVERLAP", "Connector %s crosses an unrelated room %s." % [corridor["id"], room.stable_id])
 				break
 	for i in corridors.size():
@@ -160,7 +163,7 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 			var b: Dictionary = corridors[j]
 			if a["a"] == b["a"] or a["a"] == b["b"] or a["b"] == b["a"] or a["b"] == b["b"]:
 				continue
-			if DungeonCorridorRouter.overlap_xz(a, b):
+			if DungeonOrientedBounds.overlaps(DungeonOrientedBounds.corridor(a["center"], a["half"]), DungeonOrientedBounds.corridor(b["center"], b["half"])):
 				report.add_error("CORRIDOR_CROSSING", "Unconnected corridors %s and %s physically intersect." % [a["id"], b["id"]])
 	return report
 

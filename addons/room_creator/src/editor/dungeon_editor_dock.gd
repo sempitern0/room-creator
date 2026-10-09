@@ -134,18 +134,32 @@ func _build() -> void:
 	add_child(tabs)
 	_room_tabs = tabs
 
-	var build := VBoxContainer.new()
-	build.name = "Build"
-	tabs.add_child(build)
-	_heading(build, "Generation")
-	_note(build, "Use the DungeonAuthoring3D Config in the Inspector to choose the generation preset.")
-	_action(build, "Generate dungeon", "_request_generate_layout")
-	_action(build, "Preview layout", "_request_preview")
-	_action(build, "Validate layout", "_request_validate")
-	_heading(build, "Output")
-	_action(build, "Bake static geometry", "_request_bake")
-	_action(build, "Export baked scene", "_request_save")
-	_note(build, "Preview and bake remain transient; exported scenes contain native collision.")
+	# Flow layout responds to the native EditorDock's width. It shows
+	# separate action groups side-by-side along the bottom, and stacks them
+	# automatically when moved into a narrow vertical sidebar.
+	var build_scroll := ScrollContainer.new()
+	build_scroll.name = "Build"
+	build_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	build_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	tabs.add_child(build_scroll)
+	var build := HFlowContainer.new()
+	build.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	build_scroll.add_child(build)
+	var generation := VBoxContainer.new()
+	generation.custom_minimum_size.x = 270
+	build.add_child(generation)
+	_heading(generation, "Generation")
+	_note(generation, "Choose a Config preset in the DungeonAuthoring3D Inspector.")
+	_action(generation, "Generate dungeon", "_request_generate_layout")
+	_action(generation, "Preview layout", "_request_preview")
+	_action(generation, "Validate layout", "_request_validate")
+	var output := VBoxContainer.new()
+	output.custom_minimum_size.x = 270
+	build.add_child(output)
+	_heading(output, "Output")
+	_action(output, "Bake static geometry", "_request_bake")
+	_action(output, "Export baked scene", "_request_save")
+	_note(output, "Preview/bake are temporary. Exports use native physics nodes.")
 
 	# Rooms contains browsing, palette and precision fields. A real dock can
 	# be only ~300 px wide and ~450 px high, so scroll instead of clipping UI.
@@ -154,11 +168,21 @@ func _build() -> void:
 	room_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	room_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	tabs.add_child(room_scroll)
-	var rooms := VBoxContainer.new()
+	var rooms := HFlowContainer.new()
 	rooms.custom_minimum_size.x = 268
 	rooms.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	room_scroll.add_child(rooms)
-	_heading(rooms, "Viewport tool")
+	var tools := VBoxContainer.new()
+	tools.custom_minimum_size.x = 268
+	rooms.add_child(tools)
+	var browse := VBoxContainer.new()
+	browse.custom_minimum_size.x = 268
+	browse.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	rooms.add_child(browse)
+	var edit := VBoxContainer.new()
+	edit.custom_minimum_size.x = 268
+	rooms.add_child(edit)
+	_heading(tools, "Viewport tool")
 	_mode_picker = OptionButton.new()
 	_mode_picker.add_item("Select room", MODE_SELECT)
 	_mode_picker.add_item("Paint locks", MODE_LOCK)
@@ -166,11 +190,11 @@ func _build() -> void:
 	_mode_picker.add_item("Paint visual modules", MODE_PAINT_ART)
 	_mode_picker.add_item("Stamp connected room", MODE_STAMP)
 	_mode_picker.item_selected.connect(func(index: int) -> void: set_mode(index))
-	rooms.add_child(_mode_picker)
-	_note(rooms, "Enable Room Tool in the 3D toolbar, then click a room. Esc exits. Stamp mode previews a connected branch in green/red.")
-	_heading(rooms, "Stamp room from an open wall")
+	tools.add_child(_mode_picker)
+	_note(tools, "Enable Room Tool in the 3D toolbar, then click a room. Esc exits. Stamp mode previews a connected branch in green/red.")
+	_heading(tools, "Stamp room from an open wall")
 	var stamp_row := HBoxContainer.new()
-	rooms.add_child(stamp_row)
+	tools.add_child(stamp_row)
 	_stamp_wall = OptionButton.new()
 	_stamp_wall.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	# Display order follows spatial orientation; IDs are ACTUAL Godot
@@ -187,60 +211,60 @@ func _build() -> void:
 	stamp_button.text = "Add connected room"
 	stamp_button.pressed.connect(_stamp_selected)
 	stamp_row.add_child(stamp_button)
-	_note(rooms, "Choose a wall. Click the source room using Stamp mode. Green = valid; red = blocked. New rooms require an existing socket-connected graph.")
-	_heading(rooms, "Visual module palette")
+	_note(tools, "Choose a wall. Click the source room using Stamp mode. Green = valid; red = blocked. New rooms require an existing socket-connected graph.")
+	_heading(tools, "Visual module palette")
 	_module_picker = OptionButton.new()
 	_module_picker.item_selected.connect(func(index: int) -> void:
 		if is_instance_valid(author) and index >= 0 and index < _module_profiles.size():
 			author.selected_visual_module = _module_profiles[index]
 			stamp_wall_changed.emit(get_stamp_wall())
 	)
-	rooms.add_child(_module_picker)
+	tools.add_child(_module_picker)
 	var paint_bar := HBoxContainer.new()
-	rooms.add_child(paint_bar)
+	tools.add_child(paint_bar)
 	var paint_btn := Button.new()
 	paint_btn.text = "Apply to selected"
 	paint_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	paint_btn.pressed.connect(_paint_module)
 	paint_bar.add_child(paint_btn)
-	_note(rooms, "Palette reads Config.room_modules. None clears current room art. Only compatible visual-only modules can be painted.")
-	_heading(rooms, "Find a room")
+	_note(tools, "Palette reads Config.room_modules. None clears current room art. Only compatible visual-only modules can be painted.")
+	_heading(browse, "Find a room")
 	_search = LineEdit.new()
 	_search.placeholder_text = "Filter by room ID or role..."
 	_search.text_changed.connect(func(_value: String) -> void: _fill_rooms())
-	rooms.add_child(_search)
+	browse.add_child(_search)
 	_filter = OptionButton.new()
 	_filter.add_item("All rooms")
 	_filter.add_item("Locked only")
 	_filter.add_item("Edited only")
 	_filter.item_selected.connect(func(_index: int) -> void: _fill_rooms())
-	rooms.add_child(_filter)
+	browse.add_child(_filter)
 	_room_list = ItemList.new()
 	_room_list.custom_minimum_size.y = 142
 	_room_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_room_list.item_selected.connect(_on_list_select)
-	rooms.add_child(_room_list)
+	browse.add_child(_room_list)
 	_details = Label.new()
 	_details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	rooms.add_child(_details)
+	browse.add_child(_details)
 	var lock_bar := HBoxContainer.new()
-	rooms.add_child(lock_bar)
+	browse.add_child(lock_bar)
 	_action(lock_bar, "Lock", "_request_lock_room", true)
 	_action(lock_bar, "Unlock", "_request_unlock_room", true)
-	_action(rooms, "Reroll unlocked room appearances", "_request_regenerate_unlocked")
+	_action(browse, "Reroll unlocked room appearances", "_request_regenerate_unlocked")
 
-	_heading(rooms, "Move selected room (metres)")
+	_heading(edit, "Move selected room (metres)")
 	var moves := HBoxContainer.new()
-	rooms.add_child(moves)
+	edit.add_child(moves)
 	_delta_x = _spin(moves, "X", -3.0, 3.0, 0.25, 0.0)
 	_delta_z = _spin(moves, "Z", -3.0, 3.0, 0.25, 0.0)
-	_heading(rooms, "Footprint (0 keeps current)")
+	_heading(edit, "Footprint (0 keeps current)")
 	var sizes := HBoxContainer.new()
-	rooms.add_child(sizes)
+	edit.add_child(sizes)
 	_size_x = _spin(sizes, "Width", 0.0, 128.0, 0.1, 0.0)
 	_size_z = _spin(sizes, "Depth", 0.0, 128.0, 0.1, 0.0)
 	var shapes := HBoxContainer.new()
-	rooms.add_child(shapes)
+	edit.add_child(shapes)
 	_shape = OptionButton.new()
 	_shape.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for label in ["Keep shape", "Rectangle", "Cross", "L Shape", "T Shape"]:
@@ -255,8 +279,8 @@ func _build() -> void:
 	apply.text = "Apply safe override"
 	apply.tooltip_text = "Rebuild only incident corridors. Reject changes with invalid collisions/sockets. Fully Undo/Redo-enabled."
 	apply.pressed.connect(_apply_override)
-	rooms.add_child(apply)
-	_note(rooms, "If the edit cannot fit, nothing is modified. The Inspector retains advanced fields and settings.")
+	edit.add_child(apply)
+	_note(edit, "If the edit cannot fit, nothing is modified. The Inspector retains advanced fields and settings.")
 
 	_status = Label.new()
 	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

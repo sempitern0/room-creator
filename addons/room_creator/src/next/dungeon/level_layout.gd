@@ -41,7 +41,7 @@ func fingerprint() -> String:
 	parts.append("schema:%d seed:%d grid:%d,%d" % [schema_version, seed, grid_size.x, grid_size.y])
 	parts.append("size:%.4f,%.4f,%.4f" % [room_size.x, room_size.y, room_size.z])
 	parts.append("axis_x:%s axis_z:%s" % [str(column_positions), str(row_positions)])
-		parts.append("surfaces:%.4f,%.4f,%.4f:%d" % [wall_thickness, floor_thickness, ceiling_thickness, int(include_ceiling)])
+	parts.append("surfaces:%.4f,%.4f,%.4f:%d" % [wall_thickness, floor_thickness, ceiling_thickness, int(include_ceiling)])
 	parts.append("player:%.4f,%.4f collision:%d,%d" % [player_radius, player_height, collision_layer, collision_mask])
 	parts.append("materials:%s|%s|%s" % [wall_material.resource_path if wall_material != null else "", floor_material.resource_path if floor_material != null else "", ceiling_material.resource_path if ceiling_material != null else ""])
 	parts.append("exterior:%d:%.4f,%.4f" % [int(exterior_doors_enabled), exterior_door_width, exterior_door_height])

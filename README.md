@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.6.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.7.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -63,6 +63,29 @@ Manual `RoomBlueprint` authoring also exposes `shape` and `shape_rotation`, and 
 
 This is **not** yet arbitrary collision-bearing prefab replacement, free-form rotated spatial packing, multilevel routing, navigation-mesh baking, or partial room-lock regeneration. New hand-authored room prefabs can be added later without changing the graph contract.
 
+## Recovered scene and independent room offsets (F2.5)
+
+### Recover a Git-merge-corrupted authoring example
+
+The canonical `examples/dungeon_authoring.tscn` is now deliberately **source-only**: a `DungeonConfig` resource and a single `DungeonAuthoring3D` node. It must not contain a serialized `DungeonPreview`, `DungeonBake`, or unresolved Git conflict markers. The editor now keeps generated preview and bake geometry as **transient unowned children**, so ordinary Ctrl+S persists the authored configuration and layout, **not thousands of derived mesh nodes**. Click **Generate Layout** or **Preview Layout** to reconstruct the visual output after reopening; **Save Baked Scene** still exports an independent standalone `.tscn` with full static collision.
+
+CI verifies that the example has a single authored node and rejects merge-conflict markers in tracked Godot assets. If a local copy still has the conflict, first back up any personal edits, then use:
+
+```bash
+git fetch origin
+git restore --source=origin/main --staged --worktree -- examples/dungeon_authoring.tscn
+```
+
+This overwrites only the **local working-tree and staged changes to that one file**; it does not discard changes to other project files. Run `git status` to inspect other pending merges before pulling.
+
+### F2.5 bounded, compatible independent room placements
+
+Enable `DungeonConfig → Independent room offsets (F2.5) → enable_independent_room_offsets`; tune `room_position_jitter` (up to 6 m) and `placement_attempts` (1–64). The recovered example enables **0.50 m** per-axis jitter with **24 attempts**.
+
+The solver groups rooms according to their real connection constraints: east/west-linked rooms share a Z coordinate and north/south-linked rooms share an X coordinate. Other groups may shift independently relative to the F2.4 non-uniform base grid. This moves some individual rooms without ever breaking paired straight-line sockets. Candidate placements are deterministic, bounded and checked for reversed walls, negative corridor spans, unrelated room collisions and intersections between unrelated corridors. The accepted world transforms and bounds live in the serialized `LevelLayout`; impossible configurations fail explicitly.
+
+This is a **constrained off-grid placement step**, not arbitrary per-room 3D rotation, L-turning hallways or complete OBB/backtracking assembly with collision-bearing prefab shells. Those remain upcoming work.
+
 ## Non-uniform spatial embedding (F2.4)
 
 The unified `examples/dungeon_authoring.tscn` now demonstrates **all three features in one scene**: mixed orthogonal silhouettes, optional socket-aware decorative modules, and **non-uniform room spacing**. There is no separate `dungeon_modular_authoring.tscn`.
@@ -91,7 +114,7 @@ The preview palette now colors **floors AND ceilings**, including the segmented 
 
 Enable `DungeonConfig.vary_room_sizes` and set `min_room_scale` / `max_room_scale` (defaults **0.80–1.00**). The planner assigns reproducible individual horizontal room dimensions, always centered within their own grid cell. Where two door sockets no longer coincide, the geometry compiler automatically builds a native, static roofed **corridor** between them. The corridor has a floor, two walls, optional ceiling and matching primitive collision. Tests include seeded reproducibility, validation of bounding-box overlap and a real capsule sweep through internal **and exterior** doors.
 
-Room heights stay shared; varied sizes do **not** yet mean completely free XZ packing. The room center positions are still on the original grid to retain F2 determinism and reliable connector generation.
+Room heights stay shared. F2.4 uses non-uniform aligned grid rows/columns; F2.5 additionally shifts graph-compatible groups of rooms independently. Unrestricted rotated-room 3D packing remains future work.
 
 ### Optional socket-aware decorative prefabs
 
@@ -150,9 +173,10 @@ godot --headless --path . --script res://tests/dungeon_diagnostics_smoke.gd
 godot --headless --path . --script res://tests/dungeon_spatial_smoke.gd
 godot --headless --path . --script res://tests/dungeon_module_smoke.gd
 godot --headless --path . --script res://tests/dungeon_embedding_smoke.gd
+godot --headless --path . --script res://tests/dungeon_offsets_smoke.gd
 ```
 
-GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
+GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
 
 The older `RoomCreator` and `DungeonGenerator` nodes remain for compatibility but the legacy dungeon path is not claimed to have the same F2 validation guarantees. Use `DungeonAuthoring3D` for new dungeons.
 

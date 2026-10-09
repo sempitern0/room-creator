@@ -30,6 +30,36 @@ func _exercise() -> void:
 	preview = author.get_node_or_null("DungeonPreview")
 	if not _check(preview != null and _count_nodes(preview, "ModuleDecor") == _expected_modules(author.layout), "Refresh must not duplicate nested visual modules."):
 		return
+	# F3.3: real main-addon UI dock, not an isolated Control fixture.
+	# The project editor loads the production Room Creator plugin alongside
+	# this integration harness; the dock must be present and attached to
+	# the currently edited source root.
+	var room_dock := EditorInterface.get_base_control().find_child("RoomCreatorDungeonDock", true, false) as Control
+	if not _check(room_dock != null, "Room Creator must expose its own context-aware dungeon dock in Godot."):
+		return
+	for frame in 25:
+		if room_dock.get("author") == author:
+			break
+		await get_tree().process_frame
+	if not _check(room_dock.get("author") == author and room_dock.visible, "Dock must automatically attach to the canonical edited DungeonAuthoring3D."):
+		return
+	var dock_id: String = author.layout.rooms[1].stable_id
+	if not _check(room_dock.call("select_room", dock_id) and author.selected_room_id == dock_id, "Selecting the dock's room list must target the authoring source stable ID."):
+		return
+	room_dock.call("set_mode", 1)
+	if not _check(room_dock.call("apply_viewport_action", dock_id), "Viewport lock-paint action should accept a visible room."):
+		return
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(author.layout.rooms[1].edit_locked, "Production dock must paint a room lock using existing transactional Undo/Redo."):
+		return
+	room_dock.call("set_mode", 2)
+	room_dock.call("apply_viewport_action", dock_id)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(not author.layout.rooms[1].edit_locked, "Production dock must erase room lock without destroying the graph."):
+		return
+	room_dock.call("set_mode", 0)
 	# F3.1 exercises the exact deferred Inspector actions and a real
 	# EditorUndoRedoManager roundtrip, not just a headless logic helper.
 	var protected_id := author.layout.rooms[0].stable_id

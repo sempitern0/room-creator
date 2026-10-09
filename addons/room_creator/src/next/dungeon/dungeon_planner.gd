@@ -39,6 +39,8 @@ static func generate_layout(config: DungeonConfig) -> DungeonBuildResult:
 			continue
 		if not _add_loops(config, layout, occupied, rng):
 			continue
+		if not _assign_exterior_walls(layout, rng):
+			continue
 		if not _assign_room_shapes(config, layout, rng):
 			continue
 		var report := validate_layout(layout)
@@ -135,6 +137,9 @@ static func _assemble_path(config: DungeonConfig, path: Array[Vector2i]) -> Leve
 	layout.collision_layer = config.collision_layer
 	layout.collision_mask = config.collision_mask
 	layout.minimum_critical_rooms = config.critical_path_min
+	layout.exterior_doors_enabled = config.generate_exterior_doors
+	layout.exterior_door_width = config.door_width
+	layout.exterior_door_height = config.door_height
 	layout.expected_room_count = path.size() + config.branch_count
 	layout.expected_loops = config.loop_count
 	for i in path.size():
@@ -220,6 +225,26 @@ static func _add_loops(config: DungeonConfig, layout: LevelLayout, occupied: Dic
 	return true
 
 
+## Select outside-facing walls from unoccupied grid cells, without adding graph
+## edges. Endpoint sockets must connect to the outside world, not another room.
+static func _assign_exterior_walls(layout: LevelLayout, rng: RandomNumberGenerator) -> bool:
+	if not layout.exterior_doors_enabled:
+		return true
+	var occupied: Dictionary = {}
+	for room in layout.rooms:
+		occupied[room.cell] = true
+	for room in [layout.rooms[0], layout.rooms[layout.critical_path_ids.size() - 1]]:
+		var options: Array[int] = []
+		for direction in _shuffled_directions(rng):
+			if not occupied.has(room.cell + direction):
+				options.append(_wall_for_delta(direction))
+		if options.is_empty():
+			return false
+		room.exterior_wall = options[rng.randi_range(0, options.size() - 1)]
+		room.exterior_id = "exterior_entrance" if room.role == RoomPlacementData.Role.ENTRANCE else "exterior_exit"
+	return true
+
+
 ## Match every actual doorway to an occupied, centered boundary tile.
 ## Choosing a shape never alters graph edges; incompatible profiles cannot
 ## silently create unpaired openings or discontinuous passageways.
@@ -230,6 +255,8 @@ static func _assign_room_shapes(config: DungeonConfig, layout: LevelLayout, rng:
 	]
 	for room in layout.rooms:
 		var needed: Array[int] = []
+		if room.exterior_wall >= 0:
+			needed.append(room.exterior_wall)
 		for edge in layout.connections:
 			if edge.from_room_id == room.stable_id:
 				needed.append(edge.from_wall)
@@ -305,6 +332,23 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 		return report
 	if by_id[layout.entrance_id].role != RoomPlacementData.Role.ENTRANCE or by_id[layout.exit_id].role != RoomPlacementData.Role.EXIT:
 		report.add_error("ENDPOINT_ROLES", "Endpoint roles do not match entrance/exit IDs.")
+	if layout.exterior_doors_enabled:
+		for endpoint_id in [layout.entrance_id, layout.exit_id]:
+			var endpoint: RoomPlacementData = by_id[endpoint_id]
+			if endpoint.exterior_wall < 0 or endpoint.exterior_wall > 3 or endpoint.exterior_id.is_empty():
+				report.add_error("EXTERIOR_MISSING", "Start and exit must each have a physical exterior doorway.")
+				continue
+			var delta := _delta_for_wall(endpoint.exterior_wall)
+			if by_cell.has(endpoint.cell + delta):
+				report.add_error("EXTERIOR_BLOCKED", "Exterior door of %s faces an occupied room cell." % endpoint.stable_id)
+		if layout.exterior_door_width <= 0.0 or layout.exterior_door_height <= 0.0:
+			report.add_error("EXTERIOR_CLEARANCE", "Invalid exterior door dimensions.")
+	for room in layout.rooms:
+		if room.stable_id != layout.entrance_id and room.stable_id != layout.exit_id and room.exterior_wall >= 0:
+			report.add_error("UNEXPECTED_EXTERIOR", "Only entrance and exit rooms may expose exterior portals.")
+		if not layout.exterior_doors_enabled and room.exterior_wall >= 0:
+			report.add_error("EXTERIOR_DISABLED", "Exterior doorway present despite being disabled.")
+
 	var seen_edges: Dictionary = {}
 	for edge in layout.connections:
 		if edge == null:
@@ -385,6 +429,14 @@ static func make_blueprint(layout: LevelLayout, room: RoomPlacementData) -> Room
 	blueprint.ceiling_material = layout.ceiling_material
 	blueprint.collision_layer = layout.collision_layer
 	blueprint.collision_mask = layout.collision_mask
+	if layout.exterior_doors_enabled and room.exterior_wall >= 0:
+		var outside := RoomOpening.new()
+		outside.stable_id = room.exterior_id
+		outside.kind = RoomOpening.Kind.DOOR
+		outside.wall = room.exterior_wall
+		outside.width = layout.exterior_door_width
+		outside.height = layout.exterior_door_height
+		blueprint.openings.append(outside)
 	for edge in layout.connections:
 		if edge.from_room_id == room.stable_id or edge.to_room_id == room.stable_id:
 			var opening := RoomOpening.new()
@@ -395,6 +447,17 @@ static func make_blueprint(layout: LevelLayout, room: RoomPlacementData) -> Room
 			opening.height = edge.clear_height
 			blueprint.openings.append(opening)
 	return blueprint
+
+
+static func _delta_for_wall(side: int) -> Vector2i:
+	match side:
+		RoomOpening.Wall.FRONT:
+			return Vector2i.UP
+		RoomOpening.Wall.BACK:
+			return Vector2i.DOWN
+		RoomOpening.Wall.LEFT:
+			return Vector2i.LEFT
+	return Vector2i.RIGHT
 
 
 static func _wall_for_delta(delta: Vector2i) -> RoomOpening.Wall:

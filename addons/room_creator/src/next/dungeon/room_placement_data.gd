@@ -9,5 +9,9 @@ enum Role { ENTRANCE, MAIN, EXIT, BRANCH }
 @export var cell: Vector2i = Vector2i.ZERO
 @export var world_transform: Transform3D = Transform3D.IDENTITY
 @export var role: Role = Role.MAIN
+## Exterior doorway is independent from the internal room-connection graph.
+## -1 means no exterior opening. Uses the same outward-facing wall convention.
+@export var exterior_wall: int = -1
+@export var exterior_id: String = ""
 @export var shape: RoomFootprint.Shape = RoomFootprint.Shape.RECTANGLE
 @export_range(0, 3, 1) var shape_rotation: int = 0

@@ -28,6 +28,9 @@ extends Resource
 @export_range(0.5, 6.0, 0.05) var door_height: float = 2.3
 @export_range(0.1, 2.0, 0.05) var player_radius: float = 0.35
 @export_range(0.5, 4.0, 0.05) var player_height: float = 1.8
+@export_group("Exterior entrances")
+## Cut actual walkable outside doorways in the start and finish rooms.
+@export var generate_exterior_doors: bool = true
 @export_group("Rendering and collision")
 @export var wall_material: Material
 @export var floor_material: Material

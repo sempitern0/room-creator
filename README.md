@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.3.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.4.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -19,6 +19,22 @@ Copy the directory `addons/room_creator/` to the same path in your Godot project
 7. Save your authoring scene to keep the `DungeonConfig` and `LevelLayout` as the source of truth for later regeneration.
 
 Preview, bake, regeneration and clearing generated output are Undo/Redo-enabled in the editor. Regeneration is **non-destructive** to manually owned child nodes. If the source changes after baking, bake again before exporting.
+
+### Path visualization (F2.2)
+
+The authoring Inspector includes **Preview Diagnostics**. **Generate Layout** automatically creates a color-coded preview; **Preview Layout** refreshes colors and toggles after an edit. The optional `DungeonPreviewPalette` resource exposes each color:
+
+| Meaning | Default color | What it indicates |
+|---|---|---|
+| **Entrance** | Green `#29B86D` | The start room's floor and its `ENTRANCE` label |
+| **Exit** | Red `#E45050` | The exit room's floor and its `EXIT` label |
+| **Critical path** | Cyan `#38B8DF` | Main-route floors and connections |
+| **Branches** | Amber `#E9AB42` | Secondary rooms and non-loop branch links, including dead ends |
+| **Alternative loops** | Violet `#A97CFF` | An additional graph connection that closes a cycle and creates another possible route |
+
+The overlay uses actual `critical_path_ids`, room roles, and graph connectivity (spanning-forest classification), **not** randomly assigned colors. Routes are visible thin strips joining room centers and the entrance/exit appear as floating labels.
+
+Controls: `show_room_role_colors`, `show_connection_routes`, and `show_entrance_exit_labels`. You can adjust these independently and click **Preview Layout** to refresh. All diagnostic elements belong only to `DungeonPreview`. They are cleared on bake and **never enter the exported static dungeon**; existing material assets and collision shapes are not modified. Paths indicate **logical topology**, not a guaranteed NavMesh navigation route; physical collision crossing is tested separately.
 
 ### Shape variety (F2.1)
 
@@ -73,9 +89,10 @@ godot --headless --path . --script res://tests/room_creator_smoke.gd
 godot --headless --path . --script res://tests/dungeon_layout_smoke.gd
 godot --headless --path . --script res://tests/dungeon_capsule_smoke.gd
 godot --headless --path . --script res://tests/room_shapes_smoke.gd
+godot --headless --path . --script res://tests/dungeon_diagnostics_smoke.gd
 ```
 
-GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette seed cases, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
+GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette seed cases and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
 
 The older `RoomCreator` and `DungeonGenerator` nodes remain for compatibility but the legacy dungeon path is not claimed to have the same F2 validation guarantees. Use `DungeonAuthoring3D` for new dungeons.
 

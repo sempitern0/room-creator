@@ -13,6 +13,7 @@ Architecture derived from `ROOM_CREATOR_NEXT_AGENT_HANDOFF(1).md` (design propos
 | F2 editor/export | Implemented | `DungeonAuthoring3D` generates/validates/previews/bakes/exports; Undo/Redo for generated nodes; baked scenes are engine-native |
 | F2 validation | Automated in Godot 4.7.2 CI | 100 seeds × 3 presets plus 60 mixed-silhouette seeds and 12 rotations; loop test, door socket alignment, portable scene reload and capsule sweep |
 | F2.1 shape variety and editor lifecycle | **Implemented** | Weighted rectangle/cross/L/T orthogonal silhouettes with matched sockets; generating auto-previews and replaces stale bake; bake hides preview, undoable |
+| F2.2 path diagnostics | **Implemented** | Preview-only role floor tints, entrance/exit labels, main/branch/alternate-loop links, editable color palette and visibility toggles; no bake contamination |
 | F2 advanced packing | **Not implemented** | Variable-size prefabs, arbitrary rotated sockets, explicit spatial broadphase and bounded backtracking for 3D overlaps |
 | F3 locked editing/biomes | **Not implemented** | Locks, incremental regeneration, biomes, reusable profiles, navigation pipeline |
 | F4 exterior cities | **Not implemented** | Street graph, parcels, road access, zoning |

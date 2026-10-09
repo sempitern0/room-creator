@@ -82,6 +82,41 @@ func _exercise() -> void:
 	var source := PackedScene.new()
 	if not _check(source.pack(author) == OK and source.get_state().get_node_count() == 1, "Ctrl+S must never serialize prefab meshes inside the authoring scene."):
 		return
+	# F2.8: an asymmetric full collision prefab uses the same deferred
+	# Inspector generation, bake, and source-only Ctrl+S path as F2.7.
+	var offset_preset := load("res://examples/dungeon_offset_socket_preset.tres") as DungeonConfig
+	if not _check(offset_preset != null, "Offset-socket preset must be importable."):
+		return
+	var found_offset_seed := false
+	for candidate in 35:
+		offset_preset.seed = 27000 + candidate
+		var candidate_layout := DungeonPlanner.generate_layout(offset_preset)
+		if not candidate_layout.success:
+			continue
+		for room in candidate_layout.layout.rooms:
+			if room.structural_prefab != null:
+				found_offset_seed = true
+				break
+		if found_offset_seed:
+			break
+	if not _check(found_offset_seed, "The asymmetric prefab preset must have at least one accepted structural room."):
+		return
+	author.config = offset_preset
+	author._request_generate_layout()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	preview = author.get_node_or_null("DungeonPreview")
+	if not _check(preview != null and _count_nodes(preview, "StructuralShell") > 0, "Inspector must preview room shells with offset door sockets."):
+		return
+	author._request_bake()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	structural_bake = author.get_node_or_null("DungeonBake")
+	if not _check(structural_bake != null and _count_nodes(structural_bake, "StructuralShell") > 0, "Inspector must bake asymmetric authored room colliders."):
+		return
+	source = PackedScene.new()
+	if not _check(source.pack(author) == OK and source.get_state().get_node_count() == 1, "Generated off-center prefab geometry must remain transient in authoring scenes."):
+		return
 	print("DUNGEON_EDITOR_INTEGRATION: PASS")
 	get_tree().quit(0)
 

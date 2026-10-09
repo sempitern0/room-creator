@@ -1,9 +1,12 @@
 @tool
 class_name RoomBlueprint
 extends Resource
-## Canonical editable source for a single rectangular room, not its rendered nodes.
+## Canonical editable source for a one orthogonal room, not its rendered nodes.
 
 @export var stable_id: String = "room_01"
+@export_group("Footprint")
+@export var shape: RoomFootprint.Shape = RoomFootprint.Shape.RECTANGLE
+@export_range(0, 3, 1) var shape_rotation: int = 0
 @export var room_size: Vector3 = Vector3(8.0, 3.5, 8.0)
 @export_range(0.05, 2.0, 0.01, "or_greater") var wall_thickness: float = 0.2
 @export_range(0.05, 2.0, 0.01, "or_greater") var floor_thickness: float = 0.2

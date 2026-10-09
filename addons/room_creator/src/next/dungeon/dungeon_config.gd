@@ -11,6 +11,12 @@ extends Resource
 @export_range(0, 300, 1) var loop_count: int = 0
 @export_range(1, 32, 1) var max_attempts: int = 12
 @export_range(100, 30000, 100) var search_budget_per_attempt: int = 4000
+@export_group("Room silhouettes")
+## Set a weight to zero to exclude that shape. Rectangle-only preserves older scenes.
+@export_range(0, 100, 1) var rectangle_weight: int = 10
+@export_range(0, 100, 1) var cross_weight: int = 0
+@export_range(0, 100, 1) var l_shape_weight: int = 0
+@export_range(0, 100, 1) var t_shape_weight: int = 0
 @export_group("Shared room geometry")
 @export var room_size: Vector3 = Vector3(8.0, 3.5, 8.0)
 @export_range(0.05, 1.0, 0.01) var wall_thickness: float = 0.2

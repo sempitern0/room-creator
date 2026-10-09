@@ -38,7 +38,7 @@ func fingerprint() -> String:
 	parts.append("materials:%s|%s|%s" % [wall_material.resource_path if wall_material != null else "", floor_material.resource_path if floor_material != null else "", ceiling_material.resource_path if ceiling_material != null else ""])
 	parts.append("rooms:%d edges:%d" % [rooms.size(), connections.size()])
 	for room in rooms:
-		parts.append("%s:%d,%d:%d:%.4f,%.4f,%.4f" % [room.stable_id, room.cell.x, room.cell.y, room.role, room.world_transform.origin.x, room.world_transform.origin.y, room.world_transform.origin.z])
+		parts.append("%s:%d,%d:%d:%.4f,%.4f,%.4f:%d,%d" % [room.stable_id, room.cell.x, room.cell.y, room.role, room.world_transform.origin.x, room.world_transform.origin.y, room.world_transform.origin.z, room.shape, room.shape_rotation])
 	for edge in connections:
 		parts.append("%s:%s:%s:%d:%d:%.4f:%.4f" % [edge.stable_id, edge.from_room_id, edge.to_room_id, edge.from_wall, edge.to_wall, edge.clear_width, edge.clear_height])
 	return "|".join(parts).md5_text()

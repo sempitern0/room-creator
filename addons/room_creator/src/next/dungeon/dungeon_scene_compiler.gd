@@ -13,6 +13,9 @@ static func build(layout: LevelLayout, with_collisions: bool = true) -> Node3D:
 	root.set_meta("layout_seed", layout.seed)
 	root.set_meta("entrance_id", layout.entrance_id)
 	root.set_meta("exit_id", layout.exit_id)
+	var by_id: Dictionary = {}
+	for room in layout.rooms:
+		by_id[room.stable_id] = room
 	for room in layout.rooms:
 		var blueprint := DungeonPlanner.make_blueprint(layout, room)
 		var room_root := RoomGeometryBuilder.build(blueprint, with_collisions)
@@ -24,4 +27,10 @@ static func build(layout: LevelLayout, with_collisions: bool = true) -> Node3D:
 		room_root.set_meta("stable_id", room.stable_id)
 		room_root.set_meta("role", room.role)
 		root.add_child(room_root)
+	for edge in layout.connections:
+		var a: RoomPlacementData = by_id[edge.from_room_id]
+		var b: RoomPlacementData = by_id[edge.to_room_id]
+		var corridor := DungeonConnectorBuilder.build(layout, edge, a, b, with_collisions)
+		if corridor != null:
+			root.add_child(corridor)
 	return root

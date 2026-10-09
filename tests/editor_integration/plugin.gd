@@ -40,11 +40,16 @@ func _exercise() -> void:
 	if not _check(author.layout.rooms[0].edit_locked and author.get_node_or_null("DungeonPreview").find_children("Locked_*", "Label3D", true, false).size() == 1, "Lock Selected Room must persist a room lock and show it from above."):
 		return
 	var history := EditorInterface.get_editor_undo_redo()
-	history.undo()
+	# EditorUndoRedoManager has no undo()/redo() itself; for graphical CI
+	# inspect its scene-specific UndoRedo resource.
+	var scene_history := history.get_history_undo_redo(history.get_object_history_id(author))
+	if not _check(scene_history != null, "Current authoring scene should have a persistent UndoRedo history."):
+		return
+	scene_history.undo()
 	await get_tree().process_frame
 	if not _check(not author.layout.rooms[0].edit_locked, "Editor Undo must revert the room lock."):
 		return
-	history.redo()
+	scene_history.redo()
 	await get_tree().process_frame
 	if not _check(author.layout.rooms[0].edit_locked, "Editor Redo must restore the protected room without changing the other rooms."):
 		return

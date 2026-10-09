@@ -23,6 +23,11 @@ extends Resource
 @export_range(0.05, 1.0, 0.01) var floor_thickness: float = 0.2
 @export_range(0.05, 1.0, 0.01) var ceiling_thickness: float = 0.2
 @export var include_ceiling: bool = true
+@export_group("Variable room sizes")
+## Rooms stay centered in fixed grid cells; smaller rooms use short connector corridors.
+@export var vary_room_sizes: bool = false
+@export_range(0.5, 1.0, 0.05) var min_room_scale: float = 0.80
+@export_range(0.5, 1.0, 0.05) var max_room_scale: float = 1.00
 @export_group("Opening and player clearance")
 @export_range(0.5, 5.0, 0.05) var door_width: float = 1.6
 @export_range(0.5, 6.0, 0.05) var door_height: float = 2.3

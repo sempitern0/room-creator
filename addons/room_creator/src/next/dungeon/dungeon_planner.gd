@@ -43,6 +43,7 @@ static func generate_layout(config: DungeonConfig) -> DungeonBuildResult:
 			continue
 		if not _assign_room_shapes(config, layout, rng):
 			continue
+		_assign_room_sizes(config, layout, rng)
 		var report := validate_layout(layout)
 		if report.is_valid():
 			result.success = true
@@ -90,6 +91,13 @@ static func validate_config(config: DungeonConfig) -> RoomValidationReport:
 			report.add_error("PLAYER_HEIGHT", "Door must clear the standing player height.")
 	if config.floor_thickness <= 0.0 or config.ceiling_thickness <= 0.0:
 		report.add_error("SURFACE_THICKNESS", "Floor and ceiling thickness must be positive.")
+	if config.vary_room_sizes:
+		if not is_finite(config.min_room_scale) or not is_finite(config.max_room_scale) or config.min_room_scale < 0.5 or config.max_room_scale > 1.0 or config.max_room_scale < config.min_room_scale:
+			report.add_error("ROOM_SCALE", "Variable room scales must be between 0.5 and 1.0 and form an ordered range.")
+		elif config.door_width + 2.0 * config.wall_thickness > minf(config.room_size.x, config.room_size.z) * config.min_room_scale / 3.0 - 0.001 and config.cross_weight + config.l_shape_weight + config.t_shape_weight > 0:
+			report.add_error("VARIABLE_DOOR_FIT", "The smallest nonrectangular room must fit the player doorway on its boundary tile.")
+		elif config.door_width + 2.0 * config.wall_thickness > minf(config.room_size.x, config.room_size.z) * config.min_room_scale - 0.001:
+			report.add_error("VARIABLE_DOOR_FIT", "The smallest room must fit the door width.")
 	if config.rectangle_weight < 0 or config.cross_weight < 0 or config.l_shape_weight < 0 or config.t_shape_weight < 0:
 		report.add_error("SHAPE_WEIGHT", "Room shape weights must be nonnegative.")
 	if config.rectangle_weight + config.cross_weight + config.l_shape_weight + config.t_shape_weight <= 0:
@@ -292,6 +300,20 @@ static func _assign_room_shapes(config: DungeonConfig, layout: LevelLayout, rng:
 	return true
 
 
+static func _assign_room_sizes(config: DungeonConfig, layout: LevelLayout, rng: RandomNumberGenerator) -> void:
+	for room in layout.rooms:
+		if not config.vary_room_sizes:
+			room.room_size = Vector3.ZERO
+			continue
+		var a: float = snappedf(rng.randf_range(config.min_room_scale, config.max_room_scale), 0.05)
+		var b: float = snappedf(rng.randf_range(config.min_room_scale, config.max_room_scale), 0.05)
+		room.room_size = Vector3(config.room_size.x * clampf(a, config.min_room_scale, config.max_room_scale), config.room_size.y, config.room_size.z * clampf(b, config.min_room_scale, config.max_room_scale))
+
+
+static func actual_size(layout: LevelLayout, room: RoomPlacementData) -> Vector3:
+	return layout.room_size if room.room_size == Vector3.ZERO else room.room_size
+
+
 static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 	var report := RoomValidationReport.new()
 	if layout == null:
@@ -324,6 +346,17 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 			report.add_error("ROOM_TRANSFORM", "Room transform disagrees with the grid footprint: %s" % room.stable_id)
 		if not RoomFootprint.is_valid_shape(int(room.shape)) or room.shape_rotation < 0 or room.shape_rotation > 3:
 			report.add_error("ROOM_SHAPE", "Invalid shape or rotation in %s." % room.stable_id)
+		var size: Vector3 = actual_size(layout, room)
+		if not size.is_finite() or size.x < layout.room_size.x * 0.5 or size.x > layout.room_size.x + 0.0001 or absf(size.y - layout.room_size.y) > 0.0001 or size.z < layout.room_size.z * 0.5 or size.z > layout.room_size.z + 0.0001:
+			report.add_error("ROOM_EXTENT", "Room footprint is invalid or larger than its grid cell: %s" % room.stable_id)
+		for other in layout.rooms:
+			if other == room or other == null:
+				continue
+			var other_size: Vector3 = actual_size(layout, other)
+			var overlap_x: bool = absf(room.world_transform.origin.x - other.world_transform.origin.x) < (size.x + other_size.x) * 0.5 - 0.0001
+			var overlap_z: bool = absf(room.world_transform.origin.z - other.world_transform.origin.z) < (size.z + other_size.z) * 0.5 - 0.0001
+			if overlap_x and overlap_z:
+				report.add_error("ROOM_OVERLAP", "Room footprints overlap: %s and %s" % [room.stable_id, other.stable_id])
 		by_id[room.stable_id] = room
 		by_cell[room.cell] = room
 		adjacency[room.stable_id] = PackedStringArray()
@@ -415,7 +448,7 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 static func make_blueprint(layout: LevelLayout, room: RoomPlacementData) -> RoomBlueprint:
 	var blueprint := RoomBlueprint.new()
 	blueprint.stable_id = room.stable_id
-	blueprint.room_size = layout.room_size
+	blueprint.room_size = actual_size(layout, room)
 	blueprint.shape = room.shape
 	blueprint.shape_rotation = room.shape_rotation
 	blueprint.wall_thickness = layout.wall_thickness

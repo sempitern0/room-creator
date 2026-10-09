@@ -7,6 +7,8 @@ enum Role { ENTRANCE, MAIN, EXIT, BRANCH }
 
 @export var stable_id: String = ""
 @export var cell: Vector2i = Vector2i.ZERO
+## Optional actual geometry extent; ZERO preserves pre-1.5 layouts.
+@export var room_size: Vector3 = Vector3.ZERO
 @export var world_transform: Transform3D = Transform3D.IDENTITY
 @export var role: Role = Role.MAIN
 ## Exterior doorway is independent from the internal room-connection graph.

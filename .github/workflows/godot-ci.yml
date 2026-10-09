@@ -23,6 +23,21 @@ jobs:
           set -o pipefail
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --quit 2>&1 | tee import.log
           if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script' import.log; then exit 1; fi
+      - name: Verify addon-only installation in a clean Godot project
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p /tmp/room-creator-clean/addons
+          cp -a addons/ninetailsrabbit.room_creator /tmp/room-creator-clean/addons/
+          cat > /tmp/room-creator-clean/project.godot <<'EOF'
+          config_version=5
+          [application]
+          config/name="Room Creator Clean Install"
+          [editor_plugins]
+          enabled=PackedStringArray("res://addons/ninetailsrabbit.room_creator/plugin.cfg")
+          EOF
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path /tmp/room-creator-clean --editor --quit 2>&1 | tee clean-install.log
+          if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script' clean-install.log; then exit 1; fi
       - name: Test geometry, validation, preservation, and export round-trip
         shell: bash
         run: |

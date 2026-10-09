@@ -1,0 +1,24 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://addons/ninetailsrabbit.room_creator/src/next/room_authoring_3d.gd" id="1_author"]
+[ext_resource type="Script" path="res://addons/ninetailsrabbit.room_creator/src/next/room_blueprint.gd" id="2_blueprint"]
+[ext_resource type="Script" path="res://addons/ninetailsrabbit.room_creator/src/next/room_opening.gd" id="3_opening"]
+
+[sub_resource type="Resource" id="Opening_front"]
+script = ExtResource("3_opening")
+stable_id = "entrance"
+wall = 0
+kind = 0
+width = 1.6
+height = 2.3
+
+[sub_resource type="Resource" id="Blueprint_main"]
+script = ExtResource("2_blueprint")
+stable_id = "demo_single_room"
+room_size = Vector3(8, 3.5, 8)
+openings = Array[ExtResource("3_opening")]([SubResource("Opening_front")])
+
+[node name="RoomAuthoring3D" type="Node3D"]
+script = ExtResource("1_author")
+blueprint = SubResource("Blueprint_main")
+output_scene_path = "res://room_creator/rooms/demo_single_room.tscn"

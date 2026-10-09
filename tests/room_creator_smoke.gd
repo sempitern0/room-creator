@@ -46,6 +46,13 @@ func _run() -> void:
 		if absf(mesh.position.y - 1.1) < 1.1 and absf(mesh.position.x - 2.0) < 0.65:
 			if not _check(false, "Front wall geometry obstructs the second door."):
 				return
+	var demo := load("res://examples/single_room_door.tscn") as PackedScene
+	if not _check(demo != null, "Bundled manual-room example must load."):
+		return
+	var demo_root := demo.instantiate() as RoomAuthoring3D
+	if not _check(demo_root != null and demo_root.blueprint != null and RoomGeometryBuilder.validate(demo_root.blueprint).is_valid(), "Example must have a valid editable blueprint."):
+		return
+	demo_root.free()
 	var authored := RoomAuthoring3D.new()
 	authored.blueprint = source
 	var untouched := Node3D.new()

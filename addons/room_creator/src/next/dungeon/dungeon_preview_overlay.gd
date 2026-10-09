@@ -47,7 +47,7 @@ static func apply(preview: Node3D, layout: LevelLayout, palette: DungeonPreviewP
 	if draw_labels:
 		for room in layout.rooms:
 			if room.role == RoomPlacementData.Role.ENTRANCE or room.role == RoomPlacementData.Role.EXIT:
-				_add_label(group, room, layout.room_size.y + (layout.ceiling_thickness if layout.include_ceiling else 0.0), colors)
+				_add_label(group, room, layout, colors)
 
 
 static func classify_edges(layout: LevelLayout) -> Dictionary:
@@ -139,7 +139,7 @@ static func _add_route(parent_node: Node3D, edge_id: String, a: Vector3, b: Vect
 	parent_node.add_child(visual)
 
 
-static func _add_label(parent_node: Node3D, room: RoomPlacementData, height: float, palette: DungeonPreviewPalette) -> void:
+static func _add_label(parent_node: Node3D, room: RoomPlacementData, layout: LevelLayout, palette: DungeonPreviewPalette) -> void:
 	var marker := Label3D.new()
 	var is_entry: bool = room.role == RoomPlacementData.Role.ENTRANCE
 	marker.name = "RoleLabel_Entrance" if is_entry else "RoleLabel_Exit"
@@ -149,6 +149,19 @@ static func _add_label(parent_node: Node3D, room: RoomPlacementData, height: flo
 	marker.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	marker.no_depth_test = true
 	marker.modulate = palette.entrance if is_entry else palette.exit
-	marker.position = room.world_transform.origin + Vector3.UP * (height + 0.7)
+	var anchor: Vector3 = room.world_transform.origin
+	if room.exterior_wall >= 0:
+		var half_size: Vector3 = DungeonPlanner.actual_size(layout, room) * 0.5
+		match room.exterior_wall:
+			RoomOpening.Wall.FRONT:
+				anchor.z -= half_size.z
+			RoomOpening.Wall.BACK:
+				anchor.z += half_size.z
+			RoomOpening.Wall.LEFT:
+				anchor.x -= half_size.x
+			RoomOpening.Wall.RIGHT:
+				anchor.x += half_size.x
+	var top: float = layout.room_size.y + (layout.ceiling_thickness if layout.include_ceiling else 0.0)
+	marker.position = anchor + Vector3.UP * (top + 0.7)
 	marker.set_meta("room_id", room.stable_id)
 	parent_node.add_child(marker)

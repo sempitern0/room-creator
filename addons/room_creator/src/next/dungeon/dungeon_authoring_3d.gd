@@ -17,6 +17,11 @@ const GENERATED_META := "room_creator_generated"
 ## Enable to inspect every new layout immediately. Disable for very large drafts.
 @export var auto_preview_on_generate: bool = true
 @export var layout: LevelLayout
+@export_group("Preview Diagnostics")
+@export var preview_palette: DungeonPreviewPalette = DungeonPreviewPalette.new()
+@export var show_room_role_colors: bool = true
+@export var show_connection_routes: bool = true
+@export var show_entrance_exit_labels: bool = true
 @export_file("*.tscn") var output_scene_path: String = "res://room_creator/dungeons/dungeon.tscn"
 @export_tool_button("Generate Layout") var generate_action: Callable = generate_new_layout
 @export_tool_button("Validate Layout") var validate_action: Callable = validate_current_layout
@@ -50,7 +55,7 @@ func generate_new_layout() -> void:
 		return
 	var preview_snapshot: PackedScene = null
 	if auto_preview_on_generate:
-		var geometry := DungeonSceneCompiler.build(result.layout, false)
+		var geometry := _build_diagnostic_preview(result.layout)
 		if geometry == null:
 			result.success = false
 			result.report.add_error("PREVIEW_COMPILE", "Unable to compile the generated layout.")
@@ -107,10 +112,20 @@ func get_last_report() -> RoomValidationReport:
 	return last_report
 
 
+func _build_diagnostic_preview(source: LevelLayout) -> Node3D:
+	var geometry := DungeonSceneCompiler.build(source, false)
+	if geometry != null and (show_room_role_colors or show_connection_routes or show_entrance_exit_labels):
+		DungeonPreviewOverlay.apply(
+			geometry, source, preview_palette,
+			show_room_role_colors, show_connection_routes, show_entrance_exit_labels
+		)
+	return geometry
+
+
 func preview_layout() -> void:
 	if not validate_current_layout().is_valid():
 		return
-	_commit_generated_action(PREVIEW_NAME, DungeonSceneCompiler.build(layout, false), "Preview Dungeon")
+	_commit_generated_action(PREVIEW_NAME, _build_diagnostic_preview(layout), "Preview Dungeon")
 
 
 func bake() -> void:

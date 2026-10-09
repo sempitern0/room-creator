@@ -1,0 +1,187 @@
+@tool
+class_name DungeonStructuralPrefab
+extends Resource
+## F2.7: a complete, engine-native room shell with its OWN primitive physics.
+## Unlike DungeonRoomModule, this replaces the procedural room geometry.
+## Supported placement: unscaled room, grid-cardinal quarter-turn rotations.
+## Every authored exterior hole MUST have exactly one normalized socket.
+
+@export var stable_id: String = "structural_room"
+@export_range(1, 100, 1) var weight: int = 10
+@export var authored_size: Vector3 = Vector3(8.0, 3.5, 8.0)
+@export_range(0.5, 5.0, 0.05) var doorway_width: float = 1.6
+@export_range(0.5, 6.0, 0.05) var doorway_height: float = 2.3
+@export var packed_room: PackedScene
+
+const WALL_SIDES: Array[int] = [
+	RoomOpening.Wall.FRONT, RoomOpening.Wall.RIGHT,
+	RoomOpening.Wall.BACK, RoomOpening.Wall.LEFT
+]
+const SOCKET_NAMES: Array[String] = [
+	"SocketFront", "SocketRight", "SocketBack", "SocketLeft"
+]
+const EPS: float = 0.005
+
+func validate() -> RoomValidationReport:
+	var report := RoomValidationReport.new()
+	if stable_id.is_empty() or weight < 1 or weight > 100:
+		report.add_error("PREFAB_PROFILE", "Structural prefab ID and positive bounded weight are required.")
+	if not authored_size.is_finite() or authored_size.x <= 1.0 or authored_size.y <= 1.0 or authored_size.z <= 1.0:
+		report.add_error("PREFAB_SIZE", "Structural prefab requires positive, finite authored dimensions.")
+		return report
+	if not is_finite(doorway_width) or not is_finite(doorway_height) or doorway_width <= 0.0 or doorway_height <= 0.0 or doorway_height >= authored_size.y or doorway_width >= minf(authored_size.x, authored_size.z):
+		report.add_error("PREFAB_DOOR", "Invalid authored doorway clearance.")
+		return report
+	if packed_room == null:
+		report.add_error("PREFAB_MISSING", "Assign a structural PackedScene.")
+		return report
+	_inspect(report)
+	return report
+
+
+func compatible_rotations(required_walls: Array[int], actual_size: Vector3, width: float, height: float) -> Array[int]:
+	var rotations: Array[int] = []
+	if packed_room == null or absf(width - doorway_width) > EPS or absf(height - doorway_height) > EPS:
+		return rotations
+	var report := validate()
+	if not report.is_valid():
+		return rotations
+	var sockets := _read_sockets(packed_room.get_state(), null)
+	if sockets.size() != required_walls.size():
+		return rotations
+	for turns in 4:
+		var rotated_size := Vector3(authored_size.z, authored_size.y, authored_size.x) if turns % 2 == 1 else authored_size
+		if rotated_size.distance_to(actual_size) > EPS:
+			continue
+		var valid := true
+		for authored_side in sockets.keys():
+			var destination: int = DungeonRoomModule.rotated_wall(int(authored_side), turns)
+			if not required_walls.has(destination):
+				valid = false
+				break
+		if valid:
+			rotations.append(turns)
+	return rotations
+
+
+func _inspect(report: RoomValidationReport) -> void:
+	var state := packed_room.get_state()
+	if state == null or state.get_node_count() < 4:
+		report.add_error("PREFAB_EMPTY", "Expected a Node3D root, sockets, visual meshes and static collision.")
+		return
+	var root_type: StringName = state.get_node_type(0)
+	if root_type != &"Node3D":
+		report.add_error("PREFAB_ROOT", "Structural prefab root must be a Node3D.")
+	var sockets := _read_sockets(state, report)
+	if sockets.is_empty():
+		report.add_error("PREFAB_SOCKETS", "Add at least one valid, direct child Marker3D socket.")
+	var physics_bodies: Dictionary = {}
+	var has_mesh := false
+	var has_box := false
+	for i in state.get_node_count():
+		var kind: StringName = state.get_node_type(i)
+		var node_path: String = str(state.get_node_path(i))
+		if kind == &"MeshInstance3D":
+			has_mesh = true
+		if kind == &"StaticBody3D":
+			if node_path.contains("/"):
+				report.add_error("PREFAB_BODY_PARENT", "StaticBody3D must be a direct child of the prefab root.")
+			physics_bodies[str(state.get_node_name(i))] = true
+		elif kind == &"CollisionShape3D":
+			var parent_path: String = node_path.get_base_dir().trim_prefix("./")
+			if not physics_bodies.has(parent_path):
+				report.add_error("PREFAB_COLLISION_PARENT", "CollisionShape3D must be under a direct StaticBody3D.")
+			var box: BoxShape3D = null
+			var transform := Transform3D.IDENTITY
+			for j in state.get_node_property_count(i):
+				var prop := state.get_node_property_name(i, j)
+				if prop == &"shape":
+					box = state.get_node_property_value(i, j) as BoxShape3D
+				elif prop == &"transform":
+					transform = state.get_node_property_value(i, j)
+			if box == null or not transform.basis.is_equal_approx(Basis.IDENTITY):
+				report.add_error("PREFAB_PRIMITIVE", "Only axis-aligned BoxShape3D colliders are currently supported.")
+				continue
+			has_box = true
+			if box.size.x <= 0.0 or box.size.y <= 0.0 or box.size.z <= 0.0:
+				report.add_error("PREFAB_BOX_SIZE", "All collision boxes must have positive dimensions.")
+			_check_box_clearance(box, transform.origin, sockets, report)
+		elif kind != &"Node3D" and kind != &"Marker3D" and kind != &"MeshInstance3D" and kind != &"StaticBody3D":
+			report.add_error("PREFAB_NODE_TYPE", "Unsupported structural prefab node type: %s." % kind)
+		for j in state.get_node_property_count(i):
+			if state.get_node_property_name(i, j) == &"script" and state.get_node_property_value(i, j) != null:
+				report.add_error("PREFAB_SCRIPT", "Structural prefab scenes must be script-free.")
+	if not has_mesh or not has_box:
+		report.add_error("PREFAB_GEOMETRY", "Room must provide visual mesh and real BoxShape3D physics.")
+
+
+func _read_sockets(state: SceneState, report: RoomValidationReport) -> Dictionary:
+	var sockets: Dictionary = {}
+	for i in range(1, state.get_node_count()):
+		var name: String = str(state.get_node_name(i))
+		if not name.begins_with("Socket"):
+			continue
+		var index := SOCKET_NAMES.find(name)
+		if state.get_node_type(i) != &"Marker3D" or index < 0 or not ["./" + name, name].has(str(state.get_node_path(i))):
+			if report != null:
+				report.add_error("PREFAB_SOCKET_NODE", "Sockets must be direct Marker3D nodes with recognized cardinal names.")
+			continue
+		var transform := Transform3D.IDENTITY
+		for j in state.get_node_property_count(i):
+			if state.get_node_property_name(i, j) == &"transform":
+				transform = state.get_node_property_value(i, j)
+		var side: int = WALL_SIDES[index]
+		var expected := _expected_position(side)
+		var outward := _normal(side)
+		if transform.origin.distance_to(expected) > EPS or (transform.basis * Vector3.FORWARD).distance_to(outward) > EPS:
+			if report != null:
+				report.add_error("PREFAB_SOCKET_POSE", "%s position and outward orientation must match the boundary socket contract." % name)
+			continue
+		if sockets.has(side) and report != null:
+			report.add_error("PREFAB_SOCKET_DUPLICATE", "Duplicate socket side %s." % name)
+		sockets[side] = transform
+	return sockets
+
+
+func _expected_position(wall: int) -> Vector3:
+	match wall:
+		RoomOpening.Wall.FRONT:
+			return Vector3(0.0, 0.0, -authored_size.z * 0.5)
+		RoomOpening.Wall.BACK:
+			return Vector3(0.0, 0.0, authored_size.z * 0.5)
+		RoomOpening.Wall.LEFT:
+			return Vector3(-authored_size.x * 0.5, 0.0, 0.0)
+	return Vector3(authored_size.x * 0.5, 0.0, 0.0)
+
+
+static func _normal(wall: int) -> Vector3:
+	match wall:
+		RoomOpening.Wall.FRONT:
+			return Vector3.FORWARD
+		RoomOpening.Wall.BACK:
+			return Vector3.BACK
+		RoomOpening.Wall.LEFT:
+			return Vector3.LEFT
+	return Vector3.RIGHT
+
+
+func _check_box_clearance(box: BoxShape3D, center: Vector3, sockets: Dictionary, report: RoomValidationReport) -> void:
+	var half: Vector3 = box.size * 0.5
+	if not center.is_finite() or not box.size.is_finite() or absf(center.x) + half.x > authored_size.x * 0.5 + EPS or absf(center.z) + half.z > authored_size.z * 0.5 + EPS:
+		report.add_error("PREFAB_COLLIDER_BOUNDS", "Collision boxes must stay inside the authored room footprint.")
+		return
+	# A capsule-height corridor from the room center to every required socket
+	# must remain clear of the authored physics boxes, not just the door face.
+	var radius: float = doorway_width * 0.5 - EPS
+	var bottom: float = 0.0
+	var top: float = doorway_height - EPS
+	for side in sockets.keys():
+		var start := Vector3.ZERO
+		var finish := _expected_position(int(side))
+		var sweep_x: float = maxf(absf(start.x), absf(finish.x)) + radius if int(side) == RoomOpening.Wall.LEFT or int(side) == RoomOpening.Wall.RIGHT else radius
+		var sweep_z: float = maxf(absf(start.z), absf(finish.z)) + radius if int(side) == RoomOpening.Wall.FRONT or int(side) == RoomOpening.Wall.BACK else radius
+		var intersects_horizontal: bool = absf(center.x) < sweep_x + half.x - EPS and absf(center.z) < sweep_z + half.z - EPS
+		var intersects_height: bool = center.y + half.y > bottom + EPS and center.y - half.y < top - EPS
+		if intersects_horizontal and intersects_height:
+			report.add_error("PREFAB_WALKWAY_BLOCKED", "Authored collision box intrudes into a doorway's walkable center route.")
+			return

@@ -4,7 +4,7 @@ extends Resource
 ## F2.7: a complete, engine-native room shell with its OWN primitive physics.
 ## Unlike DungeonRoomModule, this replaces the procedural room geometry.
 ## Supported placement: unscaled room, grid-cardinal quarter-turn rotations.
-## Every authored exterior hole MUST have exactly one normalized socket.
+## Every authored exterior hole MUST have exactly one meter-space wall socket.
 
 @export var stable_id: String = "structural_room"
 @export_range(1, 100, 1) var weight: int = 10
@@ -62,6 +62,21 @@ func compatible_rotations(required_walls: Array[int], actual_size: Vector3, widt
 		if valid:
 			rotations.append(turns)
 	return rotations
+
+
+## Signed lateral offset in the destination room's wall coordinates after
+## a cardinal quarter turn. Reads the immutable SceneState (no instantiation).
+func rotated_socket_offset(world_wall: int, turns: int) -> float:
+	if packed_room == null:
+		return 0.0
+	var authored_index: int = posmod(WALL_SIDES.find(world_wall) - turns, 4)
+	var source_wall: int = WALL_SIDES[authored_index]
+	var sockets: Dictionary = _read_sockets(packed_room.get_state(), null)
+	if not sockets.has(source_wall):
+		return 0.0
+	var transform: Transform3D = sockets[source_wall]
+	var rotated: Vector3 = Basis(Vector3.UP, -float(turns) * PI * 0.5) * transform.origin
+	return rotated.x if world_wall == RoomOpening.Wall.FRONT or world_wall == RoomOpening.Wall.BACK else rotated.z
 
 
 func _inspect(report: RoomValidationReport) -> void:
@@ -159,9 +174,15 @@ func _read_sockets(state: SceneState, report: RoomValidationReport) -> Dictionar
 		var side: int = WALL_SIDES[index]
 		var expected := _expected_position(side)
 		var outward := _normal(side)
-		if transform.origin.distance_to(expected) > EPS or (transform.basis * Vector3.FORWARD).distance_to(outward) > EPS:
+		var lateral: float = transform.origin.x if side == RoomOpening.Wall.FRONT or side == RoomOpening.Wall.BACK else transform.origin.z
+		var wall_width: float = authored_size.x if side == RoomOpening.Wall.FRONT or side == RoomOpening.Wall.BACK else authored_size.z
+		# Door opening must remain inside the face after a conservative 0.2 m
+		# wall-end margin. Vertical position stays anchored to the floor.
+		var limit: float = wall_width * 0.5 - doorway_width * 0.5 - 0.2
+		var off_axis: float = transform.origin.z - expected.z if side == RoomOpening.Wall.FRONT or side == RoomOpening.Wall.BACK else transform.origin.x - expected.x
+		if absf(off_axis) > EPS or absf(transform.origin.y) > EPS or not is_finite(lateral) or absf(lateral) > limit + EPS or (transform.basis * Vector3.FORWARD).distance_to(outward) > EPS:
 			if report != null:
-				report.add_error("PREFAB_SOCKET_POSE", "%s position and outward orientation must match the boundary socket contract." % name)
+				report.add_error("PREFAB_SOCKET_POSE", "%s must face outwards, remain on its wall face and leave room for a full-width door." % name)
 			continue
 		if sockets.has(side) and report != null:
 			report.add_error("PREFAB_SOCKET_DUPLICATE", "Duplicate socket side %s." % name)
@@ -203,13 +224,22 @@ func _check_box_clearance(box: BoxShape3D, center: Vector3, sockets: Dictionary,
 	var top: float = doorway_height - EPS
 	for side in sockets.keys():
 		var start := Vector3.ZERO
-		var finish := _expected_position(int(side))
-		var min_x: float = minf(start.x, finish.x) - radius
-		var max_x: float = maxf(start.x, finish.x) + radius
-		var min_z: float = minf(start.z, finish.z) - radius
-		var max_z: float = maxf(start.z, finish.z) + radius
-		var intersects_horizontal: bool = center.x + half.x > min_x + EPS and center.x - half.x < max_x - EPS and center.z + half.z > min_z + EPS and center.z - half.z < max_z - EPS
+		var target: Transform3D = sockets[side]
+		var finish: Vector3 = target.origin
+		# A dogleg within the room reaches the lateral offset before
+		# advancing toward the relevant face. This is a constructive,
+		# conservative axis-aligned capsule-clearance contract.
+		var elbow: Vector3 = Vector3(finish.x, 0.0, 0.0) if int(side) == RoomOpening.Wall.FRONT or int(side) == RoomOpening.Wall.BACK else Vector3(0.0, 0.0, finish.z)
 		var intersects_height: bool = center.y + half.y > bottom + EPS and center.y - half.y < top - EPS
-		if intersects_horizontal and intersects_height:
-			report.add_error("PREFAB_WALKWAY_BLOCKED", "Authored collision box intrudes into a doorway's walkable center route.")
-			return
+		if not intersects_height:
+			continue
+		for segment in [[start, elbow], [elbow, finish]]:
+			var p0: Vector3 = segment[0]
+			var p1: Vector3 = segment[1]
+			var min_x: float = minf(p0.x, p1.x) - radius
+			var max_x: float = maxf(p0.x, p1.x) + radius
+			var min_z: float = minf(p0.z, p1.z) - radius
+			var max_z: float = maxf(p0.z, p1.z) + radius
+			if center.x + half.x > min_x + EPS and center.x - half.x < max_x - EPS and center.z + half.z > min_z + EPS and center.z - half.z < max_z - EPS:
+				report.add_error("PREFAB_WALKWAY_BLOCKED", "Authored collision box blocks an interior path to a socket.")
+				return

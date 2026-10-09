@@ -20,7 +20,7 @@ extends Node3D
 @export_range(0.5, 30.0, 0.25) var max_gap: float = 6.0
 @export_range(1, 64, 1) var attempts: int = 12
 @export_range(0.8, 5.0, 0.1) var bridge_width: float = 1.6
-@export_file("*.tscn") var export_path: String = "res://room_creator/dungeons/yaw_pair.tscn"
+@export_file("*.tscn") var export_path: String = "res://yaw_pair_export.tscn"
 
 @export_tool_button("Preview Socket Pair") var preview_button: Callable = _request_preview
 @export_tool_button("Bake Physical Pair") var bake_button: Callable = _request_bake

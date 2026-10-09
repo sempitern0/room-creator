@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.10.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.11.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -63,6 +63,26 @@ Manual `RoomBlueprint` authoring also exposes `shape` and `shape_rotation`, and 
 
 This is **not** yet arbitrary collision-bearing prefab replacement, free-form rotated spatial packing, multilevel routing, navigation-mesh baking, or partial room-lock regeneration. New hand-authored room prefabs can be added later without changing the graph contract.
 
+## F2.8.2 — Arbitrary-yaw socket docking, OBB SAT and experimental editor laboratory
+
+This version introduces the **first physically tested arbitrary-yaw docking kernel**, without making unsupported changes to the production cardinal dungeon graph.
+
+### Test in the Godot editor
+
+Open **[examples/yaw_socket_pair_lab.tscn](examples/yaw_socket_pair_lab.tscn)** and select its `YawSocketPairLab3D` root. This is a *dedicated two-room spatial laboratory*, **not a second copy of `dungeon_authoring.tscn`**.
+
+- Set `first_yaw_degrees` to any angle (example **27°**) and adjust the seeded gap range / attempt limit; optionally assign `first_room_scene` and `second_room_scene` (`PackedScene` with actual direct `Marker3D` socket names and correctly authored door holes). Unassigned scenes use existing F1 procedural rooms.
+- Click **Preview Socket Pair**. The solver uses the first room socket's outward direction (local **-Z**), opposes the second socket's direction, and chooses a deterministic collision-free gap. An angled authored socket can induce a **different relative yaw** between the two rooms.
+- Click **Bake Physical Pair** for real room and connector `StaticBody3D` / `BoxShape3D` physics, then **Save Physical Pair** to export a standalone scene (default `res://yaw_pair_export.tscn`). **Clear Pair** removes transient geometry; ordinary Ctrl+S on the laboratory scene never writes generated meshes into the authoring source.
+
+### Exact implementation and safety scope
+
+`DungeonOrientedBounds` uses a four-axis **separating-axis theorem (SAT)** OBB test in X/Z. The existing production `DungeonPlanner` and `DungeonRoomOffsetSolver` now use this common test for room and unrelated corridor footprints, replacing axis-only overlap checks. Backward-compatible layouts without yaw still produce the same placements.
+
+`DungeonYawDockingSolver` computes a rigid transform for the second prefab by matching the complete **world-space socket transform**, including orientation; it uses a seeded, bounded gap search with obstacle OBB checks, and rejects overlapping candidates. `DungeonYawSocketBridge` compiles a real arbitrarily oriented **straight** floor, roof and side walls with primitive collision. Tests cover **80 deterministic angle cases**, relative yaw from an angled socket, blocked-pose rejection, actual **27° capsule movement** through both rooms and the bridge, portable PackedScene export, and real graphical-editor Inspector buttons.
+
+**This is a limited F2.8.2 step, not finished unrestricted 3D packing.** The laboratory docks *two compatible, opposite-facing sockets along a straight gap*. It does not yet route general multi-leg angled corridors, insert freely rotated rooms into the existing multiroom `LevelLayout` graph, perform deep room-by-room 3D backtracking, or certify arbitrary user-authored meshes/diagonal door cuts. Production `dungeon_authoring.tscn` remains the **proven cardinal graph generator**. Extend the laboratory's socket/OBB and physics contract into that graph in the next phase before offering its yaw control there.
+
 ## F2.8 — Asymmetric room sockets (first spatial-packing extension)
 
 Full, collision-bearing room prefabs can now have doors **offset from the wall center**. Each connection stores independent `from_offset` and `to_offset` metrics; entrance/exit rooms also store `exterior_offset`. These values are **serialized, fingerprinted, deterministic and independently validated**. Unlike visual-only `DungeonRoomModule` assets, these offsets describe genuine physical cutouts in the full `DungeonStructuralPrefab` shell.
@@ -80,7 +100,7 @@ The [example structural prefab](examples/dungeon_structural_offset_straight.tscn
 
 The profile validator also checks interior walkable routes from the room center to each offset opening against authored `BoxShape3D` colliders. A broken socket position or stale physical wall cutout prevents accepting that prefab.
 
-**Limitations:** asymmetric door offsets **do not mean arbitrary room yaw**. The rooms still have axis-aligned rectangular bounding footprints and rotate in 90° increments; corridors remain orthogonal three-leg doglegs with enough clearance to turn. Presets without dogleg routing automatically fall back to procedural rooms whenever a displaced socket cannot make a straight, coaxial connection. Truly free-angle sockets, rotated OBB packing, unconstrained 3D placement, curved tunnels, rotated collision boxes and multilevel rooms are still future work. This distinction is intentional to preserve physical passability.
+**Limitations:** asymmetric door offsets **do not mean arbitrary room yaw**. The rooms still have axis-aligned rectangular bounding footprints and rotate in 90° increments; corridors remain orthogonal three-leg doglegs with enough clearance to turn. Presets without dogleg routing automatically fall back to procedural rooms whenever a displaced socket cannot make a straight, coaxial connection. An experimental two-room free-yaw SAT docking laboratory is available in F2.8.2, but generalized yaw-aware multiroom packing, curved tunnels and multilevel rooms are still future work. This distinction is intentional to preserve physical passability.
 
 ## F2.7 — Full collision-bearing room prefabs and oriented sockets
 
@@ -201,7 +221,7 @@ Author module scenes in **normalized coordinates**: X/Z in -0.5…+0.5 and Y in 
 
 The generator selects modules deterministically **only when their markers, shape and rotation match all required wall connections**, including outside doors. Modules must be **script-free and collision-free**: they provide visual detail inside a procedurally validated, walkable room shell. Module instances are scaled to the chosen room dimensions, and sockets align with the actual procedural door markers. The exported `.tscn` contains engine-native geometry and the selected art scene dependencies.
 
-**Still future work:** arbitrary yaw or non-cardinal angled sockets, fully unbounded spatial placement with rotated OBB and backtracking, non-box collision-bearing prefabs, multilevel dungeons and automatic navigation meshes. F2.7 supports collision-bearing **rectangular** replacement shells with exact cardinal sockets, alongside visual-only art modules.
+**Still future work:** integrating non-cardinal socket poses into the complete graph generator, deep multiroom OBB backtracking, non-box collision-bearing prefabs, multilevel dungeons and automatic navigation meshes. F2.7 supports collision-bearing **rectangular** replacement shells with exact cardinal sockets, alongside visual-only art modules.
 
 ## Create a manual room (F1)
 
@@ -247,6 +267,7 @@ godot --headless --path . --script res://tests/dungeon_offsets_smoke.gd
 godot --headless --path . --script res://tests/dungeon_dogleg_smoke.gd
 godot --headless --path . --script res://tests/dungeon_structural_smoke.gd
 godot --headless --path . --script res://tests/dungeon_offset_socket_smoke.gd
+godot --headless --path . --script res://tests/dungeon_yaw_docking_smoke.gd
 ```
 
 GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset + 36 routed-dogleg + 34 structural-prefab + 35 asymmetric-socket seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.

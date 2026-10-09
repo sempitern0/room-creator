@@ -49,8 +49,8 @@ static func any_locked(layout: LevelLayout) -> bool:
 
 static func toggle_lock(source: LevelLayout, room_id: String, locked: bool) -> DungeonBuildResult:
 	var result := DungeonBuildResult.new()
-	result.report = DungeonPlanner.validate_layout(source)
-	if not result.report.is_valid():
+	if source == null:
+		result.report.add_error("LAYOUT_MISSING", "Generate a dungeon before locking rooms.")
 		return result
 	var target_id := room_id.strip_edges()
 	if target_id.is_empty():
@@ -60,8 +60,13 @@ static func toggle_lock(source: LevelLayout, room_id: String, locked: bool) -> D
 	for room in copy.rooms:
 		if room.stable_id != target_id:
 			continue
+		# Validate the edited layout, not the previous lock state: this
+		# permits Unlock Room to RESOLVE a stale topology-signature conflict.
 		room.edit_locked = locked
 		room.lock_topology_signature = topology_signature(copy, room) if locked else ""
+		result.report = DungeonPlanner.validate_layout(copy)
+		if not result.report.is_valid():
+			return result
 		result.success = true
 		result.layout = copy
 		result.seed = source.seed

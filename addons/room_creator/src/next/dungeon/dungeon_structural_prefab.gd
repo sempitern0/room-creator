@@ -120,14 +120,15 @@ func _inspect(report: RoomValidationReport) -> void:
 					box = state.get_node_property_value(i, j) as BoxShape3D
 				elif prop == &"transform":
 					transform = state.get_node_property_value(i, j)
-			if box == null or not transform.basis.is_equal_approx(Basis.IDENTITY):
-				report.add_error("PREFAB_PRIMITIVE", "Only axis-aligned BoxShape3D colliders are currently supported.")
+			if box == null or not DungeonYawDockingSolver._rigid_yaw(transform):
+				report.add_error("PREFAB_PRIMITIVE", "Static room colliders must be rigid, horizontal-yaw BoxShape3D instances (no scaling, pitch or roll).")
 				continue
 			has_box = true
-			solid_boxes.append({"center": transform.origin, "half": box.size * 0.5})
+			solid_boxes.append({"center": transform.origin, "half": box.size * 0.5,
+				"footprint": DungeonOrientedBounds.rectangle(transform.origin, Vector2(box.size.x, box.size.z), transform.basis)})
 			if box.size.x <= 0.0 or box.size.y <= 0.0 or box.size.z <= 0.0:
 				report.add_error("PREFAB_BOX_SIZE", "All collision boxes must have positive dimensions.")
-			_check_box_clearance(box, transform.origin, sockets, report)
+			_check_box_clearance(box, transform, sockets, report)
 		elif kind != &"Node3D" and kind != &"Marker3D" and kind != &"MeshInstance3D" and kind != &"StaticBody3D":
 			report.add_error("PREFAB_NODE_TYPE", "Unsupported structural prefab node type: %s." % kind)
 		for j in state.get_node_property_count(i):
@@ -148,7 +149,7 @@ func _inspect(report: RoomValidationReport) -> void:
 			for bounds in solid_boxes:
 				var center: Vector3 = bounds["center"]
 				var half: Vector3 = bounds["half"]
-				if absf(probe.x - center.x) <= half.x + EPS and absf(probe.y - center.y) <= half.y + EPS and absf(probe.z - center.z) <= half.z + EPS:
+				if absf(probe.y - center.y) <= half.y + EPS and DungeonOrientedBounds.contains_point(bounds["footprint"], probe):
 					blocked = true
 					break
 			if not blocked:
@@ -212,34 +213,44 @@ static func _normal(wall: int) -> Vector3:
 	return Vector3.RIGHT
 
 
-func _check_box_clearance(box: BoxShape3D, center: Vector3, sockets: Dictionary, report: RoomValidationReport) -> void:
+func _check_box_clearance(box: BoxShape3D, pose: Transform3D, sockets: Dictionary, report: RoomValidationReport) -> void:
+	var center: Vector3 = pose.origin
 	var half: Vector3 = box.size * 0.5
-	if not center.is_finite() or not box.size.is_finite() or absf(center.x) + half.x > authored_size.x * 0.5 + EPS or absf(center.z) + half.z > authored_size.z * 0.5 + EPS:
-		report.add_error("PREFAB_COLLIDER_BOUNDS", "Collision boxes must stay inside the authored room footprint.")
+	if not center.is_finite() or not box.size.is_finite():
+		report.add_error("PREFAB_COLLIDER_BOUNDS", "Collision collider must have finite dimensions.")
 		return
-	# A capsule-height corridor from the room center to every required socket
-	# must remain clear of the authored physics boxes, not just the door face.
+	var footprint: Dictionary = DungeonOrientedBounds.rectangle(center, Vector2(box.size.x, box.size.z), pose.basis)
+	var corner_x: Vector3 = pose.basis.x * half.x
+	var corner_z: Vector3 = pose.basis.z * half.z
+	for sign_x in [-1, 1]:
+		for sign_z in [-1, 1]:
+			var corner: Vector3 = center + float(sign_x) * corner_x + float(sign_z) * corner_z
+			if absf(corner.x) > authored_size.x * 0.5 + EPS or absf(corner.z) > authored_size.z * 0.5 + EPS:
+				report.add_error("PREFAB_COLLIDER_BOUNDS", "The oriented static box must remain inside the authored rectangular room footprint.")
+				return
+	# Conservative capsule clearance along two orthogonal interior legs.
+	# A yaw-rotated physics obstacle is evaluated by SAT (not its AABB).
 	var radius: float = doorway_width * 0.5 - EPS
 	var bottom: float = 0.0
 	var top: float = doorway_height - EPS
+	if center.y + half.y <= bottom + EPS or center.y - half.y >= top - EPS:
+		return
 	for side in sockets.keys():
 		var start := Vector3.ZERO
 		var target: Transform3D = sockets[side]
 		var finish: Vector3 = target.origin
-		# A dogleg within the room reaches the lateral offset before
-		# advancing toward the relevant face. This is a constructive,
-		# conservative axis-aligned capsule-clearance contract.
 		var elbow: Vector3 = Vector3(finish.x, 0.0, 0.0) if int(side) == RoomOpening.Wall.FRONT or int(side) == RoomOpening.Wall.BACK else Vector3(0.0, 0.0, finish.z)
-		var intersects_height: bool = center.y + half.y > bottom + EPS and center.y - half.y < top - EPS
-		if not intersects_height:
-			continue
 		for segment in [[start, elbow], [elbow, finish]]:
 			var p0: Vector3 = segment[0]
 			var p1: Vector3 = segment[1]
-			var min_x: float = minf(p0.x, p1.x) - radius
-			var max_x: float = maxf(p0.x, p1.x) + radius
-			var min_z: float = minf(p0.z, p1.z) - radius
-			var max_z: float = maxf(p0.z, p1.z) + radius
-			if center.x + half.x > min_x + EPS and center.x - half.x < max_x - EPS and center.z + half.z > min_z + EPS and center.z - half.z < max_z - EPS:
-				report.add_error("PREFAB_WALKWAY_BLOCKED", "Authored collision box blocks an interior path to a socket.")
+			var length: float = p0.distance_to(p1)
+			var tunnel: Dictionary
+			if length < EPS:
+				tunnel = DungeonOrientedBounds.rectangle(p0, Vector2(radius * 2.0, radius * 2.0))
+			else:
+				var direction := p1 - p0
+				var yaw := atan2(-direction.x, -direction.z)
+				tunnel = DungeonOrientedBounds.rectangle((p0 + p1) * 0.5, Vector2(radius * 2.0, length), Basis(Vector3.UP, yaw))
+			if DungeonOrientedBounds.overlaps(tunnel, footprint):
+				report.add_error("PREFAB_WALKWAY_BLOCKED", "A rotated authored static box blocks an interior route to a socket.")
 				return

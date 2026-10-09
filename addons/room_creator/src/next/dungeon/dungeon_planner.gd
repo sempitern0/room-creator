@@ -103,7 +103,12 @@ static func validate_config(config: DungeonConfig) -> RoomValidationReport:
 	if config.use_variable_grid_spacing:
 		if not is_finite(config.min_corridor_gap) or not is_finite(config.max_corridor_gap) or config.min_corridor_gap < 0.0 or config.max_corridor_gap > 30.0 or config.max_corridor_gap < config.min_corridor_gap:
 			report.add_error("GRID_GAP", "Corridor gap range must be finite, ordered and inside [0, 30] meters.")
-	if config.enable_free_yaw_dungeons:
+	if config.enable_offgrid_socket_packing:
+		if not config.enable_free_yaw_dungeons:
+			report.add_error("SOCKET_PACK_YAW_REQUIRED", "Off-grid socket packing requires free-yaw multiroom mode.")
+		if not is_finite(config.socket_pack_min_gap) or not is_finite(config.socket_pack_max_gap) or config.socket_pack_min_gap < 7.0 or config.socket_pack_max_gap > 30.0 or config.socket_pack_max_gap < config.socket_pack_min_gap:
+			report.add_error("SOCKET_PACK_GAP", "Off-grid socket gaps must be finite, ordered and between 7 and 30 meters.")
+	if config.enable_free_yaw_dungeons and not config.enable_offgrid_socket_packing:
 		if not config.use_variable_grid_spacing or config.min_corridor_gap < 7.0:
 			report.add_error("YAW_SPACE_REQUIRED", "Free-yaw dungeon mode needs variable grid spacing with at least 7 m gap for safe three-leg angled connectors.")
 		if not is_finite(config.free_yaw_max_degrees) or config.free_yaw_max_degrees < 0.0 or config.free_yaw_max_degrees > 180.0 or not is_finite(config.free_yaw_shift) or config.free_yaw_shift < 0.0 or config.free_yaw_shift > 3.0 or config.free_yaw_candidates < 4 or config.free_yaw_candidates > 32 or config.free_yaw_search_budget < 100 or config.free_yaw_search_budget > 20000:

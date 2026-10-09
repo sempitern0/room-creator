@@ -11,6 +11,8 @@ static func assign(config: DungeonConfig, layout: LevelLayout, rng: RandomNumber
 	layout.free_yaw_enabled = config.enable_free_yaw_dungeons
 	layout.maximum_yaw_degrees = config.free_yaw_max_degrees if config.enable_free_yaw_dungeons else 0.0
 	layout.maximum_free_yaw_shift = config.free_yaw_shift if config.enable_free_yaw_dungeons else 0.0
+	layout.offgrid_socket_packing_enabled = config.enable_offgrid_socket_packing
+	layout.maximum_socket_pack_gap = config.socket_pack_max_gap if config.enable_offgrid_socket_packing else 0.0
 	if not config.enable_free_yaw_dungeons:
 		return true
 	var origins: Dictionary = {}
@@ -18,7 +20,15 @@ static func assign(config: DungeonConfig, layout: LevelLayout, rng: RandomNumber
 		origins[room.stable_id] = room.world_transform.origin
 	var assigned: Dictionary = {}
 	var budget: Array[int] = [config.free_yaw_search_budget]
-	if not _search(layout, rng, origins, assigned, 0, budget, config.free_yaw_candidates, config.free_yaw_max_degrees, config.free_yaw_shift):
+	var succeeded: bool
+	if config.enable_offgrid_socket_packing:
+		succeeded = DungeonSocketGraphPacker.assign(config, layout, rng)
+		if succeeded:
+			for room in layout.rooms:
+				assigned[room.stable_id] = room
+	else:
+		succeeded = _search(layout, rng, origins, assigned, 0, budget, config.free_yaw_candidates, config.free_yaw_max_degrees, config.free_yaw_shift)
+	if not succeeded:
 		for room in layout.rooms:
 			room.world_transform = Transform3D(Basis.IDENTITY, origins[room.stable_id])
 		return false

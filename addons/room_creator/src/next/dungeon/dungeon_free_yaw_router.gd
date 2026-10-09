@@ -100,6 +100,8 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 	if not is_finite(layout.maximum_yaw_degrees) or layout.maximum_yaw_degrees < 0.0 or layout.maximum_yaw_degrees > 180.0 or not is_finite(layout.maximum_free_yaw_shift) or layout.maximum_free_yaw_shift < 0.0 or layout.maximum_free_yaw_shift > 5.0:
 		report.add_error("FREE_YAW_CONTRACT", "Persisted yaw or placement bounds are invalid.")
 		return report
+	if layout.offgrid_socket_packing_enabled and (not is_finite(layout.maximum_socket_pack_gap) or layout.maximum_socket_pack_gap < 7.0 or layout.maximum_socket_pack_gap > 30.0):
+		report.add_error("OFFGRID_GAP_CONTRACT", "The off-grid socket placement's persisted search bounds are invalid.")
 	var by_id: Dictionary = {}
 	for room in layout.rooms:
 		if room == null:
@@ -109,7 +111,12 @@ static func validate(layout: LevelLayout) -> RoomValidationReport:
 		var expected: Vector3 = DungeonSpatialEmbedder.expected_origin(layout, room.cell)
 		var delta: Vector3 = room.world_transform.origin - expected
 		var max_offset: float = layout.maximum_room_offset + layout.maximum_free_yaw_shift + EPS
-		if not room.world_transform.origin.is_finite() or absf(delta.x) > max_offset or absf(delta.z) > max_offset or absf(delta.y) > EPS or not DungeonYawDockingSolver._rigid_yaw(room.world_transform):
+		var invalid_position: bool = not room.world_transform.origin.is_finite() or absf(delta.y) > EPS
+		if layout.offgrid_socket_packing_enabled:
+			invalid_position = invalid_position or absf(room.world_transform.origin.x) > 100000.0 or absf(room.world_transform.origin.z) > 100000.0
+		else:
+			invalid_position = invalid_position or absf(delta.x) > max_offset or absf(delta.z) > max_offset
+		if invalid_position or not DungeonYawDockingSolver._rigid_yaw(room.world_transform):
 			report.add_error("FREE_YAW_POSE", "Room has invalid off-grid transform: %s." % room.stable_id)
 		var radians: float = room.world_transform.basis.get_euler().y
 		if absf(rad_to_deg(radians)) > layout.maximum_yaw_degrees + 0.05:

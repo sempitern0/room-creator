@@ -20,6 +20,8 @@ const SCHEMA_VERSION: int = 1
 @export var free_yaw_enabled: bool = false
 @export var maximum_yaw_degrees: float = 0.0
 @export var maximum_free_yaw_shift: float = 0.0
+@export var offgrid_socket_packing_enabled: bool = false
+@export var maximum_socket_pack_gap: float = 0.0
 @export var wall_thickness: float = 0.2
 @export var floor_thickness: float = 0.2
 @export var ceiling_thickness: float = 0.2
@@ -51,6 +53,7 @@ func fingerprint() -> String:
 	parts.append("axis_x:%s axis_z:%s" % [str(column_positions), str(row_positions)])
 	parts.append("room_offsets:%d:%.4f" % [int(independent_room_offsets_enabled), maximum_room_offset])
 	parts.append("free_yaw:%d:%.4f:%.4f" % [int(free_yaw_enabled), maximum_yaw_degrees, maximum_free_yaw_shift])
+	parts.append("offgrid_socket:%d:%.4f" % [int(offgrid_socket_packing_enabled), maximum_socket_pack_gap])
 	parts.append("surfaces:%.4f,%.4f,%.4f:%d" % [wall_thickness, floor_thickness, ceiling_thickness, int(include_ceiling)])
 	parts.append("player:%.4f,%.4f collision:%d,%d" % [player_radius, player_height, collision_layer, collision_mask])
 	parts.append("materials:%s|%s|%s" % [wall_material.resource_path if wall_material != null else "", floor_material.resource_path if floor_material != null else "", ceiling_material.resource_path if ceiling_material != null else ""])

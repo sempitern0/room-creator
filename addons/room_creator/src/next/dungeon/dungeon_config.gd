@@ -63,6 +63,12 @@ extends Resource
 @export_range(0.0, 3.0, 0.25) var free_yaw_shift: float = 0.75
 @export_range(4, 32, 1) var free_yaw_candidates: int = 12
 @export_range(100, 20000, 100) var free_yaw_search_budget: int = 3000
+@export_group("Off-grid socket packing (F2 full)")
+## Instead of deriving room centers from cell indices, grow the dungeon
+## through physically authored sockets using a bounded spatial DFS.
+@export var enable_offgrid_socket_packing: bool = false
+@export_range(7.0, 30.0, 0.25) var socket_pack_min_gap: float = 9.0
+@export_range(7.0, 30.0, 0.25) var socket_pack_max_gap: float = 13.0
 @export_group("Opening and player clearance")
 @export_range(0.5, 5.0, 0.05) var door_width: float = 1.6
 @export_range(0.5, 6.0, 0.05) var door_height: float = 2.3

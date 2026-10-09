@@ -84,7 +84,7 @@ func _inspect(report: RoomValidationReport) -> void:
 		if kind == &"MeshInstance3D":
 			has_mesh = true
 		if kind == &"StaticBody3D":
-			if node_path.contains("/"):
+			if node_path.trim_prefix("./").contains("/"):
 				report.add_error("PREFAB_BODY_PARENT", "StaticBody3D must be a direct child of the prefab root.")
 			physics_bodies[str(state.get_node_name(i))] = true
 		elif kind == &"CollisionShape3D":

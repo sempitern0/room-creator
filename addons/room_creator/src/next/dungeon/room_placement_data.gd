@@ -12,6 +12,9 @@ enum Role { ENTRANCE, MAIN, EXIT, BRANCH }
 @export var world_transform: Transform3D = Transform3D.IDENTITY
 @export var role: Role = Role.MAIN
 @export var module_profile: DungeonRoomModule
+## Full authored collision room; null preserves the procedural shell.
+@export var structural_prefab: DungeonStructuralPrefab
+@export_range(0, 3, 1) var structural_turns: int = 0
 ## Exterior doorway is independent from the internal room-connection graph.
 ## -1 means no exterior opening. Uses the same outward-facing wall convention.
 @export var exterior_wall: int = -1

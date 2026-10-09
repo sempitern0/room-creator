@@ -49,6 +49,7 @@ static func generate_layout(config: DungeonConfig) -> DungeonBuildResult:
 			continue
 		if not _assign_room_modules(config, layout, rng):
 			continue
+		_assign_structural_prefabs(config, layout, rng)
 		var report := validate_layout(layout)
 		if report.is_valid():
 			result.success = true
@@ -114,6 +115,19 @@ static func validate_config(config: DungeonConfig) -> RoomValidationReport:
 			report.add_error("VARIABLE_DOOR_FIT", "The smallest nonrectangular room must fit the player doorway on its boundary tile.")
 		elif config.door_width + 2.0 * config.wall_thickness > minf(config.room_size.x, config.room_size.z) * config.min_room_scale - 0.001:
 			report.add_error("VARIABLE_DOOR_FIT", "The smallest room must fit the door width.")
+	var seen_structural_ids: Dictionary = {}
+	if not is_finite(config.structural_prefab_chance) or config.structural_prefab_chance < 0.0 or config.structural_prefab_chance > 1.0:
+		report.add_error("STRUCTURAL_FREQUENCY", "Structural prefab chance must be between 0 and 1.")
+	for profile in config.structural_prefabs:
+		if profile == null:
+			report.add_error("NULL_STRUCTURAL", "Remove null structural_prefabs entries.")
+			continue
+		var checked := profile.validate()
+		for error in checked.errors:
+			report.add_error("INVALID_STRUCTURAL", "%s: %s" % [profile.stable_id, error])
+		if seen_structural_ids.has(profile.stable_id):
+			report.add_error("DUPLICATE_STRUCTURAL_ID", "Structural prefab IDs must be unique.")
+		seen_structural_ids[profile.stable_id] = true
 	var seen_module_ids: Dictionary = {}
 	for module_profile in config.room_modules:
 		if module_profile == null:
@@ -377,6 +391,42 @@ static func _assign_room_modules(config: DungeonConfig, layout: LevelLayout, rng
 	return true
 
 
+## Deterministic preference for fully authored collision-bearing room shells.
+## A structural asset replaces (rather than decorates) the procedural geometry.
+static func _assign_structural_prefabs(config: DungeonConfig, layout: LevelLayout, rng: RandomNumberGenerator) -> void:
+	for room in layout.rooms:
+		room.structural_prefab = null
+		room.structural_turns = 0
+		if config.structural_prefabs.is_empty() or room.shape != RoomFootprint.Shape.RECTANGLE:
+			continue
+		if rng.randf() > config.structural_prefab_chance:
+			continue
+		var walls: Array[int] = []
+		for opening in make_blueprint(layout, room).openings:
+			walls.append(opening.wall)
+		var candidates: Array[Dictionary] = []
+		var total: int = 0
+		var size: Vector3 = actual_size(layout, room)
+		for profile in config.structural_prefabs:
+			var turns: Array[int] = profile.compatible_rotations(walls, size, layout.exterior_door_width, layout.exterior_door_height)
+			if turns.is_empty():
+				continue
+			candidates.append({"profile": profile, "rotations": turns})
+			total += profile.weight
+		if total <= 0:
+			continue
+		var ticket: int = rng.randi_range(0, total - 1)
+		for option in candidates:
+			var profile: DungeonStructuralPrefab = option["profile"]
+			ticket -= profile.weight
+			if ticket < 0:
+				var rotations: Array[int] = option["rotations"]
+				room.structural_prefab = profile
+				room.structural_turns = rotations[rng.randi_range(0, rotations.size() - 1)]
+				room.module_profile = null
+				break
+
+
 static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 	var report := RoomValidationReport.new()
 	if layout == null:
@@ -415,6 +465,17 @@ static func validate_layout(layout: LevelLayout) -> RoomValidationReport:
 			report.add_error("ROOM_TRANSFORM", "Room transform disagrees with the grid footprint: %s" % room.stable_id)
 		if not RoomFootprint.is_valid_shape(int(room.shape)) or room.shape_rotation < 0 or room.shape_rotation > 3:
 			report.add_error("ROOM_SHAPE", "Invalid shape or rotation in %s." % room.stable_id)
+		if room.structural_prefab == null and room.structural_turns != 0:
+			report.add_error("ORPHAN_PREFAB_ROTATION", "Unassigned room cannot keep an authored prefab rotation.")
+		if room.structural_prefab != null:
+			if room.shape != RoomFootprint.Shape.RECTANGLE or room.module_profile != null:
+				report.add_error("STRUCTURAL_SHAPE", "Collision prefab needs a rectangular slot and replaces any visual-only module.")
+			var required: Array[int] = []
+			for opening in make_blueprint(layout, room).openings:
+				required.append(opening.wall)
+			var possible := room.structural_prefab.compatible_rotations(required, actual_size(layout, room), layout.exterior_door_width, layout.exterior_door_height)
+			if not possible.has(room.structural_turns):
+				report.add_error("STRUCTURAL_SOCKETS", "A collision prefab or rotation disagrees with real door sockets: %s" % room.stable_id)
 		if room.module_profile != null:
 			var module_report := room.module_profile.validate()
 			if not module_report.is_valid() or room.module_profile.shape != room.shape:

@@ -18,7 +18,11 @@ static func build(layout: LevelLayout, with_collisions: bool = true) -> Node3D:
 		by_id[room.stable_id] = room
 	for room in layout.rooms:
 		var blueprint := DungeonPlanner.make_blueprint(layout, room)
-		var room_root := RoomGeometryBuilder.build(blueprint, with_collisions)
+		var room_root: Node3D
+		if room.structural_prefab != null:
+			room_root = DungeonStructuralRoomBuilder.build(room, blueprint, with_collisions)
+		else:
+			room_root = RoomGeometryBuilder.build(blueprint, with_collisions)
 		if room_root == null:
 			root.free()
 			return null

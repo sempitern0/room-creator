@@ -28,6 +28,11 @@ extends Resource
 @export var room_modules: Array[DungeonRoomModule] = []
 @export var require_room_modules: bool = false
 @export_range(0.0, 1.0, 0.05) var module_chance: float = 1.0
+@export_group("Structural room prefabs (F2.7)")
+## Full collision-bearing static room shells; only exact room sizes and
+## precisely matching door sockets are accepted. Never silently add doors.
+@export var structural_prefabs: Array[DungeonStructuralPrefab] = []
+@export_range(0.0, 1.0, 0.05) var structural_prefab_chance: float = 0.70
 @export_group("Variable room sizes")
 ## Rooms stay centered in fixed grid cells; smaller rooms use short connector corridors.
 @export var vary_room_sizes: bool = false

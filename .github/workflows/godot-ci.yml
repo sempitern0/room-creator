@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - uses: actions/checkout@v4
       - name: Reject unresolved merge markers in authored Godot assets
         shell: bash
         run: |
@@ -33,7 +34,6 @@ jobs:
           print("GODOT_ASSET_CONFLICT_GUARD: PASS")
           PY
 
-      - uses: actions/checkout@v4
       - name: Download pinned Godot 4.7.2 stable
         run: |
           curl -fL --retry 3 -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"

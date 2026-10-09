@@ -117,6 +117,33 @@ func _exercise() -> void:
 	source = PackedScene.new()
 	if not _check(source.pack(author) == OK and source.get_state().get_node_count() == 1, "Generated off-center prefab geometry must remain transient in authoring scenes."):
 		return
+	# F2 full multiroom yaw: same canonical DungeonAuthoring3D, not another
+	# specialized copy. Test real Inspector actions, preview, bake and save.
+	var free_preset := load("res://examples/dungeon_free_yaw_preset.tres") as DungeonConfig
+	if not _check(free_preset != null and DungeonPlanner.validate_config(free_preset).is_valid(), "Full free-yaw preset must be importable in the Inspector."):
+		return
+	author.config = free_preset
+	author._request_generate_layout()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	preview = author.get_node_or_null("DungeonPreview")
+	if not _check(author.layout != null and author.layout.free_yaw_enabled and preview != null, "Canonical author must preview a multiroom free-yaw layout."):
+		return
+	var yaw_rooms: int = 0
+	for room in author.layout.rooms:
+		if absf(rad_to_deg(room.world_transform.basis.get_euler().y)) > 4.0:
+			yaw_rooms += 1
+	if not _check(yaw_rooms >= 1 and preview.find_children("Connector_*", "Node3D", true, false).size() == author.layout.connections.size(), "Free-yaw preview must visibly contain rotated rooms and all physical connectors."):
+		return
+	author._request_bake()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var full_bake := author.get_node_or_null("DungeonBake")
+	if not _check(full_bake != null and full_bake.find_children("*", "CollisionShape3D", true, false).size() > 10, "Canonical author must bake complete collision for a multiroom rotated dungeon."):
+		return
+	var free_snapshot := PackedScene.new()
+	if not _check(free_snapshot.pack(author) == OK and free_snapshot.get_state().get_node_count() == 1, "Ctrl+S must keep the full yaw generated scene transient too."):
+		return
 	# The experimental free-yaw pair is a DIFFERENT authoring lab, not a
 	# duplicate general dungeon scene. Exercise its actual Inspector buttons.
 	EditorInterface.open_scene_from_path("res://examples/yaw_socket_pair_lab.tscn")

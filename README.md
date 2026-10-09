@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.7.0**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.8.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -63,6 +63,24 @@ Manual `RoomBlueprint` authoring also exposes `shape` and `shape_rotation`, and 
 
 This is **not** yet arbitrary collision-bearing prefab replacement, free-form rotated spatial packing, multilevel routing, navigation-mesh baking, or partial room-lock regeneration. New hand-authored room prefabs can be added later without changing the graph contract.
 
+## F2.6 — Orthogonal dogleg corridors and spatial routing
+
+The canonical **[examples/dungeon_authoring.tscn](examples/dungeon_authoring.tscn)** now demonstrates routed corridors alongside mixed room silhouettes, independent positions, variable sizes, optional artwork modules and exterior entrance/exit doors.
+
+In `DungeonConfig → Routed corridors (F2.6)`, enable **`enable_dogleg_corridors`** and set **`dogleg_frequency`** between 0 and 1. This requires `enable_independent_room_offsets` and a layout with enough room for an elbow; it defaults to **off** for backward compatibility. The example uses a 65% route-selection probability with 32 bounded placement attempts.
+
+For a selected connection, the solver can place the two rooms with **non-coaxial doorway centers**, without rotating the room walls. It stores an orthogonal **four-point / three-leg S-shaped route** in `RoomConnectionData.route_points`:
+
+1. Leave the first room straight through its existing door.
+2. Turn 90° at an outer elbow, cross the lateral displacement, and turn again.
+3. Continue straight into the reciprocal door of the next room.
+
+The route is derived deterministically from the seed, independent room offsets and fixed-facing sockets. The builder unions the three corridor envelopes and fills corners with contiguous floor/optional roof panels, placing collision walls **only on their exposed outer borders**. The physical `CharacterBody3D` capsule test follows every route segment, including both elbows. Collision validation rejects intersecting unrelated rooms/corridors and negative or reversed door spans. An invalid or edited route cannot be baked.
+
+The editor's **main-path / branch / alternative-loop** color overlay now follows the corridor turns rather than drawing a misleading straight shortcut. Generated geometry remains transient in the authoring scene; **Save Baked Scene** exports standard Godot meshes and primitive physics without editor-only path ribbons.
+
+**Limitations:** these are **planar, orthogonal, S/dogleg** paths between existing cardinal-facing rooms. They do not yet support arbitrary-angle door orientations, free-rotated collision-bearing room prefabs, stairs/multilevel corridors, diagonal or curved connectors, or a general 3D OBB/backtracking packer. For narrow layouts, lower `dogleg_frequency`, increase `min_corridor_gap` or increase `placement_attempts` if the generator reports an unsatisfiable configuration.
+
 ## Recovered scene and independent room offsets (F2.5)
 
 ### Recover a Git-merge-corrupted authoring example
@@ -80,7 +98,7 @@ This overwrites only the **local working-tree and staged changes to that one fil
 
 ### F2.5 bounded, compatible independent room placements
 
-Enable `DungeonConfig → Independent room offsets (F2.5) → enable_independent_room_offsets`; tune `room_position_jitter` (up to 6 m) and `placement_attempts` (1–64). The recovered example enables **0.50 m** per-axis jitter with **24 attempts**.
+Enable `DungeonConfig → Independent room offsets (F2.5) → enable_independent_room_offsets`; tune `room_position_jitter` (up to 6 m) and `placement_attempts` (1–64). The recovered example enables **0.50 m** per-axis jitter with **32 attempts**, supporting dogleg routing.
 
 The solver groups rooms according to their real connection constraints: east/west-linked rooms share a Z coordinate and north/south-linked rooms share an X coordinate. Other groups may shift independently relative to the F2.4 non-uniform base grid. This moves some individual rooms without ever breaking paired straight-line sockets. Candidate placements are deterministic, bounded and checked for reversed walls, negative corridor spans, unrelated room collisions and intersections between unrelated corridors. The accepted world transforms and bounds live in the serialized `LevelLayout`; impossible configurations fail explicitly.
 
@@ -174,9 +192,10 @@ godot --headless --path . --script res://tests/dungeon_spatial_smoke.gd
 godot --headless --path . --script res://tests/dungeon_module_smoke.gd
 godot --headless --path . --script res://tests/dungeon_embedding_smoke.gd
 godot --headless --path . --script res://tests/dungeon_offsets_smoke.gd
+godot --headless --path . --script res://tests/dungeon_dogleg_smoke.gd
 ```
 
-GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
+GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing + 45 constrained-room-offset + 36 routed-dogleg seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
 
 The older `RoomCreator` and `DungeonGenerator` nodes remain for compatibility but the legacy dungeon path is not claimed to have the same F2 validation guarantees. Use `DungeonAuthoring3D` for new dungeons.
 

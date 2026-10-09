@@ -26,7 +26,9 @@ min_corridor_gap = 1.0
 max_corridor_gap = 4.0
 enable_independent_room_offsets = true
 room_position_jitter = 0.50
-placement_attempts = 24
+placement_attempts = 32
+enable_dogleg_corridors = true
+dogleg_frequency = 0.65
 generate_exterior_doors = true
 
 [node name="DungeonAuthoring3D" type="Node3D"]

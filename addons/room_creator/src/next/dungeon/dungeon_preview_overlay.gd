@@ -52,8 +52,8 @@ static func apply(preview: Node3D, layout: LevelLayout, palette: DungeonPreviewP
 				for i in range(track.size() - 1):
 					if track[i].distance_to(track[i + 1]) <= 0.01:
 						continue
-					_add_route(group, edge.stable_id if drawn == 0 else "Part_%s_%d" % [edge.stable_id, drawn],
-						track[i], track[i + 1], top, colors.route_width, color, kind)
+					_add_route(group, edge.stable_id,
+						track[i], track[i + 1], top, colors.route_width, color, kind, drawn)
 					drawn += 1
 			else:
 				_add_route(group, edge.stable_id, from_room.world_transform.origin, to_room.world_transform.origin, top, colors.route_width, color, kind)
@@ -135,13 +135,13 @@ static func _unshaded(color: Color) -> StandardMaterial3D:
 	return material
 
 
-static func _add_route(parent_node: Node3D, edge_id: String, a: Vector3, b: Vector3, ceiling_top: float, width: float, color: Color, kind: String) -> void:
+static func _add_route(parent_node: Node3D, edge_id: String, a: Vector3, b: Vector3, ceiling_top: float, width: float, color: Color, kind: String, part_index: int = 0) -> void:
 	var distance: float = a.distance_to(b)
 	if distance <= 0.01:
 		return
 	var delta: Vector3 = (b - a).normalized()
 	var visual := MeshInstance3D.new()
-	visual.name = "Route_" + edge_id.validate_node_name()
+	visual.name = "Route_" + edge_id.validate_node_name() if part_index == 0 else "RoutePart_%s_%d" % [edge_id.validate_node_name(), part_index]
 	var box := BoxMesh.new()
 	box.size = Vector3(maxf(width, 0.05), 0.025, distance)
 	visual.mesh = box

@@ -18,6 +18,9 @@ const MARKERS: Array[String] = [
 	"SocketFront", "SocketRight", "SocketBack", "SocketLeft"
 ]
 
+## SceneState lets us inspect all socket declarations without instantiating a
+## PackedScene during editor inspector actions. Repeated instantiation here used
+## to cause hundreds of editor-side scene notifications for a single layout.
 func validate() -> RoomValidationReport:
 	var report := RoomValidationReport.new()
 	if stable_id.is_empty() or weight <= 0 or not RoomFootprint.is_valid_shape(int(shape)):
@@ -25,48 +28,67 @@ func validate() -> RoomValidationReport:
 	if visual_scene == null:
 		report.add_error("MODULE_MISSING_SCENE", "Assign a PackedScene to this module.")
 		return report
-	var instance := visual_scene.instantiate()
-	if not instance is Node3D:
-		report.add_error("MODULE_ROOT", "Module scene root must be a Node3D.")
-		if instance != null:
-			instance.free()
-		return report
-	_check_node_tree(instance, report)
-	var found: int = 0
-	for i in SIDES.size():
-		var marker := instance.get_node_or_null(NodePath(MARKERS[i])) as Marker3D
-		if marker == null:
-			continue
-		found += 1
-		var expected := _socket_point(SIDES[i])
-		if marker.position.distance_to(expected) > 0.001:
-			report.add_error("MODULE_SOCKET_POSITION", "Marker %s must be at normalized wall midpoint %s." % [MARKERS[i], str(expected)])
-	if found == 0:
+	var available := _inspect_sockets(report)
+	if available.is_empty():
 		report.add_error("MODULE_SOCKETS_MISSING", "Add at least one normalized SocketFront/Right/Back/Left Marker3D.")
-	instance.free()
 	return report
 
 
 func supports(walls: Array[int], turns: int) -> bool:
 	if visual_scene == null or not RoomFootprint.is_valid_shape(int(shape)):
 		return false
-	var instance := visual_scene.instantiate()
-	if not instance is Node3D:
-		if instance != null:
-			instance.free()
+	var report := RoomValidationReport.new()
+	var available := _inspect_sockets(report)
+	if not report.is_valid():
 		return false
-	var compatible := true
 	for wall in walls:
-		var matched := false
-		for i in SIDES.size():
-			if rotated_wall(SIDES[i], turns) == wall and instance.get_node_or_null(NodePath(MARKERS[i])) is Marker3D:
-				matched = true
+		var found := false
+		for original_side in available:
+			if rotated_wall(original_side, turns) == wall:
+				found = true
 				break
-		if not matched:
-			compatible = false
-			break
-	instance.free()
-	return compatible
+		if not found:
+			return false
+	return true
+
+
+func _inspect_sockets(report: RoomValidationReport) -> Array[int]:
+	var sides: Array[int] = []
+	var state := visual_scene.get_state()
+	if state == null or state.get_node_count() == 0:
+		report.add_error("MODULE_EMPTY", "The visual scene has no nodes.")
+		return sides
+	var root_type: StringName = state.get_node_type(0)
+	if root_type != &"Node3D" and not ClassDB.is_parent_class(root_type, &"Node3D"):
+		report.add_error("MODULE_ROOT", "Module root must be Node3D or a 3D-derived node.")
+		return sides
+	for index in state.get_node_count():
+		var node_type: StringName = state.get_node_type(index)
+		var node_name: StringName = state.get_node_name(index)
+		if index > 0 and (node_type == &"CollisionShape3D" or ClassDB.is_parent_class(node_type, &"CollisionObject3D")):
+			report.add_error("MODULE_COLLISION", "Visual-only module cannot include colliders: %s" % node_name)
+		for prop_index in state.get_node_property_count(index):
+			if state.get_node_property_name(index, prop_index) == &"script" and state.get_node_property_value(index, prop_index) != null:
+				report.add_error("MODULE_SCRIPT", "Module visual nodes must be script-free: %s" % node_name)
+		if index == 0 or node_type != &"Marker3D":
+			continue
+		# Only direct children represent normalized doorway sockets.
+		var direct_path: String = str(state.get_node_path(index))
+		var socket_index: int = MARKERS.find(str(node_name))
+		if socket_index < 0 or direct_path != str(node_name):
+			continue
+		var position: Vector3 = Vector3.ZERO
+		for prop_index in state.get_node_property_count(index):
+			var property_name: StringName = state.get_node_property_name(index, prop_index)
+			if property_name == &"transform":
+				position = (state.get_node_property_value(index, prop_index) as Transform3D).origin
+			elif property_name == &"position":
+				position = state.get_node_property_value(index, prop_index)
+		if position.distance_to(_socket_point(SIDES[socket_index])) > 0.001:
+			report.add_error("MODULE_SOCKET_POSITION", "%s must be placed at its normalized wall midpoint." % node_name)
+		else:
+			sides.append(SIDES[socket_index])
+	return sides
 
 
 static func rotated_wall(original: int, turns: int) -> int:
@@ -85,10 +107,3 @@ static func _socket_point(side: int) -> Vector3:
 	return Vector3(0.5, 0.0, 0.0)
 
 
-static func _check_node_tree(node: Node, report: RoomValidationReport) -> void:
-	if node.get_script() != null:
-		report.add_error("MODULE_SCRIPT", "Module visuals must be script-free for portable baked scenes: %s" % node.name)
-	if node is CollisionObject3D or node is CollisionShape3D:
-		report.add_error("MODULE_COLLISION", "Module visuals cannot contribute unvalidated collision: %s" % node.name)
-	for child in node.get_children():
-		_check_node_tree(child, report)

@@ -25,7 +25,7 @@ static func apply(preview: Node3D, layout: LevelLayout, palette: DungeonPreviewP
 		if color_floors:
 			var node := preview.get_node_or_null(NodePath(room.stable_id))
 			if node != null:
-				_color_floor_meshes(node, _role_color(room.role, colors))
+				_color_surface_meshes(node, _role_color(room.role, colors))
 	var group := Node3D.new()
 	group.name = ROUTES_NAME
 	group.set_meta(META_KEY, true)
@@ -43,11 +43,11 @@ static func apply(preview: Node3D, layout: LevelLayout, palette: DungeonPreviewP
 				color = colors.alternate_loops
 			var from_room: RoomPlacementData = room_by_id[edge.from_room_id]
 			var to_room: RoomPlacementData = room_by_id[edge.to_room_id]
-			_add_route(group, edge.stable_id, from_room.world_transform.origin, to_room.world_transform.origin, layout.floor_thickness, colors.route_width, color, kind)
+			_add_route(group, edge.stable_id, from_room.world_transform.origin, to_room.world_transform.origin, layout.room_size.y + (layout.ceiling_thickness if layout.include_ceiling else 0.0), colors.route_width, color, kind)
 	if draw_labels:
 		for room in layout.rooms:
 			if room.role == RoomPlacementData.Role.ENTRANCE or room.role == RoomPlacementData.Role.EXIT:
-				_add_label(group, room, layout.room_size.y, colors)
+				_add_label(group, room, layout.room_size.y + (layout.ceiling_thickness if layout.include_ceiling else 0.0), colors)
 
 
 static func classify_edges(layout: LevelLayout) -> Dictionary:
@@ -108,10 +108,10 @@ static func _role_color(role: RoomPlacementData.Role, colors: DungeonPreviewPale
 	return colors.critical_path
 
 
-static func _color_floor_meshes(room_node: Node, color: Color) -> void:
+static func _color_surface_meshes(room_node: Node, color: Color) -> void:
 	var material := _unshaded(color)
 	for child in room_node.get_children():
-		if child is MeshInstance3D and (child.name == "Floor" or child.name.begins_with("Floor_")):
+		if child is MeshInstance3D and (child.name == "Floor" or child.name.begins_with("Floor_") or child.name == "Ceiling" or child.name.begins_with("Ceiling_")):
 			(child as MeshInstance3D).material_override = material
 
 
@@ -122,7 +122,7 @@ static func _unshaded(color: Color) -> StandardMaterial3D:
 	return material
 
 
-static func _add_route(parent_node: Node3D, edge_id: String, a: Vector3, b: Vector3, floor_thickness: float, width: float, color: Color, kind: String) -> void:
+static func _add_route(parent_node: Node3D, edge_id: String, a: Vector3, b: Vector3, ceiling_top: float, width: float, color: Color, kind: String) -> void:
 	var distance: float = a.distance_to(b)
 	if distance <= 0.01:
 		return
@@ -133,7 +133,7 @@ static func _add_route(parent_node: Node3D, edge_id: String, a: Vector3, b: Vect
 	box.size = Vector3(maxf(width, 0.05), 0.025, distance)
 	visual.mesh = box
 	visual.material_override = _unshaded(color)
-	visual.transform = Transform3D(Basis.looking_at(delta, Vector3.UP), (a + b) * 0.5 + Vector3.UP * maxf(0.07, floor_thickness * 0.3))
+	visual.transform = Transform3D(Basis.looking_at(delta, Vector3.UP), (a + b) * 0.5 + Vector3.UP * (ceiling_top + 0.15))
 	visual.set_meta("connection_id", edge_id)
 	visual.set_meta("path_kind", kind)
 	parent_node.add_child(visual)

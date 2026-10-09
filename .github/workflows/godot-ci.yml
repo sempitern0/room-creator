@@ -169,3 +169,11 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_embedding_smoke.gd 2>&1 | tee embedding.log
           grep 'DUNGEON_EMBEDDING_SMOKE: PASS' embedding.log
           if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_EMBEDDING_SMOKE: FAIL' embedding.log; then exit 1; fi
+
+      - name: Verify independently offset rooms and collision-free corridor solver
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/dungeon_offsets_smoke.gd 2>&1 | tee offsets.log
+          grep 'DUNGEON_OFFSETS_SMOKE: PASS' offsets.log
+          if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_OFFSETS_SMOKE: FAIL' offsets.log; then exit 1; fi

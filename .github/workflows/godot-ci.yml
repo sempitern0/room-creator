@@ -115,3 +115,26 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --quit-after 600 2>&1 | tee editor-integration.log
           grep 'DUNGEON_EDITOR_INTEGRATION: PASS' editor-integration.log
           if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_EDITOR_INTEGRATION: FAIL|Attempting to parent and popup a dialog that already has a parent' editor-integration.log; then exit 1; fi
+
+      - name: Exercise real graphical editor under a virtual X11 display
+        shell: bash
+        run: |
+          set -o pipefail
+          cp project.godot /tmp/room-creator-xvfb-project.godot
+          trap 'cp /tmp/room-creator-xvfb-project.godot project.godot' EXIT
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('project.godot')
+          content = p.read_text()
+          addon = 'res://addons/room_creator/plugin.cfg'
+          smoke = 'res://tests/editor_integration/plugin.cfg'
+          if 'enabled=PackedStringArray(' in content:
+              content = content.replace(addon + '")', addon + '", "' + smoke + '")')
+          else:
+              content += '\n[editor_plugins]\nenabled=PackedStringArray("' + addon + '", "' + smoke + '")\n'
+          p.write_text(content)
+          PY
+          command -v xvfb-run
+          xvfb-run -a -s '-screen 0 1280x720x24' env LIBGL_ALWAYS_SOFTWARE=1             ./Godot_v4.7.2-stable_linux.x86_64 --path . --editor             --rendering-method gl_compatibility --quit-after 600 2>&1 | tee editor-xvfb.log
+          grep 'DUNGEON_EDITOR_INTEGRATION: PASS' editor-xvfb.log
+          if grep -E 'SCRIPT ERROR|Parse Error|DUNGEON_EDITOR_INTEGRATION: FAIL|Attempting to parent and popup a dialog that already has a parent' editor-xvfb.log; then exit 1; fi

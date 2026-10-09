@@ -30,6 +30,37 @@ func _exercise() -> void:
 	preview = author.get_node_or_null("DungeonPreview")
 	if not _check(preview != null and _count_nodes(preview, "ModuleDecor") == _expected_modules(author.layout), "Refresh must not duplicate nested visual modules."):
 		return
+	# F3.1 exercises the exact deferred Inspector actions and a real
+	# EditorUndoRedoManager roundtrip, not just a headless logic helper.
+	var protected_id := author.layout.rooms[0].stable_id
+	author.selected_room_id = protected_id
+	author._request_lock_room()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(author.layout.rooms[0].edit_locked and author.get_node_or_null("DungeonPreview").find_children("Locked_*", "Label3D", true, false).size() == 1, "Lock Selected Room must persist a room lock and show it from above."):
+		return
+	var history := EditorInterface.get_editor_undo_redo()
+	history.undo()
+	await get_tree().process_frame
+	if not _check(not author.layout.rooms[0].edit_locked, "Editor Undo must revert the room lock."):
+		return
+	history.redo()
+	await get_tree().process_frame
+	if not _check(author.layout.rooms[0].edit_locked, "Editor Redo must restore the protected room without changing the other rooms."):
+		return
+	var fixed_room := author.layout.rooms[0].duplicate(true) as RoomPlacementData
+	var before_reroll := author.layout.fingerprint()
+	author.appearance_variation_seed = 8337
+	author._request_regenerate_unlocked()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(author.layout.fingerprint() != before_reroll and author.layout.rooms[0].edit_locked and author.layout.rooms[0].shape == fixed_room.shape and author.layout.rooms[0].world_transform == fixed_room.world_transform, "Local reroll must change only unlocked appearances, preserving locked-room geometry and pose."):
+		return
+	author._request_unlock_room()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not _check(not author.layout.rooms[0].edit_locked and DungeonPlanner.validate_layout(author.layout).is_valid(), "Unlock Selected Room should recover a valid fully editable layout."):
+		return
 	var snapshot := PackedScene.new()
 	if not _check(snapshot.pack(author) == OK, "Editor-generated scene tree must remain packable."):
 		return

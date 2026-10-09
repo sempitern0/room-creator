@@ -6,6 +6,11 @@ extends Resource
 enum Role { ENTRANCE, MAIN, EXIT, BRANCH }
 
 @export var stable_id: String = ""
+## F3 designer-owned geometry lock, persisted inside the RoomPlacementData
+## already stored in LevelLayout. Only lock via DungeonAuthoring3D so its
+## topology signature is captured from the actual graph and socket contract.
+@export var edit_locked: bool = false
+@export var lock_topology_signature: String = ""
 @export var cell: Vector2i = Vector2i.ZERO
 ## Optional actual geometry extent; ZERO preserves pre-1.5 layouts.
 @export var room_size: Vector3 = Vector3.ZERO

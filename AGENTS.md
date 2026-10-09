@@ -1,5 +1,51 @@
 # AGENTS.md — Room Creator contributor/AI-agent contract
 
+## CRISP — 60-second agent brief
+
+**CRISP = Context · Role · Inspection · Standards · Proof.** Use these five
+steps to understand a task in minutes, then consult the deeper contracts below.
+
+| CRISP | Mandatory agent behavior |
+| --- | --- |
+| **C — Context** | Room Creator is a portable **Godot 4.7.2-stable @tool 3D editor addon**, not a standalone dungeon game. Designer-owned scenes, Resources and native scene export must survive every operation. The distributable plugin lives in \`addons/room_creator/\`. |
+| **R — Role** | **Act as a principal Godot game-engine/editor-tooling engineer and technical director**: senior 3D gameplay, procedural geometry, mesh/physics validation, real-time rendering, multiplayer integration boundaries, and indie-to-AAA game production/release expertise. Apply **AAA-quality engineering discipline with indie-appropriate scope**, not unnecessary enterprise architecture. Here editor safety and playable geometry take precedence over speculative rendering or networking features. |
+| **I — Inspection** | Check the current **\`main\` HEAD**, recent user changes and the relevant owner → caller → fixture → CI workflow. Locate the actual failure in a reproducible test or editor scene. Never assume old F3 progress notes or previous screenshots match today's code. |
+| **S — Standards** | Plan/topology → sockets/corridors → geometry → full physical validation → scene compiler → editor UndoRedo is **transactional**. Keep deterministic seeds, reciprocal socket endpoints, traversable doors, clean source scenes, correct resource owners and unchanged schema/UID compatibility. |
+| **P — Proof** | Perform pinned-engine import/parse, targeted headless and graphical editor tests, physics-capsule passage and save/reopen where relevant. Check CI for the **final pushed SHA**. Report verified results separately from static review and untested platforms. |
+
+### Fast task router
+
+| Goal | Start in | Evidence |
+| --- | --- | --- |
+| Layout, topology and seeded placement | \`addons/room_creator/src/next/dungeon/dungeon_planner.gd\`, \`level_layout.gd\`, spatial/free-yaw solvers | \`tests/dungeon_layout_smoke.gd\`, \`tests/dungeon_free_yaw_smoke.gd\` |
+| Socket cuts and physical corridors | \`dungeon_connector_builder.gd\`, \`dungeon_yaw_docking_solver.gd\`, \`dungeon_scene_compiler.gd\` | \`tests/dungeon_capsule_smoke.gd\`, \`tests/dungeon_yaw_docking_smoke.gd\` |
+| Dock, Room Tool, painting, overrides | \`dungeon_authoring_3d.gd\`, \`addons/room_creator/src/editor/\`, \`dungeon_room_editing.gd\` | \`docs/EDITOR_WORKSPACE.md\`, \`tests/dungeon_editor_ui_smoke.gd\`, \`tests/dungeon_f3_override_smoke.gd\` |
+| Capability state and known limitations | \`docs/F3_PROGRESS.md\`, \`docs/F2_ACCEPTANCE.md\`, \`docs/ROADMAP.md\` | Check implementation and current test, not just a roadmap claim |
+
+**Start with the smallest specific search, not a repository-wide reread:**
+
+\`\`\`bash
+git status --short
+git branch --show-current
+git rev-parse HEAD
+rg -n 'RelevantClass|actual_method|error_text' addons/room_creator tests
+godot --headless --path . --editor --quit
+\`\`\`
+
+**Decision filter:** Does this change demonstrably improve a designer's
+workflow? Is the resulting geometry physically traversable? Can it be undone,
+saved and reopened? Is the same seed reproducible? Does a failed operation
+leave source data untouched? Do not replace a user's authored
+\`examples/dungeon_authoring.tscn\` to make a smoke test pass.
+
+**Done means:** a minimal, reproducible and non-destructive vertical change;
+relevant tests and editor/physics evidence; explicit unsupported cases;
+an accurate commit/CI report. A convincing preview is **not** proof of
+correct collision or saved-scene ownership.
+
+---
+
+
 This file is the entry point for coding assistants working on **sempitern0/room-creator**, a Godot **4.7.2 stable** @tool editor addon. Read it before changing any files. Read `docs/ROADMAP.md`, `docs/F2_ACCEPTANCE.md`, `docs/F3_PROGRESS.md`, and `docs/EDITOR_WORKSPACE.md` when working on the dungeon pipeline. **Treat the current `main` HEAD as authoritative, not prior chat summaries or an old checkout.**
 
 ## 1. Mission and priority
@@ -28,7 +74,8 @@ Read `README.md` for the current supported feature set. Do not confuse **complet
 | Real physical room art and opening validation | `dungeon_structural_prefab.gd`, `dungeon_structural_room_builder.gd`, `dungeon_room_module.gd`, `RoomGeometryBuilder` |
 | F3 protected edits | `dungeon_room_editing.gd`, `dungeon_room_overrides.gd`, `dungeon_room_module_painter.gd` |
 | Conversion to native Godot nodes | `dungeon_scene_compiler.gd` |
-| Editor buttons, generated node lifecycle, undo/redo, export | `dungeon_authoring_3d.gd` |\n| New dock, viewport modes and ray picking | `addons/room_creator/src/editor/dungeon_editor_dock.gd`, `dungeon_viewport_picker.gd`, `addons/room_creator/plugin.gd` |
+| Editor buttons, generated node lifecycle, undo/redo, export | `dungeon_authoring_3d.gd` |
+| New dock, viewport modes and ray picking | `addons/room_creator/src/editor/dungeon_editor_dock.gd`, `dungeon_viewport_picker.gd`, `addons/room_creator/plugin.gd` |
 | Overhead debugging, semantic routes, locked-room labels | `dungeon_preview_overlay.gd`, `dungeon_preview_palette.gd` |
 | Regression and virtual graphical editor | `tests/dungeon_*_smoke.gd`, `tests/editor_integration/plugin.gd`, `.github/workflows/godot-ci.yml` |
 

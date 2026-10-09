@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3]
+
+[sub_resource type="BoxMesh" id="BoxMesh_pillar"]
+size = Vector3(0.06, 0.4, 0.06)
+
+[node name="NormalizedModuleDecor" type="Node3D"]
+
+[node name="SocketFront" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+
+[node name="SocketBack" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5)
+
+[node name="SocketLeft" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0)
+
+[node name="SocketRight" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
+
+[node name="PillarNorthWest" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.30, 0.20, -0.30)
+mesh = SubResource("BoxMesh_pillar")
+
+[node name="PillarNorthEast" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.30, 0.20, -0.30)
+mesh = SubResource("BoxMesh_pillar")
+
+[node name="PillarSouthWest" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.30, 0.20, 0.30)
+mesh = SubResource("BoxMesh_pillar")
+
+[node name="PillarSouthEast" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.30, 0.20, 0.30)
+mesh = SubResource("BoxMesh_pillar")

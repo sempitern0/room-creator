@@ -2,7 +2,7 @@
 
 A self-contained, editor-first plugin for creating manual 3D rooms and **deterministic connected dungeons** with static collisions, doors and portable scene export.
 
-**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.5.1**. Authors: **sempitern0**.
+**Supported/tested:** Godot **4.7.2 stable**. Addon version **1.6.0**. Authors: **sempitern0**.
 
 ## Install
 
@@ -57,11 +57,21 @@ In the `DungeonConfig` Inspector, expand **Room silhouettes** and configure four
 
 Each nonrectangular room occupies some of the nine thirds of the same bounding grid cell. Floors, ceilings and colliders follow the actual silhouette; missing tiles remain empty. The entry/exit openings always align with reciprocal external sockets. Door width must fit the narrower one-third connector of the cell: by default an 8-meter room supports the standard 1.6-meter door. Invalid configurations fail validation rather than creating inaccessible walls.
 
-Manual `RoomBlueprint` authoring also exposes `shape` and `shape_rotation`, and currently supports **centered** openings on exposed silhouette boundaries. In dungeons, individual room sizes now vary inside **fixed-position grid cells**, with corridor connectors bridging gaps; custom visual-module scenes may declare normalized sockets. Arbitrary room boundaries, unconstrained prefab collisions and fully free rotations are not supported.
+Manual `RoomBlueprint` authoring also exposes `shape` and `shape_rotation`, and currently supports **centered** openings on exposed silhouette boundaries. In dungeons, room size and the world-space distances between aligned grid rows/columns can now vary independently; native static corridors connect room sockets. Custom visual modules may declare normalized sockets. Arbitrary room boundaries, collision-bearing prefabs and unconstrained free rotation are not supported.
 
 **Current F2 scope:** single-floor rooms inside a fixed-size cardinal grid, a seeded main path, branches and optional graph cycles. Each connection defines two mirrored door openings with stable IDs, coincident socket centers and opposite normals. No open unpaired doorways are generated. Impossible layouts return a `DungeonBuildResult` with an error report; they are not exported as success.
 
 This is **not** yet arbitrary collision-bearing prefab replacement, free-form rotated spatial packing, multilevel routing, navigation-mesh baking, or partial room-lock regeneration. New hand-authored room prefabs can be added later without changing the graph contract.
+
+## Non-uniform spatial embedding (F2.4)
+
+The unified `examples/dungeon_authoring.tscn` now demonstrates **all three features in one scene**: mixed orthogonal silhouettes, optional socket-aware decorative modules, and **non-uniform room spacing**. There is no separate `dungeon_modular_authoring.tscn`.
+
+In `DungeonConfig → Spatial embedding (F2.4)`, enable `use_variable_grid_spacing`. Set `min_corridor_gap` and `max_corridor_gap` (meters, range 0–30). The planner uses its private seeded RNG to assign a distinct separation between each adjacent column and row. As a result, the X/Z positions of rooms are **nonuniform** and dynamically linked by corridors of differing lengths; the central coordinate of each column/row remains shared so opposed door sockets never drift sideways.
+
+The resulting `LevelLayout.column_positions` and `row_positions` are **serialized source data**. The validator rejects missing arrays, invalid ordering, intersections or room transforms that disagree with the persisted embedding. Previously authored layouts omit these arrays and continue to use the original uniform grid. Spatial variations, room silhouettes and compatible modules remain repeatable with the same seed.
+
+**Scope:** this is a first *non-uniform, axis-aligned spatial embedding*, **not** unrestricted room-by-room off-grid placement with arbitrary rotations, 3D OBB packing or backtracking. Free spatial embedding and collision-bearing prefab replacement remain roadmap work. For longer connectors, remember that more static meshes increase scene cost.
 
 ## Exterior doors, top-down colors and modular rooms (F2.3)
 
@@ -139,9 +149,10 @@ godot --headless --path . --script res://tests/room_shapes_smoke.gd
 godot --headless --path . --script res://tests/dungeon_diagnostics_smoke.gd
 godot --headless --path . --script res://tests/dungeon_spatial_smoke.gd
 godot --headless --path . --script res://tests/dungeon_module_smoke.gd
+godot --headless --path . --script res://tests/dungeon_embedding_smoke.gd
 ```
 
-GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
+GitHub Actions additionally verifies **clean addon-only installation**, 300 baseline + 60 weighted-silhouette + 40 variable-size + 70 variable-spacing seed cases; exterior doorway/corridor capsule tests, custom module sockets and editor path-color classification, graph cycles, reciprocal world-space sockets, scene-pack/reload with collisions and a real PhysicsServer3D capsule-sweep across all connected doors of a representative dungeon.
 
 The older `RoomCreator` and `DungeonGenerator` nodes remain for compatibility but the legacy dungeon path is not claimed to have the same F2 validation guarantees. Use `DungeonAuthoring3D` for new dungeons.
 

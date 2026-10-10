@@ -13,6 +13,12 @@ steps to understand a task in minutes, then consult the deeper contracts below.
 | **S — Standards** | Plan/topology → sockets/corridors → geometry → full physical validation → scene compiler → editor UndoRedo is **transactional**. Keep deterministic seeds, reciprocal socket endpoints, traversable doors, clean source scenes, correct resource owners and unchanged schema/UID compatibility. |
 | **P — Proof** | Perform pinned-engine import/parse, targeted headless and graphical editor tests, physics-capsule passage and save/reopen where relevant. Check CI for the **final pushed SHA**. Report verified results separately from static review and untested platforms. |
 
+### Decision discipline for non-destructive editor changes
+
+- State observable designer acceptance criteria and material assumptions before implementation. Explain a simpler existing-tool solution when available. Ask before choosing between interpretations that affect saved scenes, resource identities, schema, undo semantics or destruction of authored data; resolve minor reversible details independently and disclose the choice.
+- Keep edits bounded to the affected transaction, not to an arbitrary file-count limit. Modify the necessary planner, geometry, validation, compiler, editor lifecycle, fixtures and public docs together when correctness requires it. No speculative settings, adjacent refactors, format churn or removal of pre-existing dead code; clean up only orphans created by the patch.
+- Prefer a failing isolated fixture before bug fixes and baseline-versus-final tests for refactors. Define success in terms of traversable physical geometry, deterministic regeneration, UndoRedo, failure rollback and save/reopen whenever the change touches them; a clean import or attractive preview alone does not meet those criteria.
+
 ### Fast task router
 
 | Goal | Start in | Evidence |
